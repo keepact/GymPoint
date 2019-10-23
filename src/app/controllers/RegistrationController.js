@@ -91,8 +91,14 @@ class RegistrationController {
           as: 'student',
           attributes: ['name', 'email'],
         },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['title'],
+        },
       ],
     });
+
     await Queue.add(RegistrationMail.key, {
       registrationComplete,
     });

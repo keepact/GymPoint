@@ -10,8 +10,6 @@ class RegistrationMail {
   async handle({ data }) {
     const { registrationComplete } = data;
 
-    console.log('A fila executou');
-
     await Mail.sendMail({
       to: `${registrationComplete.student.name} <${registrationComplete.student.email}>`,
       subject: 'Matrícula realizada',
@@ -19,20 +17,21 @@ class RegistrationMail {
       context: {
         student: registrationComplete.student.name,
         start: format(
-          parseISO(registrationComplete.student.start_date),
+          parseISO(registrationComplete.start_date),
           "'dia' dd 'de' MMMM', às' H:mm'h'",
           {
             locale: pt,
           }
         ),
         end: format(
-          parseISO(registrationComplete.student.end_date),
+          parseISO(registrationComplete.end_date),
           "'dia' dd 'de' MMMM', às' H:mm'h'",
           {
             locale: pt,
           }
         ),
-        price: registrationComplete.student.price,
+        plan: registrationComplete.plan.title,
+        price: registrationComplete.price,
       },
     });
   }
