@@ -7,11 +7,11 @@ This project was built on the challenges of Rocketseat Bootcamp.
 
 ## Tools used:
   
-  Insomnia, Postbird, Nodemailer, Sequelize, Mongo DB, Redis and others.
+ Insomnia, Postbird, Nodemailer, Sequelize, Mongo DB, Redis and others.
   
  ## Javascript Project:
  
- Node.js
+ Node.js & Express
 
 ## Scripts
 
