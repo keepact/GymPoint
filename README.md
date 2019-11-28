@@ -1,6 +1,3 @@
-# Gympoint
-Rocketseat 2019 Bootcamp Third Challenge
-
 ## Gympoint - Gym App
 
 This project was built on the challenges of Rocketseat Bootcamp.
