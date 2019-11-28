@@ -1,4 +1,4 @@
-# NodeJS-Third-Bootcamp-Challenge-Rocketseat
+# Gympoint
 Rocketseat 2019 Bootcamp Third Challenge
 
 ## Gympoint - Gym App
