@@ -1,14 +1,25 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
+
 import Student from '../models/Student';
 
 class StudentController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, q: query } = req.query;
 
-    const student = await Student.findAll({
+    const students = await Student.findAll({
       limit: 20,
       offset: (page - 1) * 20,
+      where: query ? { name: { [Op.substring]: query } } : null,
     });
+
+    return res.json(students);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const student = await Student.findByPk(id);
 
     return res.json(student);
   }

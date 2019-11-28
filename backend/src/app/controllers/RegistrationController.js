@@ -14,14 +14,7 @@ class RegistrationController {
 
     const registration = await Registration.findAll({
       order: ['start_date'],
-      attributes: [
-        'id',
-        'student_id',
-        'plan_id',
-        'start_date',
-        'end_date',
-        'price',
-      ],
+      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
       limit: 20,
       offset: (page - 1) * 20,
       include: [
