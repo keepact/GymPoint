@@ -9,12 +9,12 @@ class UserController {
     const user = await User.findAll({
       limit: 20,
       offset: (page - 1) * 20,
-      attributes: ['id', 'name', 'email', 'avatar_id'],
+      attributes: ['id', 'name', 'email'],
       include: [
         {
           model: File,
           as: 'avatar',
-          attributes: ['name', 'path', 'url'],
+          attributes: ['id', 'path', 'url'],
         },
       ],
     });
@@ -88,12 +88,23 @@ class UserController {
       return res.status(401).json({ error: 'Password does not match' });
     }
 
-    const { name } = await user.update(req.body);
+    await user.update(req.body);
+
+    const { name, avatar } = await User.findByPk(req.params.id, {
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
 
     return res.json({
       id,
       name,
       email,
+      avatar,
     });
   }
 
