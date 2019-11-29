@@ -24,18 +24,19 @@ export const Content = styled.div`
     margin-top: 30px;
 
     label {
-      display: flex;
-      flex-direction: column;
       color: #444;
       font-size: 14px;
       font-weight: bold;
-      text-align: left;
+      align-self: flex-start;
       margin-bottom: 10px;
       text-transform: uppercase;
+    }
 
-      span {
-        margin-bottom: 10px;
-      }
+    span {
+      color: #fb6f91;
+      font-weight: bold;
+      align-self: flex-start;
+      margin: 0 0 10px;
     }
 
     input {
