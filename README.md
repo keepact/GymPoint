@@ -1,6 +1,6 @@
 ## Gympoint - Gym App
 
-This application is being developed and is part of the final Rocketseat Bootcamp 9 project.
+This application is being developed and is part of the final project of Rocketseat Bootcamp 9.
 
 ## Tools used:
   
