@@ -11,12 +11,12 @@ export const Wrapper = styled.div`
 
 export const Content = styled.div`
   width: 100%;
-  max-width: 315px;
+  max-width: 360px;
   text-align: center;
   background: #fff;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-  padding: 40px 20px;
+  padding: 40px 25px;
 
   form {
     display: flex;
@@ -24,12 +24,18 @@ export const Content = styled.div`
     margin-top: 30px;
 
     label {
+      display: flex;
+      flex-direction: column;
       color: #444;
       font-size: 14px;
       font-weight: bold;
       text-align: left;
       margin-bottom: 10px;
       text-transform: uppercase;
+
+      span {
+        margin-bottom: 10px;
+      }
     }
 
     input {
