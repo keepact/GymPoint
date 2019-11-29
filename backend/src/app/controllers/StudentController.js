@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { Op } from 'sequelize';
 
 import Student from '../models/Student';
+import File from '../models/File';
 
 class StudentController {
   async index(req, res) {
@@ -10,6 +11,14 @@ class StudentController {
     const students = await Student.findAll({
       limit: 20,
       offset: (page - 1) * 20,
+      attributes: ['id', 'name', 'email', 'age', 'height', 'weight'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
       where: query ? { name: { [Op.substring]: query } } : null,
     });
 
@@ -82,7 +91,20 @@ class StudentController {
       return res.status(400).json({ error: 'Student does not exists.' });
     }
 
-    const { name, email, age, weight, height } = await student.update(req.body);
+    await student.update(req.body);
+
+    const { name, email, age, weight, height, avatar } = await student.findByPk(
+      req.params.id,
+      {
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
+      }
+    );
 
     return res.json({
       id,
@@ -91,6 +113,7 @@ class StudentController {
       age,
       weight,
       height,
+      avatar,
     });
   }
 
