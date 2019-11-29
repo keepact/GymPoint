@@ -93,7 +93,7 @@ class StudentController {
 
     await student.update(req.body);
 
-    const { name, email, age, weight, height, avatar } = await student.findByPk(
+    const { name, email, age, weight, height, avatar } = await Student.findByPk(
       req.params.id,
       {
         include: [
