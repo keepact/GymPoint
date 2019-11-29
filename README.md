@@ -1,6 +1,6 @@
 ## Gympoint - Gym App
 
-This project was built on the challenges of Rocketseat Bootcamp.
+This application is being developed and is part of the final Rocketseat Bootcamp 9 project.
 
 ## Tools used:
   
