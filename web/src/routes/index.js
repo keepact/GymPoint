@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import Route from './Route';
 
 import SignIn from '../pages/SignIn';
 
@@ -23,20 +24,26 @@ export default function Routes() {
     <Switch>
       <Route path="/" exact component={SignIn} />
 
-      <Route path="/plans/create" component={PlansCreate} />
-      <Route path="/plans/:id" component={PlansEdit} />
-      <Route path="/plans" component={PlansList} />
+      <Route path="/plans/create" component={PlansCreate} isPrivate />
+      <Route path="/plans/:id" component={PlansEdit} isPrivate />
+      <Route path="/plans" component={PlansList} isPrivate />
 
-      <Route path="/registration/create" component={RegistrationCreate} />
-      <Route path="/registration/:id" component={RegistrationEdit} />
-      <Route path="/registration" component={RegistrationList} />
+      <Route
+        path="/registration/create"
+        component={RegistrationCreate}
+        isPrivate
+      />
+      <Route path="/registration/:id" component={RegistrationEdit} isPrivate />
+      <Route path="/registration" component={RegistrationList} isPrivate />
 
-      <Route path="/students/create" component={StudentsCreate} />
-      <Route path="/students/:id" component={StudentsEdit} />
-      <Route path="/students" component={StudentsList} />
+      <Route path="/students/create" component={StudentsCreate} isPrivate />
+      <Route path="/students/:id" component={StudentsEdit} isPrivate />
+      <Route path="/students" component={StudentsList} isPrivate />
 
-      <Route path="/help-orders/:id" component={HelpOrdersAnswer} />
-      <Route path="/help-orders" component={HelpOrdersList} />
+      <Route path="/help-orders/:id" component={HelpOrdersAnswer} isPrivate />
+      <Route path="/help-orders" component={HelpOrdersList} isPrivate />
+
+      <Route path="/" component={() => <h1>404</h1>} />
     </Switch>
   );
 }
