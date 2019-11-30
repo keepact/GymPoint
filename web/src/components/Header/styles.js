@@ -53,7 +53,8 @@ export const Profile = styled.div`
 
     strong {
       display: block;
-      color: #333;
+      font-size: 14px;
+      color: #666;
     }
 
     a {
@@ -61,6 +62,13 @@ export const Profile = styled.div`
       margin-top: 2px;
       font-size: 12px;
       color: #999;
+    }
+
+    button {
+      border: 0;
+      color: #de3b3b;
+      margin-top: 5px;
+      font-size: 14px;
     }
   }
 
