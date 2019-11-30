@@ -70,11 +70,9 @@ class UserController {
       return res.json({ error: 'Validation Fails' });
     }
 
-    const { id } = req.params;
-
     const { email, oldPassword } = req.body;
 
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.userId);
 
     if (email !== user.email) {
       const userExists = await User.findOne({ where: { email } });
@@ -90,7 +88,7 @@ class UserController {
 
     await user.update(req.body);
 
-    const { name, avatar } = await User.findByPk(req.params.id, {
+    const { id, name, avatar } = await User.findByPk(req.userId, {
       include: [
         {
           model: File,
