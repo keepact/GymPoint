@@ -4,6 +4,8 @@ import Route from './Route';
 
 import SignIn from '../pages/SignIn';
 
+import Profile from '../pages/Profile';
+
 import PlansCreate from '../pages/Plans/Create';
 import PlansEdit from '../pages/Plans/Edit';
 import PlansList from '../pages/Plans/List';
@@ -23,6 +25,8 @@ export default function Routes() {
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
+
+      <Route path="/profile" component={Profile} isPrivate />
 
       <Route path="/plans/create" component={PlansCreate} isPrivate />
       <Route path="/plans/:id" component={PlansEdit} isPrivate />
