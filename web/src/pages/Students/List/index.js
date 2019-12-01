@@ -1,29 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import api from '~/services/api';
 
-import { Table, Container, Content, TitleWrapper } from './styles';
+import { Table, Container, Content, TitleWrapper, PageActions } from './styles';
 
 export default function List() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [students, setStudents] = useState([]);
 
-  useEffect(() => {
-    // eslint-disable-next-line no-shadow
-    async function loadStudents(page = 1) {
-      const response = await api.get('/students', {
-        params: {
-          page,
-        },
-      });
+  // eslint-disable-next-line no-shadow
+  async function loadStudents(page = 1) {
+    const response = await api.get('/students', {
+      params: {
+        page,
+      },
+    });
 
-      setStudents(response.data);
-      setLoading(false);
-    }
+    setStudents(response.data);
+    setPage(page);
+    setLoading(false);
+  }
+
+  useEffect(() => {
     loadStudents();
   }, []);
+
+  const studentsSize = useMemo(() => students.length, [students]);
+
+  function prevPage() {
+    if (page === 1) return;
+    const pageNumber = page - 1;
+    loadStudents(pageNumber);
+  }
+
+  function nextPage() {
+    if (studentsSize < 10) return;
+    const pageNumber = page + 1;
+    loadStudents(pageNumber);
+  }
 
   return (
     <Container>
@@ -73,6 +89,15 @@ export default function List() {
           </tbody>
         </Table>
       </Content>
+      <PageActions>
+        <button type="button" disabled={page < 2} onClick={prevPage}>
+          Anterior
+        </button>
+        <span>Página {page}</span>
+        <button type="button" disabled={studentsSize < 10} onClick={nextPage}>
+          Próximo
+        </button>
+      </PageActions>
     </Container>
   );
 }
