@@ -61,7 +61,6 @@ export const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 1200px;
   margin: 50px auto 30px auto;
 
   button {
@@ -88,12 +87,11 @@ export const TitleWrapper = styled.div`
 `;
 
 export const PageActions = styled.div`
-  padding-top: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
-  margin: 20px auto 0;
+  margin: 30px auto 0;
 
   span {
     font-weight: bold;
