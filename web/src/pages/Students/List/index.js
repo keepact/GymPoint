@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 
 import api from '~/services/api';
 
-import { Table, Container, Content, TitleWrapper, PageActions } from './styles';
+import { Container, Content } from '~/components/Container';
+import { Table, TitleWrapper, PageActions } from './styles';
 
 export default function List() {
   const [loading, setLoading] = useState(true);
