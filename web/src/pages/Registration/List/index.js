@@ -26,10 +26,10 @@ export default function List() {
       },
     });
 
-    const data = response.data.map(r => ({
-      ...r,
-      startDateFormatted: format(parseISO(r.start_date), "dd'/'M/Y"),
-      endDateFormatted: format(parseISO(r.end_date), "dd'/'M/Y"),
+    const data = response.data.map(registration => ({
+      ...registration,
+      startDateFormatted: format(parseISO(registration.start_date), "dd'/'M/Y"),
+      endDateFormatted: format(parseISO(registration.end_date), "dd'/'M/Y"),
     }));
 
     setRegistrations(data);
@@ -42,7 +42,7 @@ export default function List() {
   }, []);
 
   const registrationsSize = useMemo(() => registrations.length, [
-    registrations.length,
+    registrations,
   ]);
 
   function prevPage() {
