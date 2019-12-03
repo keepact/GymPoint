@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 
 import api from '~/services/api';
 
-import { Table, Container, Content, TitleWrapper, PageActions } from './styles';
+import { Container, Content } from '~/components/Container';
+import { Table, TitleWrapper, PageActions } from './styles';
 
 export default function List() {
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('');
   const [page, setPage] = useState(1);
   const [students, setStudents] = useState([]);
 
@@ -15,6 +17,7 @@ export default function List() {
     const response = await api.get('/students', {
       params: {
         page,
+        q: filter,
       },
     });
 
@@ -25,7 +28,8 @@ export default function List() {
 
   useEffect(() => {
     loadStudents();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   const studentsSize = useMemo(() => students.length, [students]);
 
@@ -41,6 +45,10 @@ export default function List() {
     loadStudents(pageNumber);
   }
 
+  function handleSearch(e) {
+    setFilter(e.target.value);
+  }
+
   return (
     <Container>
       <TitleWrapper>
@@ -48,7 +56,11 @@ export default function List() {
 
         <div>
           <button type="button">Cadastrar</button>
-          <input type="text" placeholder="Buscar aluno" />
+          <input
+            type="text"
+            placeholder="Buscar aluno"
+            onChange={handleSearch}
+          />
         </div>
       </TitleWrapper>
       <Content>
