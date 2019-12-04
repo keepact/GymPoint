@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   max-width: ${props => (props.large ? '1440px' : '1200px')};
+  width: ${props => (props.small ? '700px' : 'auto')};
   margin: 0 auto;
 `;
 
@@ -12,6 +13,7 @@ export const Content = styled.div`
   border-radius: 4px;
   background: #fff;
   max-width: ${props => (props.large ? '1440px' : '1200px')};
+  width: ${props => (props.small ? '700px' : 'auto')};
 `;
 
 export const TitleWrapper = styled.div`
@@ -63,7 +65,7 @@ export const Table = styled.table`
   }
 
   tbody td {
-    padding: 10px 20px 10px 40px;
+    padding: 20px 20px 10px 40px;
   }
 
   div {
