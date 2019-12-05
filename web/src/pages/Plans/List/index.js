@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { formatPrice } from '~/util';
+import { formatPrice } from '~/utils';
 
 import api from '~/services/api';
 
