@@ -31,7 +31,9 @@ export default function Create() {
               <input type="number" />
             </div>
             <div>
-              <label htmlFor="">PESO (em kg)</label>
+              <label htmlFor="">
+                Peso <span>(em kg)</span>
+              </label>
               <input type="number" />
             </div>
             <div>

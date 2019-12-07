@@ -29,7 +29,7 @@ export default function Create() {
             </div>
             <div>
               <label htmlFor="">Data de ínicio</label>
-              <input type="number" />
+              <input type="date" />
             </div>
             <div>
               <label htmlFor="">Data de Termíno</label>

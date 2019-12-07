@@ -29,6 +29,7 @@ export const TitleWrapper = styled.div`
     background-color: #ee4d64;
     color: #fff;
     font-weight: bold;
+    text-transform: uppercase;
   }
 
   input {
@@ -133,13 +134,17 @@ export const NumberInputs = styled.div`
   display: grid;
   margin-top: 20px;
   margin-left: 10px;
-  grid-gap: 5px;
+  grid-gap: ${props => (props.columns ? '5px' : '10px')};
   grid-template-columns: ${props =>
     props.columns ? '208px 208px 208px 208px' : '275px 275px 275px'};
 
   input {
     max-width: ${props => (props.columns ? '198px' : '269.3px')};
     margin-top: 5px;
+  }
+
+  span {
+    text-transform: lowercase;
   }
 
   input[class='gray'] {
