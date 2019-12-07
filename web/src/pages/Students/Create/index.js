@@ -1,15 +1,17 @@
 import React from 'react';
 
-import { Container, Content, TitleWrapper } from '~/components/Container';
-import { Form, NumberInputs } from './styles';
+import { Content, TitleWrapper } from '~/components/Container';
+import { Container, Form, NumberInputs } from './styles';
 
 export default function Create() {
   return (
     <Container>
       <TitleWrapper>
         <h1>Cadastro de Aluno</h1>
-        <button type="button">Voltar</button>
-        <button type="button">Salvar</button>
+        <div>
+          <button type="button">Voltar</button>
+          <button type="button">Salvar</button>
+        </div>
       </TitleWrapper>
       <Content>
         <Form>
