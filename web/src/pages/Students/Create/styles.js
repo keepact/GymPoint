@@ -5,7 +5,7 @@ export const Container = styled.div`
   margin: 0 auto;
 
   button:nth-of-type(1) {
-    background-color: #cccccc;
+    background-color: #ccc;
     margin-right: 10px;
   }
 `;
@@ -24,6 +24,8 @@ export const Form = styled.form`
   label {
     padding-top: 8px;
     padding-bottom: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
   }
 
   input:nth-of-type(1) {
@@ -35,8 +37,8 @@ export const Form = styled.form`
     width: 840px;
     height: 45px;
     border-radius: 4px;
-    border: solid 1px #dddddd;
-    background-color: #ffffff;
+    border: solid 1px #ddd;
+    background-color: #fff;
   }
 `;
 
