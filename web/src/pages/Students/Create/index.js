@@ -1,11 +1,16 @@
 import React from 'react';
 
-import { Content, TitleWrapper } from '~/components/Container';
-import { Container, Form, NumberInputs } from './styles';
+import {
+  Content,
+  ContainerForm,
+  Form,
+  NumberInputs,
+  TitleWrapper,
+} from '~/components/Container';
 
 export default function Create() {
   return (
-    <Container>
+    <ContainerForm>
       <TitleWrapper>
         <h1>Cadastro de Aluno</h1>
         <div>
@@ -15,7 +20,7 @@ export default function Create() {
       </TitleWrapper>
       <Content>
         <Form>
-          <label htmlFor="">Nome Completo </label>
+          <label htmlFor="">Nome Completo</label>
           <input type="text" placeholder="John Doe" />
           <label htmlFor="">Endereço de Email</label>
           <input type="text" placeholder="example@email.com" />
@@ -36,6 +41,6 @@ export default function Create() {
           </NumberInputs>
         </Form>
       </Content>
-    </Container>
+    </ContainerForm>
   );
 }
