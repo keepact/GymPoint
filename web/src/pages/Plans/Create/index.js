@@ -12,7 +12,7 @@ export default function Create() {
   return (
     <ContainerForm>
       <TitleWrapper>
-        <h1>Cadastro de Aluno</h1>
+        <h1>Cadastro de Planos</h1>
         <div>
           <button type="button">Voltar</button>
           <button type="button">Salvar</button>
@@ -24,7 +24,9 @@ export default function Create() {
           <input type="text" placeholder="John Doe" />
           <NumberInputs>
             <div>
-              <label htmlFor="">Duração (em meses)</label>
+              <label htmlFor="">
+                Duração <span>(em meses)</span>
+              </label>
               <input type="number" />
             </div>
             <div>
