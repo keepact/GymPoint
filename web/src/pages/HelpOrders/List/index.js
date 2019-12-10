@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import api from '~/services/api';
 
 import { Container, Content, TitleWrapper } from '~/components/Container';
-import Popup from '~/components/PopUp';
+import PopUp from '~/components/PopUp';
 
 import { Wrapper } from './styles';
 
 export default function List() {
+  const [selectedQuestion, setSelectedQuestion] = useState();
   const [loading, setLoading] = useState(true);
   const [help, setHelp] = useState([]);
   const [showPopUp, setShowPopUp] = useState(false);
@@ -20,9 +21,20 @@ export default function List() {
     setLoading(false);
   }
 
-  function togglePopup() {
+  function OpenPopup() {
     setShowPopUp(!showPopUp);
   }
+
+  function handleQuestion(question) {
+    setSelectedQuestion(question);
+    OpenPopup();
+  }
+
+  // async function respondStudent(id) {
+  //   const response = await api.post(`/students/help-orders/${id}/answer`);
+
+  //   setAnswer(response.data);
+  // }
 
   useEffect(() => {
     loadHelpOrders();
@@ -38,23 +50,25 @@ export default function List() {
           <header>
             <strong>Aluno</strong>
           </header>
-          {help.map(h => (
-            <div key={h.id}>
-              <span>{h.student.name}</span>
-              <Link to="/">responder</Link>
-              <button type="button" onClick={togglePopup}>
-                teste
+          {help.map(question => (
+            <div key={question.id}>
+              <span>{question.student.name}</span>
+              <button type="button" onClick={() => handleQuestion(question)}>
+                responder
               </button>
             </div>
           ))}
+          {showPopUp ? (
+            <PopUp
+              title="Pergunta do Aluno"
+              label="Sua Resposta aqui"
+              closePopup={OpenPopup}
+              setAnswer
+              question={selectedQuestion.question}
+            />
+          ) : null}
         </Wrapper>
       </Content>
-      {showPopUp ? (
-        <Popup
-          text='Click "Close Button" to hide popup'
-          closePopup={togglePopup}
-        />
-      ) : null}
     </Container>
   );
 }
