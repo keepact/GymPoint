@@ -1,31 +1,53 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 
-import { Container, Content, Wrapper } from './styles';
+import api from '~/services/api';
 
-function PopUp({ title, closePopup, setAnswer, label, question, answer }) {
+import { Container, Content, TextArea, FormPopUp } from './styles';
+
+const schema = Yup.object().shape({
+  answer: Yup.string().required('Digite uma resposta.'),
+});
+
+function PopUp({ title, modal, label, question, student }) {
+  async function handleSubmit(data) {
+    await api.post(`/students/help-orders/${student}/answer`, data);
+
+    modal(false);
+  }
+
   return (
     <Container>
       <Content>
-        <Wrapper>
+        <FormPopUp schema={schema} onSubmit={handleSubmit}>
           <span>{title}</span>
           <p>{question}</p>
           <label htmlFor="help">{label}</label>
-          <textarea
-            rows="5"
-            cols="33"
-            name="help"
+          <TextArea
+            multiline
+            name="answer"
             placeholder="Sua resposta aqui"
+            onChange={e => e.target.value}
           />
-          <button type="button" onClick={setAnswer}>
+          <button type="submit">
             <span>Responder Aluno</span>
           </button>
-          <button cancel type="button" onClick={closePopup}>
+          <button cancel="true" type="button" onClick={modal}>
             <span>Cancelar</span>
           </button>
-        </Wrapper>
+        </FormPopUp>
       </Content>
     </Container>
   );
 }
+
+PopUp.propTypes = {
+  modal: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  question: PropTypes.string.isRequired,
+  student: PropTypes.number.isRequired,
+};
 
 export default PopUp;
