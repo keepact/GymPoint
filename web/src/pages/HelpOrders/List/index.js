@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 import api from '~/services/api';
 
@@ -30,12 +29,6 @@ export default function List() {
     OpenPopup();
   }
 
-  // async function respondStudent(id) {
-  //   const response = await api.post(`/students/help-orders/${id}/answer`);
-
-  //   setAnswer(response.data);
-  // }
-
   useEffect(() => {
     loadHelpOrders();
   }, []);
@@ -58,17 +51,17 @@ export default function List() {
               </button>
             </div>
           ))}
-          {showPopUp ? (
-            <PopUp
-              title="Pergunta do Aluno"
-              label="Sua Resposta aqui"
-              closePopup={OpenPopup}
-              setAnswer
-              question={selectedQuestion.question}
-            />
-          ) : null}
         </Wrapper>
       </Content>
+      {showPopUp ? (
+        <PopUp
+          title="Pergunta do Aluno"
+          label="Sua Resposta aqui"
+          modal={OpenPopup}
+          student={selectedQuestion.student_id}
+          question={selectedQuestion.question}
+        />
+      ) : null}
     </Container>
   );
 }
