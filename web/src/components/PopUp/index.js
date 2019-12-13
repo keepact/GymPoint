@@ -27,7 +27,7 @@ function PopUp({ title, modal, label, question, student }) {
           <TextArea
             multiline
             name="answer"
-            placeholder="Sua resposta aqui"
+            placeholder="..."
             onChange={e => e.target.value}
           />
           <button type="submit">
