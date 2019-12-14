@@ -79,45 +79,6 @@ export const TitleWrapper = styled.div`
     border: solid 1px #dddddd;
     background-color: #ffffff;
     margin-left: 10px;
-
-    &::placeholder {
-      padding-left: 30px;
-    }
-  }
-`;
-
-export const PageActions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  margin: 30px auto 0;
-
-  span {
-    font-weight: bold;
-    font-size: 18px;
-  }
-
-  button {
-    background: #ee4d64;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    transition: opacity 0.25s ease-out;
-    border-radius: 4px;
-    outline: 0;
-    border: 0;
-    padding: 8px;
-
-    &[disabled] {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-    &[disabled]:hover {
-      opacity: 0.35;
-    }
-    &:hover {
-      opacity: 0.7;
-    }
+    padding: 20px;
   }
 `;
