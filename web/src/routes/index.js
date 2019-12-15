@@ -18,7 +18,6 @@ import StudentsCreate from '../pages/Students/Create';
 import StudentsEdit from '../pages/Students/Edit';
 import StudentsList from '../pages/Students/List';
 
-import HelpOrdersAnswer from '../pages/HelpOrders/Answer';
 import HelpOrdersList from '../pages/HelpOrders/List';
 
 export default function Routes() {
@@ -44,7 +43,6 @@ export default function Routes() {
       <Route path="/students/:id" component={StudentsEdit} isPrivate />
       <Route path="/students" component={StudentsList} isPrivate />
 
-      <Route path="/help-orders/:id" component={HelpOrdersAnswer} isPrivate />
       <Route path="/help-orders" component={HelpOrdersList} isPrivate />
 
       <Route path="/" component={() => <h1>404</h1>} />
