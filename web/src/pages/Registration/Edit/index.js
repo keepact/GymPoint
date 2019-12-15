@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { StudentSelector } from '~/components/AsyncSelect/styles';
 import { PlanSelector } from '~/components/Select/styles';
+import DatePicker from '~/components/DatePicker';
 
 import api from '~/services/api';
 
@@ -66,22 +67,32 @@ function Edit({ match }) {
     });
   };
 
-  // function handleDate(newDate) {
-  //   setRegistrations({
-  //     ...registrations,
-  //     start_date: newDate,
-  //     end_date: addMonths(newDate, registrations.plan.duration),
-  //   });
-  // }
-
   function handlePlan(newPlan) {
     setRegistrations({
       ...registrations,
       plan: newPlan,
       end_date: registrations.start_date
         ? addMonths(registrations.start_date, newPlan.duration)
-        : '',
+        : null,
       price: newPlan.price * newPlan.duration,
+    });
+  }
+
+  function handleDate(newDate) {
+    const planMap = plans.filter(p => p.id === registrations.plan_id);
+
+    setRegistrations({
+      ...registrations,
+      initialPlan: planMap[0],
+      start_date: newDate,
+      end_date: newDate
+        ? addMonths(
+            newDate,
+            registrations.plan.title === planMap[0].title
+              ? planMap[0].duration
+              : registrations.plan.duration
+          )
+        : null,
     });
   }
 
@@ -104,12 +115,12 @@ function Edit({ match }) {
               <PlanSelector name="plan" options={plans} onChange={handlePlan} />
             </div>
             <div>
-              <label htmlFor="">Data de ínicio</label>
-              <input type="date" />
+              <label>Data de ínicio</label>
+              <DatePicker name="start_date" onChange={handleDate} />
             </div>
             <div>
-              <label htmlFor="">Data de término</label>
-              <input className="gray" type="text" readOnly />
+              <label>Data de término</label>
+              <DatePicker className="gray" name="end_date" disabled />
             </div>
             <div>
               <label htmlFor="">Valor Final</label>

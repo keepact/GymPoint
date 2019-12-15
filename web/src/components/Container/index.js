@@ -154,7 +154,7 @@ export const NumberInputs = styled.div`
     text-transform: lowercase;
   }
 
-  input[class='gray'] {
+  .gray {
     background: #f5f5f5;
   }
 `;
