@@ -8,6 +8,7 @@ import { Container, Content, TitleWrapper } from '~/components/Container';
 import { Table } from './styles';
 
 export default function List() {
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState([]);
 
