@@ -9,9 +9,8 @@ import {
   Content,
   TitleWrapper,
   Table,
+  PageActions,
 } from '~/components/Container';
-
-import { PageActions } from './styles';
 
 export default function List() {
   const [loading, setLoading] = useState(true);
@@ -61,7 +60,6 @@ export default function List() {
     <Container large>
       <TitleWrapper>
         <h1>Gereciando Matrículas</h1>
-
         <div>
           <button type="button">Cadastrar</button>
         </div>
@@ -87,7 +85,7 @@ export default function List() {
                 <td>{registration.active ? 'Ativa' : 'Terminada'}</td>
                 <td>
                   <div>
-                    <Link to={`/students/${registrations.id}`}>editar</Link>
+                    <Link to={`/registration/${registration.id}`}>editar</Link>
                     <button type="button">apagar</button>
                   </div>
                 </td>

@@ -19,7 +19,7 @@ class StudentController {
           attributes: ['id', 'path', 'url'],
         },
       ],
-      where: query ? { name: { [Op.substring]: query } } : null,
+      where: query ? { name: { [Op.iLike]: `%${query}%` } } : {},
     });
 
     return res.json(students);

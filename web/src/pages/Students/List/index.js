@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 
 import api from '~/services/api';
 
-import { Container, Content } from '~/components/Container';
-import { Table, TitleWrapper, PageActions } from './styles';
+import { Container, Content, PageActions } from '~/components/Container';
+import { Table, TitleWrapper } from './styles';
 
 export default function List() {
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [page, setPage] = useState(1);

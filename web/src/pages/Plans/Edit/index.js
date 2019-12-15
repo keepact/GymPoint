@@ -3,7 +3,7 @@ import React from 'react';
 import {
   Content,
   ContainerForm,
-  Form,
+  MyForm,
   NumberInputs,
   TitleWrapper,
 } from '~/components/Container';
@@ -19,7 +19,7 @@ export default function Edit() {
         </div>
       </TitleWrapper>
       <Content>
-        <Form>
+        <MyForm>
           <label htmlFor="">Título do Plano</label>
           <input type="text" placeholder="John Doe" />
           <NumberInputs>
@@ -38,7 +38,7 @@ export default function Edit() {
               <input className="gray" type="text" readOnly />
             </div>
           </NumberInputs>
-        </Form>
+        </MyForm>
       </Content>
     </ContainerForm>
   );

@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import api from '~/services/api';
 
-import { Container, Content, TitleWrapper } from '~/components/Container';
+import {
+  Container,
+  Content,
+  TitleWrapper,
+  PageActions,
+} from '~/components/Container';
 import PopUp from '~/components/PopUp';
 
 import { Wrapper } from './styles';
@@ -10,27 +15,44 @@ import { Wrapper } from './styles';
 export default function List() {
   const [selectedQuestion, setSelectedQuestion] = useState();
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
   const [help, setHelp] = useState([]);
   const [showPopUp, setShowPopUp] = useState(false);
+
+  const helpQty = useMemo(() => help.length, [help]);
 
   async function loadHelpOrders() {
     const response = await api.get('students/help-orders/answers');
 
     setHelp(response.data);
+    setPage(page);
     setLoading(false);
   }
 
-  function OpenPopup() {
+  function openPopup() {
     setShowPopUp(!showPopUp);
   }
 
   function handleQuestion(question) {
     setSelectedQuestion(question);
-    OpenPopup();
+    openPopup();
+  }
+
+  function prevPage() {
+    if (page === 1) return;
+    const pageNumber = page - 1;
+    loadHelpOrders(pageNumber);
+  }
+
+  function nextPage() {
+    if (helpQty < 10) return;
+    const pageNumber = page + 1;
+    loadHelpOrders(pageNumber);
   }
 
   useEffect(() => {
     loadHelpOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -53,11 +75,20 @@ export default function List() {
           ))}
         </Wrapper>
       </Content>
+      <PageActions>
+        <button type="button" disabled={page < 2} onClick={prevPage}>
+          Anterior
+        </button>
+        <span>Página {page}</span>
+        <button type="button" disabled={helpQty < 10} onClick={nextPage}>
+          Próximo
+        </button>
+      </PageActions>
       {showPopUp ? (
         <PopUp
           title="Pergunta do Aluno"
           label="Sua Resposta aqui"
-          modal={OpenPopup}
+          modal={openPopup}
           student={selectedQuestion.student_id}
           question={selectedQuestion.question}
         />

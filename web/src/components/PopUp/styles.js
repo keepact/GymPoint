@@ -3,7 +3,7 @@ import { Form, Input } from '@rocketseat/unform';
 
 export const Container = styled.div`
   position: fixed;
-  height: 475px;
+  max-height: 475px;
   top: 0;
   left: 0;
   right: 0;
@@ -32,45 +32,44 @@ export const Content = styled.div`
   border-radius: 4px;
   background: white;
   width: 100%;
-  height: 100%;
+  height: max-content;
   margin-top: -10px;
   z-index: 3;
 `;
 
 export const FormPopUp = styled(Form)`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: column;
   justify-content: flex-start;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 24px;
 
   p {
     font-size: 16px;
+    color: #666;
     line-height: 1.63;
     padding: 0 14px;
   }
 
   span {
-    align-self: flex-start;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     margin-bottom: 10px;
-    padding: 5px 14px;
+    padding: 5px 10px;
     text-transform: uppercase;
   }
 
   label {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     margin-bottom: 10px;
-    align-self: flex-start;
     text-transform: uppercase;
     margin: 15px 0 0 0;
-    padding: 0 14px;
+    padding: 0 10px;
   }
 
   button:last-child {
@@ -78,6 +77,7 @@ export const FormPopUp = styled(Form)`
   }
 
   button {
+    align-self: center;
     min-width: 390px;
     min-height: 45px;
     border-radius: 4px;
@@ -95,10 +95,10 @@ export const FormPopUp = styled(Form)`
 export const TextArea = styled(Input).attrs({
   multiline: true,
 })`
-  align-self: left;
+  align-self: center;
   min-width: 390px;
   min-height: 127px;
   margin: 10px 0;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  border: solid 1px #ddd;
   padding: 10px;
 `;

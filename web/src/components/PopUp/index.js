@@ -25,7 +25,6 @@ function PopUp({ title, modal, label, question, student }) {
           <p>{question}</p>
           <label htmlFor="help">{label}</label>
           <TextArea
-            multiline
             name="answer"
             placeholder="..."
             onChange={e => e.target.value}

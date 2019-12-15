@@ -8,8 +8,8 @@ class HelpOrderController {
     const { id } = req.params;
     const supportOrder = await HelpOrder.findAll({
       where: { student_id: id },
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit: 10,
+      offset: (page - 1) * 10,
       include: [
         {
           model: Student,

@@ -8,27 +8,39 @@ import Plan from '../models/Plan';
 import RegistrationMail from '../jobs/RegistrationMail';
 import Queue from '../../lib/Queue';
 
+const include = [
+  {
+    model: Student,
+    as: 'student',
+    attributes: ['name'],
+  },
+  {
+    model: Plan,
+    as: 'plan',
+    attributes: ['title'],
+  },
+];
+
 class RegistrationController {
   async index(req, res) {
     const { page = 1 } = req.query;
 
-    const registration = await Registration.findAll({
+    const registrations = await Registration.findAll({
       order: ['start_date'],
       attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
-      limit: 20,
-      offset: (page - 1) * 20,
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['name'],
-        },
-        {
-          model: Plan,
-          as: 'plan',
-          attributes: ['title'],
-        },
-      ],
+      limit: 10,
+      offset: (page - 1) * 10,
+      include,
+    });
+
+    return res.json(registrations);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const registration = await Registration.findByPk(id, {
+      include,
     });
 
     return res.json(registration);
@@ -78,18 +90,7 @@ class RegistrationController {
      * Notify registration student
      */
     const registrationComplete = await Registration.findByPk(registration.id, {
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['name', 'email'],
-        },
-        {
-          model: Plan,
-          as: 'plan',
-          attributes: ['title'],
-        },
-      ],
+      include,
     });
 
     await Queue.add(RegistrationMail.key, {
