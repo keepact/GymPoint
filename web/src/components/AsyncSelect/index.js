@@ -24,10 +24,6 @@ export default function MyAsyncSelector({
     });
   }, [ref.current, fieldName]); // eslint-disable-line
 
-  // function handleChange(selectedValue) {
-  //   setValue(selectedValue);
-  // }
-
   return (
     <>
       <AsyncSelect
@@ -51,4 +47,5 @@ export default function MyAsyncSelector({
 MyAsyncSelector.propTypes = {
   name: PropTypes.string.isRequired,
   loadOptions: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
 };

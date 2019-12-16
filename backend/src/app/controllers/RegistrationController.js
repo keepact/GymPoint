@@ -12,12 +12,12 @@ const include = [
   {
     model: Student,
     as: 'student',
-    attributes: ['name'],
+    attributes: ['id', 'name'],
   },
   {
     model: Plan,
     as: 'plan',
-    attributes: ['title'],
+    attributes: ['id', 'title'],
   },
 ];
 
@@ -102,9 +102,9 @@ class RegistrationController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      student_id: Yup.number().required(),
-      plan_id: Yup.number().required(),
-      start_date: Yup.date().required(),
+      student_id: Yup.number().positive(),
+      plan_id: Yup.number().positive(),
+      start_date: Yup.date(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -114,7 +114,9 @@ class RegistrationController {
     const { id } = req.params;
     const { student_id, plan_id, start_date } = req.body;
 
-    const registration = await Registration.findByPk(id);
+    const registration = await Registration.findByPk(id, {
+      include,
+    });
     const plan = await Plan.findByPk(plan_id);
 
     if (!registration) {
