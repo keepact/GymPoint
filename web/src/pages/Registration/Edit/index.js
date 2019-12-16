@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { parseISO, addMonths } from 'date-fns';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 import { formatPrice } from '~/utils';
+
+import history from '~/services/history';
 
 import { StudentSelector } from '~/components/AsyncSelect/styles';
 import { PlanSelector } from '~/components/Select/styles';
@@ -17,6 +20,16 @@ import {
   NumberInputs,
   TitleWrapper,
 } from '~/components/Container';
+
+const fieldRequired = 'Esse campo é obrigatório';
+
+const schema = Yup.object().shape({
+  student: Yup.mixed().required(fieldRequired),
+  plan: Yup.mixed().required(fieldRequired),
+  start_date: Yup.date()
+    .typeError(fieldRequired)
+    .required(fieldRequired),
+});
 
 function Edit({ match }) {
   // eslint-disable-next-line no-unused-vars
@@ -105,18 +118,47 @@ function Edit({ match }) {
     });
   }
 
-  // eslint-disable-next-line consistent-return
   async function handleSearch(selectedValue) {
     try {
       const newStudent = loadPromises();
       const newRegistration = await newStudent;
 
-      const planMap = newRegistration.data.filter(
+      const currentRegistration = newRegistration.data.filter(
         r => r.student.name === selectedValue.name
       );
-      setSearch(planMap[0].id);
+      setSearch(currentRegistration[0].id);
     } catch (err) {
       toast.error('Estudante sem matrícula');
+    }
+  }
+
+  function dataFormat(data) {
+    data = {
+      ...data,
+      student_id: data.student.id,
+      plan_id: data.plan.id,
+    };
+    delete data.student;
+    delete data.plan;
+    delete data.price;
+    delete data.end_date;
+
+    return data;
+  }
+
+  async function handleSubmit(data) {
+    data = dataFormat(data);
+
+    try {
+      await api.put(`registrations/${registrations.id}`, data);
+
+      toast.success('Cadastro alterado');
+      history.push('/registration');
+    } catch (err) {
+      toast.error(
+        'Falha na requisição. Verifique seus dados e tente novamente.'
+      );
+      console.log(err);
     }
   }
 
@@ -125,12 +167,21 @@ function Edit({ match }) {
       <TitleWrapper>
         <h1>Edição de Matrícula</h1>
         <div>
-          <button type="button">Voltar</button>
-          <button type="button">Salvar</button>
+          <button type="button" onClick={() => history.push('/registration')}>
+            Voltar
+          </button>
+          <button form="Form" type="submit">
+            Salvar
+          </button>
         </div>
       </TitleWrapper>
       <Content>
-        <MyForm initialData={registrations}>
+        <MyForm
+          id="Form"
+          schema={schema}
+          initialData={registrations}
+          onSubmit={handleSubmit}
+        >
           <label htmlFor="">Aluno</label>
           <StudentSelector
             name="student"
@@ -151,7 +202,7 @@ function Edit({ match }) {
               <DatePicker className="gray" name="end_date" disabled />
             </div>
             <div>
-              <label htmlFor="">Valor Final</label>
+              <label>Valor Final</label>
               <input
                 className="gray"
                 type="text"

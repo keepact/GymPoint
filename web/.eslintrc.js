@@ -38,7 +38,7 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-underscore-dangle': 'off',
     'camelcase': 'off',
-    'no-console': ['error', { allow: ['tron'] }],
+    'no-console': ['error', { allow: ['tron', 'log'] }],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn'
   },

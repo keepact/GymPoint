@@ -42,6 +42,7 @@ function DatePicker({ name, ...rest }) {
         name={fieldName}
         selected={selected}
         onChange={date => setSelected(date)}
+        dateFormat="dd/MM/yyyy"
         ref={ref}
         customInput={
           <MaskedTextInput
