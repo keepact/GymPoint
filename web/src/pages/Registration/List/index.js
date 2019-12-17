@@ -12,7 +12,8 @@ import {
   PageActions,
 } from '~/components/Container';
 
-export default function List() {
+function List() {
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [registrations, setRegistrations] = useState([]);
@@ -110,3 +111,5 @@ export default function List() {
     </Container>
   );
 }
+
+export default List;
