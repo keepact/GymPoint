@@ -132,25 +132,13 @@ function Edit({ match }) {
     }
   }
 
-  function dataFormat(data) {
-    data = {
-      ...data,
-      student_id: data.student.id,
-      plan_id: data.plan.id,
-    };
-    delete data.student;
-    delete data.plan;
-    delete data.price;
-    delete data.end_date;
-
-    return data;
-  }
-
   async function handleSubmit(data) {
-    data = dataFormat(data);
-
     try {
-      await api.put(`registrations/${registrations.id}`, data);
+      await api.put(`registrations/${registrations.id}`, {
+        student_id: data.student.id,
+        plan_id: data.plan.id,
+        start_date: data.start_date,
+      });
 
       toast.success('Cadastro alterado');
       history.push('/registration');
