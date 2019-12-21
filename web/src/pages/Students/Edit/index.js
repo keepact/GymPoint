@@ -23,8 +23,8 @@ function Edit({ match }) {
   const [student, setStudent] = useState('');
 
   function parseDecimal(numberVal, type) {
-    if (numberVal < 100 && type === 'weight') {
-      return ((numberVal / 100) * 100).toFixed(2);
+    if (numberVal < 1000 && type === 'weight') {
+      return numberVal / 10;
     }
     if (numberVal < 100 && type === 'height') {
       return (numberVal / 10).toFixed(2);

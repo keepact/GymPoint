@@ -56,7 +56,7 @@ export default function List() {
                 <td>{plan.priceFormatted}</td>
                 <td>
                   <div>
-                    <Link to={`/students/${plan.id}`}>editar</Link>
+                    <Link to={`/plans/${plan.id}`}>editar</Link>
                     <button type="button">apagar</button>
                   </div>
                 </td>
