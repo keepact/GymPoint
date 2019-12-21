@@ -3,6 +3,7 @@ import { parseISO, addMonths } from 'date-fns';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
 import { formatPrice } from '~/utils';
 
 import history from '~/services/history';
@@ -155,9 +156,7 @@ function Edit({ match }) {
       <TitleWrapper>
         <h1>Edição de Matrícula</h1>
         <div>
-          <button type="button" onClick={() => history.push('/registration')}>
-            Voltar
-          </button>
+          <Link to="/registrations">Voltar</Link>
           <button form="Form" type="submit">
             Salvar
           </button>
