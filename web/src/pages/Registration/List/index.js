@@ -86,7 +86,7 @@ function List() {
                 <td>{registration.active ? 'Ativa' : 'Terminada'}</td>
                 <td>
                   <div>
-                    <Link to={`/registration/${registration.id}`}>editar</Link>
+                    <Link to={`/registrations/${registration.id}`}>editar</Link>
                     <button type="button">apagar</button>
                   </div>
                 </td>
