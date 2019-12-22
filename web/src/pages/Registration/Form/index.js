@@ -34,7 +34,7 @@ const schema = Yup.object().shape({
     .required(fieldRequired),
 });
 
-function Edit({ match }) {
+function RegistrationForm({ match }) {
   const { id } = match.params;
 
   // eslint-disable-next-line no-unused-vars
@@ -215,7 +215,7 @@ function Edit({ match }) {
   );
 }
 
-Edit.propTypes = {
+RegistrationForm.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
@@ -223,4 +223,4 @@ Edit.propTypes = {
   }).isRequired,
 };
 
-export default Edit;
+export default RegistrationForm;

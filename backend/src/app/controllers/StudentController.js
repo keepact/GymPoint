@@ -9,6 +9,7 @@ class StudentController {
     const { page = 1, q: query } = req.query;
 
     const students = await Student.findAll({
+      order: ['id'],
       limit: 10,
       offset: (page - 1) * 10,
       attributes: ['id', 'name', 'email', 'age', 'height', 'weight'],

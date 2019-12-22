@@ -26,7 +26,7 @@ const schema = Yup.object().shape({
   price: Yup.number().required(fieldRequired),
 });
 
-function Edit({ match }) {
+function PlansForm({ match, history }) {
   const { id } = match.params;
 
   const [plan, setPlan] = useState('');
@@ -63,6 +63,7 @@ function Edit({ match }) {
         await api.post('/plans', data);
       }
       toast.success('Plano editado com sucesso');
+      history.push('/plans');
     } catch (err) {
       toast.error('Falha na requisição, tente novamente');
       console.log(err);
@@ -142,12 +143,15 @@ function Edit({ match }) {
   );
 }
 
-Edit.propTypes = {
+PlansForm.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
     }),
   }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
-export default Edit;
+export default PlansForm;

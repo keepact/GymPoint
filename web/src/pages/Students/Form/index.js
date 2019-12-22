@@ -17,7 +17,7 @@ import {
   TitleWrapper,
 } from '~/components/Container';
 
-function Edit({ match, history }) {
+function StudentForm({ match, history }) {
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [student, setStudent] = useState('');
@@ -25,11 +25,14 @@ function Edit({ match, history }) {
   const { id } = match.params;
 
   function parseDecimal(numberVal, type) {
-    if (numberVal < 100 && type === 'weight') {
+    if (numberVal < 1000 && type === 'weight') {
       return numberVal;
     }
-    if (numberVal < 1000 && type === 'weight') {
-      return numberVal / 10;
+    if (numberVal < 10000 && type === 'weight') {
+      return numberVal / 100;
+    }
+    if (numberVal < 1000000 && type === 'weight') {
+      return numberVal / 1000;
     }
     if (numberVal < 100 && type === 'height') {
       return (numberVal / 10).toFixed(2);
@@ -40,7 +43,6 @@ function Edit({ match, history }) {
   async function loadData() {
     try {
       const response = await api.get(`/students/${id}`);
-
       setStudent({
         ...response.data,
         weight_formatted: parseDecimal(response.data.weight, 'weight'),
@@ -70,7 +72,7 @@ function Edit({ match, history }) {
 
     try {
       if (id) {
-        await api.put(`/students/${match.params.id}`, {
+        await api.put(`/students/${id}`, {
           name: data.name,
           email: data.email,
           age: data.age,
@@ -125,17 +127,15 @@ function Edit({ match, history }) {
                   Peso <span>(em kg)</span>
                 </label>
                 <InputNumber
-                  decimalScale={2}
-                  fixedDecimalScale
+                  decimalScale="3"
                   name="weight_formatted"
-                  placeholder="75.50"
+                  placeholder="75.500"
                 />
               </div>
               <div>
                 <label htmlFor="height_formatted">Altura</label>
                 <InputNumber
-                  thousandSeparator
-                  decimalScale={2}
+                  decimalScale="2"
                   placeholder="1.70"
                   name="height_formatted"
                 />
@@ -148,7 +148,7 @@ function Edit({ match, history }) {
   );
 }
 
-Edit.propTypes = {
+StudentForm.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
@@ -159,4 +159,4 @@ Edit.propTypes = {
   }).isRequired,
 };
 
-export default Edit;
+export default StudentForm;
