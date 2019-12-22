@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
@@ -16,16 +17,21 @@ function List({ history }) {
 
   // eslint-disable-next-line no-shadow
   async function loadStudents(page = 1) {
-    const response = await api.get('/students', {
-      params: {
-        page,
-        q: filter,
-      },
-    });
+    try {
+      const response = await api.get('/students', {
+        params: {
+          page,
+          q: filter,
+        },
+      });
 
-    setStudents(response.data);
-    setPage(page);
-    setLoading(false);
+      setStudents(response.data);
+      setPage(page);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      toast.error('Erro na requisição');
+    }
   }
 
   useEffect(() => {
@@ -49,6 +55,14 @@ function List({ history }) {
 
   function handleSearch(e) {
     setFilter(e.target.value);
+  }
+
+  async function handleDelete(studentId) {
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
+      await api.delete(`students/${studentId}`);
+      loadStudents();
+    }
   }
 
   return (
@@ -100,7 +114,12 @@ function List({ history }) {
                 <td>
                   <div>
                     <Link to={`/students/${student.id}`}>editar</Link>
-                    <button type="button">apagar</button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(student.id)}
+                    >
+                      apagar
+                    </button>
                   </div>
                 </td>
               </tr>

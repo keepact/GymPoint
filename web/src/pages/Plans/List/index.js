@@ -30,6 +30,14 @@ function List({ history }) {
     loadPlans();
   }, []);
 
+  async function handleDelete(planId) {
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Você tem certeza que deseja apagar esse plano?')) {
+      await api.delete(`plans/${planId}`);
+      loadPlans();
+    }
+  }
+
   return (
     <Container>
       <TitleWrapper>
@@ -61,7 +69,9 @@ function List({ history }) {
                 <td>
                   <div>
                     <Link to={`/plans/${plan.id}`}>editar</Link>
-                    <button type="button">apagar</button>
+                    <button type="button" onClick={() => handleDelete(plan.id)}>
+                      apagar
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -75,7 +85,7 @@ function List({ history }) {
 
 List.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.string,
+    push: PropTypes.func,
   }).isRequired,
 };
 

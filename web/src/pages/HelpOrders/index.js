@@ -14,12 +14,11 @@ import { Wrapper } from './styles';
 
 export default function List() {
   const [selectedQuestion, setSelectedQuestion] = useState();
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [help, setHelp] = useState([]);
   const [showPopUp, setShowPopUp] = useState(false);
-
-  const helpQty = useMemo(() => help.length, [help]);
 
   async function loadHelpOrders() {
     const response = await api.get('students/help-orders/answers');
@@ -37,6 +36,13 @@ export default function List() {
     setSelectedQuestion(question);
     openPopup();
   }
+
+  const currentHelpOrders = useMemo(
+    () => help.filter(r => r.student !== null),
+    [help]
+  );
+
+  const helpQty = useMemo(() => currentHelpOrders.length, [currentHelpOrders]);
 
   function prevPage() {
     if (page === 1) return;
@@ -65,7 +71,7 @@ export default function List() {
           <header>
             <strong>Aluno</strong>
           </header>
-          {help.map(question => (
+          {currentHelpOrders.map(question => (
             <div key={question.id}>
               <span>{question.student.name}</span>
               <button type="button" onClick={() => handleQuestion(question)}>

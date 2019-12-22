@@ -27,7 +27,9 @@ export const Wrapper = styled.div`
     font-size: 16px;
   }
 
-  a {
+  button {
     text-decoration: none;
+    border: none;
+    background: unset;
   }
 `;

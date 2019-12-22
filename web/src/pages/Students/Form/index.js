@@ -17,7 +17,7 @@ import {
   TitleWrapper,
 } from '~/components/Container';
 
-function Edit({ match }) {
+function Edit({ match, history }) {
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [student, setStudent] = useState('');
@@ -89,6 +89,7 @@ function Edit({ match }) {
       toast.success(
         id ? 'Cadastro atualizado com sucesso' : 'Aluno cadastrado com sucesso'
       );
+      history.push('/students');
     } catch (err) {
       console.log(err);
       toast.error('Erro na requisição');
@@ -152,6 +153,9 @@ Edit.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string,
     }),
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
   }).isRequired,
 };
 
