@@ -6,16 +6,13 @@ import SignIn from '../pages/SignIn';
 
 import Profile from '../pages/Profile';
 
-import PlansCreate from '../pages/Plans/Create';
-import PlansEdit from '../pages/Plans/Edit';
+import PlansForm from '../pages/Plans/Form';
 import PlansList from '../pages/Plans/List';
 
-import RegistrationCreate from '../pages/Registration/Create';
-import RegistrationEdit from '../pages/Registration/Edit';
+import RegistrationForm from '../pages/Registration/Form';
 import RegistrationList from '../pages/Registration/List';
 
-import StudentsCreate from '../pages/Students/Create';
-import StudentsEdit from '../pages/Students/Edit';
+import StudentsForm from '../pages/Students/Form';
 import StudentsList from '../pages/Students/List';
 
 import HelpOrdersList from '../pages/HelpOrders/List';
@@ -27,20 +24,20 @@ export default function Routes() {
 
       <Route path="/profile" component={Profile} isPrivate />
 
-      <Route path="/plans/create" component={PlansCreate} isPrivate />
-      <Route path="/plans/:id" component={PlansEdit} isPrivate />
+      <Route path="/plans/create" component={PlansForm} isPrivate />
+      <Route path="/plans/:id" component={PlansForm} isPrivate />
       <Route path="/plans" component={PlansList} isPrivate />
 
       <Route
-        path="/registration/create"
-        component={RegistrationCreate}
+        path="/registrations/create"
+        component={RegistrationForm}
         isPrivate
       />
-      <Route path="/registrations/:id" component={RegistrationEdit} isPrivate />
+      <Route path="/registrations/:id" component={RegistrationForm} isPrivate />
       <Route path="/registrations" component={RegistrationList} isPrivate />
 
-      <Route path="/students/create" component={StudentsCreate} isPrivate />
-      <Route path="/students/:id" component={StudentsEdit} isPrivate />
+      <Route path="/students/create" component={StudentsForm} isPrivate />
+      <Route path="/students/:id" component={StudentsForm} isPrivate />
       <Route path="/students" component={StudentsList} isPrivate />
 
       <Route path="/help-orders" component={HelpOrdersList} isPrivate />

@@ -7,7 +7,7 @@ import { useField } from '@rocketseat/unform';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-function DatePicker({ name, ...rest }) {
+function DatePicker({ name, placeholder, disabled, ...rest }) {
   const ref = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
   const [selected, setSelected] = useState(defaultValue);
@@ -43,6 +43,8 @@ function DatePicker({ name, ...rest }) {
         selected={selected}
         onChange={date => setSelected(date)}
         dateFormat="dd/MM/yyyy"
+        placeholderText={placeholder}
+        disabled={!!disabled}
         ref={ref}
         customInput={
           <MaskedTextInput
@@ -57,8 +59,15 @@ function DatePicker({ name, ...rest }) {
   );
 }
 
+DatePicker.defaultProps = {
+  disabled: false,
+  placeholder: '',
+};
+
 DatePicker.propTypes = {
   name: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 export default DatePicker;

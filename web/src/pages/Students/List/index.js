@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import api from '~/services/api';
@@ -6,7 +7,7 @@ import api from '~/services/api';
 import { Container, Content, PageActions } from '~/components/Container';
 import { Table, TitleWrapper } from './styles';
 
-export default function List() {
+function List({ history }) {
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
@@ -56,7 +57,12 @@ export default function List() {
         <h1>Gereciando alunos</h1>
 
         <div>
-          <button type="button">Cadastrar</button>
+          <button
+            type="button"
+            onClick={() => history.push('/students/create')}
+          >
+            Cadastrar
+          </button>
           <input
             type="text"
             placeholder="Buscar aluno"
@@ -114,3 +120,11 @@ export default function List() {
     </Container>
   );
 }
+
+List.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
+
+export default List;

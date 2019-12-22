@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+
 import { Link } from 'react-router-dom';
 import { formatPrice } from '~/utils';
 
@@ -7,7 +9,7 @@ import api from '~/services/api';
 import { Container, Content, TitleWrapper } from '~/components/Container';
 import { Table } from './styles';
 
-export default function List() {
+function List({ history }) {
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState([]);
@@ -34,7 +36,9 @@ export default function List() {
         <h1>Gereciando Planos</h1>
 
         <div>
-          <button type="button">Cadastrar</button>
+          <button type="button" onClick={() => history.push('plans/create')}>
+            Cadastrar
+          </button>
         </div>
       </TitleWrapper>
       <Content>
@@ -68,3 +72,11 @@ export default function List() {
     </Container>
   );
 }
+
+List.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.string,
+  }).isRequired,
+};
+
+export default List;
