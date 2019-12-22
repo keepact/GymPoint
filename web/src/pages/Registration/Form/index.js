@@ -181,7 +181,6 @@ function Edit({ match }) {
             </div>
             <div>
               <label htmlFor="start_date">Data de ínicio</label>
-              {console.log(registrations)}
               <DatePicker
                 name="start_date"
                 onChange={handleDate}

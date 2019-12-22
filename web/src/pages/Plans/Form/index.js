@@ -29,19 +29,23 @@ const schema = Yup.object().shape({
 function Edit({ match }) {
   const { id } = match.params;
 
-  const [plans, setPlans] = useState('');
+  const [plan, setPlan] = useState('');
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
 
   async function loadData() {
-    const response = await api.get(`/plans/${id}`);
-    console.log(response.data);
+    try {
+      const response = await api.get(`/plans/${id}`);
 
-    setPlans({
-      ...response.data,
-      finalPrice: response.data.price * response.data.duration,
-    });
-    setLoading(false);
+      setPlan({
+        ...response.data,
+        finalPrice: response.data.price * response.data.duration,
+      });
+      setLoading(false);
+    } catch (err) {
+      toast.error('Falha na requisição, tente novamente em alguns instantes');
+      console.log(err);
+    }
   }
 
   useEffect(() => {
@@ -54,17 +58,9 @@ function Edit({ match }) {
   async function handleSubmit(data) {
     try {
       if (id) {
-        await api.put(`/plans/${plans.id}`, {
-          title: data.title,
-          duration: data.duration,
-          price: data.price,
-        });
+        await api.put(`/plans/${plan.id}`, data);
       } else {
-        await api.post('/plans', {
-          title: data.title,
-          duration: data.duration,
-          price: data.price,
-        });
+        await api.post('/plans', data);
       }
       toast.success('Plano editado com sucesso');
     } catch (err) {
@@ -73,12 +69,28 @@ function Edit({ match }) {
     }
   }
 
+  function handlePrice(price) {
+    setPlan({
+      ...plan,
+      price,
+      finalPrice: plan.duration * price,
+    });
+  }
+
+  function handleDuration(duration) {
+    setPlan({
+      ...plan,
+      duration,
+      finalPrice: plan.price * duration,
+    });
+  }
+
   return (
     <ContainerForm>
       <TitleWrapper>
         <h1>{id ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
         <div>
-          <Link to="/plans">Voltar</Link>
+          <Link to="/plan">Voltar</Link>
           <button form="Form" type="submit">
             Salvar
           </button>
@@ -88,7 +100,7 @@ function Edit({ match }) {
         <MyForm
           id="Form"
           schema={schema}
-          initialData={plans}
+          initialData={plan}
           onSubmit={handleSubmit}
         >
           <label htmlFor="title">Título do Plano</label>
@@ -98,11 +110,20 @@ function Edit({ match }) {
               <label htmlFor="duration">
                 Duração <span>(em meses)</span>
               </label>
-              <NumberInput name="duration" />
+              <Input
+                type="number"
+                name="duration"
+                onChange={e => handleDuration(e.target.value)}
+              />
             </div>
             <div>
               <label htmlFor="price">Preço Mensal</label>
-              <NumberInput name="price" decimalScale={2} prefix="R$ " />
+              <NumberInput
+                name="price"
+                onChange={handlePrice}
+                decimalScale={2}
+                prefix="R$ "
+              />
             </div>
             <div>
               <label htmlFor="finalPrice">Preço Total</label>

@@ -42,8 +42,13 @@ function List({ history }) {
     loadRegistrations();
   }, []);
 
-  const registrationsSize = useMemo(() => registrations.length, [
-    registrations,
+  const currentRegistrations = useMemo(
+    () => registrations.filter(r => r.student && r.plan !== null),
+    [registrations]
+  );
+
+  const registrationsQty = useMemo(() => currentRegistrations.length, [
+    currentRegistrations,
   ]);
 
   function prevPage() {
@@ -53,9 +58,17 @@ function List({ history }) {
   }
 
   function nextPage() {
-    if (registrationsSize < 10) return;
+    if (registrationsQty < 10) return;
     const pageNumber = page + 1;
     loadRegistrations(pageNumber);
+  }
+
+  async function handleDelete(registrationId) {
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Você tem certeza que deseja apagar essa matrícula?')) {
+      await api.delete(`registrations/${registrationId}`);
+      loadRegistrations();
+    }
   }
 
   return (
@@ -83,7 +96,7 @@ function List({ history }) {
             </tr>
           </thead>
           <tbody>
-            {registrations.map(registration => (
+            {currentRegistrations.map(registration => (
               <tr key={registration.id}>
                 <td>{registration.student.name}</td>
                 <td>{registration.plan.title}</td>
@@ -93,7 +106,12 @@ function List({ history }) {
                 <td>
                   <div>
                     <Link to={`/registrations/${registration.id}`}>editar</Link>
-                    <button type="button">apagar</button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(registration.id)}
+                    >
+                      apagar
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -108,7 +126,7 @@ function List({ history }) {
         <span>Página {page}</span>
         <button
           type="button"
-          disabled={registrationsSize < 10}
+          disabled={registrationsQty < 10}
           onClick={nextPage}
         >
           Próximo

@@ -15,7 +15,7 @@ import RegistrationList from '../pages/Registration/List';
 import StudentsForm from '../pages/Students/Form';
 import StudentsList from '../pages/Students/List';
 
-import HelpOrdersList from '../pages/HelpOrders/List';
+import HelpOrders from '../pages/HelpOrders';
 
 export default function Routes() {
   return (
@@ -40,7 +40,7 @@ export default function Routes() {
       <Route path="/students/:id" component={StudentsForm} isPrivate />
       <Route path="/students" component={StudentsList} isPrivate />
 
-      <Route path="/help-orders" component={HelpOrdersList} isPrivate />
+      <Route path="/help-orders" component={HelpOrders} isPrivate />
 
       <Route path="/" component={() => <h1>404</h1>} />
     </Switch>
