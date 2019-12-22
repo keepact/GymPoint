@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 import { useField } from '@rocketseat/unform';
 
-export default function MyAsyncSelector({
+export default function AsyncSelector({
   name,
   loadOptions,
-  onChange,
+  noOptionsMessage,
   ...rest
 }) {
   const ref = useRef();
@@ -24,6 +24,10 @@ export default function MyAsyncSelector({
     });
   }, [ref.current, fieldName]); // eslint-disable-line
 
+  function handleChange(selectedValue) {
+    setValue(selectedValue);
+  }
+
   return (
     <>
       <AsyncSelect
@@ -31,11 +35,16 @@ export default function MyAsyncSelector({
         loadOptions={loadOptions}
         value={value}
         ref={ref}
-        onChange={onChange}
+        onChange={handleChange}
         getOptionValue={option => option.id}
         getOptionLabel={option => option.name}
         className="react-asyncselect-container"
         classNamePrefix="react-asyncselect"
+        placeholder="Selecione um estudante..."
+        loadingMessage={() => 'Carregando...'}
+        noOptionsMessage={() =>
+          noOptionsMessage || 'Nenhum registro encontrado'
+        }
         {...rest}
       />
 
@@ -44,8 +53,12 @@ export default function MyAsyncSelector({
   );
 }
 
-MyAsyncSelector.propTypes = {
+AsyncSelector.defaultProps = {
+  noOptionsMessage: null,
+};
+
+AsyncSelector.propTypes = {
   name: PropTypes.string.isRequired,
   loadOptions: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
+  noOptionsMessage: PropTypes.string,
 };

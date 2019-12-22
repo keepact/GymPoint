@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
 
@@ -12,7 +13,7 @@ import {
   PageActions,
 } from '~/components/Container';
 
-function List() {
+function List({ history }) {
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -62,7 +63,12 @@ function List() {
       <TitleWrapper>
         <h1>Gereciando Matrículas</h1>
         <div>
-          <button type="button">Cadastrar</button>
+          <button
+            type="button"
+            onClick={() => history.push('registrations/create')}
+          >
+            Cadastrar
+          </button>
         </div>
       </TitleWrapper>
       <Content large>
@@ -111,5 +117,11 @@ function List() {
     </Container>
   );
 }
+
+List.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 export default List;

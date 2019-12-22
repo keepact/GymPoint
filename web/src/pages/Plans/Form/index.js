@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 
 import { Link } from 'react-router-dom';
 import { Input } from '@rocketseat/unform';
@@ -17,13 +18,23 @@ import {
   TitleWrapper,
 } from '~/components/Container';
 
+const fieldRequired = 'Esse campo é obrigatório';
+
+const schema = Yup.object().shape({
+  title: Yup.string().required(fieldRequired),
+  duration: Yup.number().required(fieldRequired),
+  price: Yup.number().required(fieldRequired),
+});
+
 function Edit({ match }) {
+  const { id } = match.params;
+
   const [plans, setPlans] = useState('');
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
 
   async function loadData() {
-    const response = await api.get(`/plans/${match.params.id}`);
+    const response = await api.get(`/plans/${id}`);
     console.log(response.data);
 
     setPlans({
@@ -34,18 +45,27 @@ function Edit({ match }) {
   }
 
   useEffect(() => {
-    loadData();
+    if (id) {
+      loadData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleSubmit(data) {
-    console.log(data.title, plans.id);
     try {
-      await api.put(`/plans/${plans.id}`, {
-        title: data.title,
-        duration: data.duration,
-        price: data.price,
-      });
+      if (id) {
+        await api.put(`/plans/${plans.id}`, {
+          title: data.title,
+          duration: data.duration,
+          price: data.price,
+        });
+      } else {
+        await api.post('/plans', {
+          title: data.title,
+          duration: data.duration,
+          price: data.price,
+        });
+      }
       toast.success('Plano editado com sucesso');
     } catch (err) {
       toast.error('Falha na requisição, tente novamente');
@@ -56,7 +76,7 @@ function Edit({ match }) {
   return (
     <ContainerForm>
       <TitleWrapper>
-        <h1>Edição de Plano</h1>
+        <h1>{id ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
         <div>
           <Link to="/plans">Voltar</Link>
           <button form="Form" type="submit">
@@ -65,7 +85,12 @@ function Edit({ match }) {
         </div>
       </TitleWrapper>
       <Content>
-        <MyForm id="Form" initialData={plans} onSubmit={handleSubmit}>
+        <MyForm
+          id="Form"
+          schema={schema}
+          initialData={plans}
+          onSubmit={handleSubmit}
+        >
           <label htmlFor="title">Título do Plano</label>
           <Input name="title" />
           <NumberInputs>
