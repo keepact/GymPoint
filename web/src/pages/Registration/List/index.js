@@ -88,8 +88,8 @@ function List({ history }) {
         <Table>
           <thead>
             <tr>
-              <th>Plano</th>
               <th>Aluno</th>
+              <th>Plano</th>
               <th>Ínicio</th>
               <th>Término</th>
               <th>Ativa</th>

@@ -23,7 +23,7 @@ function PopUp({ title, modal, label, question, student }) {
         <FormPopUp schema={schema} onSubmit={handleSubmit}>
           <span>{title}</span>
           <p>{question}</p>
-          <label htmlFor="help">{label}</label>
+          <label htmlFor="answer">{label}</label>
           <TextArea
             name="answer"
             placeholder="..."
