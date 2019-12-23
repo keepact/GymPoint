@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 
 import { Input } from '@rocketseat/unform';
@@ -17,6 +18,18 @@ import {
   TitleWrapper,
 } from '~/components/Container';
 
+const fieldRequired = 'Esse campo é obrigatório';
+
+const schema = Yup.object().shape({
+  name: Yup.string().required(fieldRequired),
+  email: Yup.string().required(fieldRequired),
+  age: Yup.number()
+    .typeError(fieldRequired)
+    .required(fieldRequired),
+  weight_formatted: Yup.number().required(fieldRequired),
+  height_formatted: Yup.number().required(fieldRequired),
+});
+
 function StudentForm({ match, history }) {
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
@@ -25,6 +38,9 @@ function StudentForm({ match, history }) {
   const { id } = match.params;
 
   function parseDecimal(numberVal, type) {
+    if (numberVal < 100 && type === 'height') {
+      return numberVal / 10;
+    }
     if (numberVal < 1000 && type === 'weight') {
       return numberVal;
     }
@@ -34,10 +50,7 @@ function StudentForm({ match, history }) {
     if (numberVal < 1000000 && type === 'weight') {
       return numberVal / 1000;
     }
-    if (numberVal < 100 && type === 'height') {
-      return (numberVal / 10).toFixed(2);
-    }
-    return (numberVal / 100).toFixed(2);
+    return numberVal / 100;
   }
 
   async function loadData() {
@@ -45,8 +58,8 @@ function StudentForm({ match, history }) {
       const response = await api.get(`/students/${id}`);
       setStudent({
         ...response.data,
-        weight_formatted: parseDecimal(response.data.weight, 'weight'),
         height_formatted: parseDecimal(response.data.height, 'height'),
+        weight_formatted: parseDecimal(response.data.weight, 'weight'),
       });
       setLoading(false);
     } catch (err) {
@@ -61,32 +74,28 @@ function StudentForm({ match, history }) {
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function decimalRegex(numberVal) {
-    return String(numberVal).replace(/[^0-9|-]/g, '');
+  function parseInteger(numberVal, type) {
+    if (type === 'height') {
+      return numberVal * 100;
+    }
+    return numberVal * 1000;
   }
 
   async function handleSubmit(data) {
-    const { weight_formatted, height_formatted } = data;
-    const weight = decimalRegex(weight_formatted);
-    const height = decimalRegex(height_formatted);
+    const formatedData = {
+      ...data,
+      name: data.name,
+      email: data.email,
+      age: data.age,
+      height: parseInteger(data.height_formatted, 'height'),
+      weight: parseInteger(data.weight_formatted),
+    };
 
     try {
       if (id) {
-        await api.put(`/students/${id}`, {
-          name: data.name,
-          email: data.email,
-          age: data.age,
-          weight,
-          height,
-        });
+        await api.put(`/students/${id}`, formatedData);
       } else {
-        await api.post('students', {
-          name: data.name,
-          email: data.email,
-          age: data.age,
-          weight,
-          height,
-        });
+        await api.post('students', formatedData);
       }
       toast.success(
         id ? 'Cadastro atualizado com sucesso' : 'Aluno cadastrado com sucesso'
@@ -110,7 +119,12 @@ function StudentForm({ match, history }) {
         </div>
       </TitleWrapper>
       <Content>
-        <MyForm id="Form" initialData={student} onSubmit={handleSubmit}>
+        <MyForm
+          id="Form"
+          schema={schema}
+          initialData={student}
+          onSubmit={handleSubmit}
+        >
           <>
             <label htmlFor="name">Nome Completo</label>
             <Input name="name" placeholder="John Doe" />
