@@ -1,36 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-
-import api from '~/services/api';
 
 import { Container, Content, TextArea, FormPopUp } from './styles';
 
-const schema = Yup.object().shape({
-  answer: Yup.string().required('Digite uma resposta.'),
-});
-
-function PopUp({ title, modal, label, question, student }) {
-  async function handleSubmit(data) {
-    await api.post(`/students/help-orders/${student}/answer`, data);
-
-    modal(false);
-  }
-
+function PopUp({
+  name,
+  title,
+  question,
+  label,
+  buttonLabel,
+  placeholder,
+  modal,
+  schema,
+  onSubmit,
+}) {
   return (
     <Container>
       <Content>
-        <FormPopUp schema={schema} onSubmit={handleSubmit}>
+        <FormPopUp schema={schema} onSubmit={onSubmit}>
           <span>{title}</span>
           <p>{question}</p>
-          <label htmlFor="answer">{label}</label>
+          <label htmlFor={name}>{label}</label>
           <TextArea
-            name="answer"
-            placeholder="..."
+            name={name}
+            placeholder={placeholder}
             onChange={e => e.target.value}
           />
           <button type="submit">
-            <span>Responder Aluno</span>
+            <span>{buttonLabel}</span>
           </button>
           <button cancel="true" type="button" onClick={modal}>
             <span>Cancelar</span>
@@ -41,12 +38,20 @@ function PopUp({ title, modal, label, question, student }) {
   );
 }
 
+PopUp.defaultProps = {
+  placeholder: '...',
+};
+
 PopUp.propTypes = {
-  modal: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
   question: PropTypes.string.isRequired,
-  student: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
+  buttonLabel: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  modal: PropTypes.func.isRequired,
+  schema: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default PopUp;

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
@@ -11,6 +13,10 @@ import {
 import PopUp from '~/components/PopUp';
 
 import { Wrapper } from './styles';
+
+const schema = Yup.object().shape({
+  answer: Yup.string().required('Digite uma resposta.'),
+});
 
 export default function List() {
   const [selectedQuestion, setSelectedQuestion] = useState();
@@ -56,6 +62,24 @@ export default function List() {
     loadHelpOrders(pageNumber);
   }
 
+  async function handleSubmit(data) {
+    try {
+      await api.post(
+        `/students/help-orders/${selectedQuestion.student_id}/answer`,
+        data
+      );
+      toast.success('Resposta enviada com sucesso');
+
+      openPopup();
+      loadHelpOrders();
+    } catch (err) {
+      console.log(err);
+      toast.error(
+        'Falha na requisição, por favor tente novamente em alguns minutos'
+      );
+    }
+  }
+
   useEffect(() => {
     loadHelpOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,11 +116,14 @@ export default function List() {
       </PageActions>
       {showPopUp ? (
         <PopUp
+          schema={schema}
+          name="answer"
           title="Pergunta do Aluno"
           label="Sua Resposta aqui"
+          buttonLabel="Resposta do Aluno"
           modal={openPopup}
-          student={selectedQuestion.student_id}
           question={selectedQuestion.question}
+          onSubmit={handleSubmit}
         />
       ) : null}
     </Container>
