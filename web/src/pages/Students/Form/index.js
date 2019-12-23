@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Input } from '@rocketseat/unform';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { parseDecimal, parseInteger } from '~/utils';
 
 import InputNumber from '~/components/NumberInput';
 
@@ -37,22 +38,6 @@ function StudentForm({ match, history }) {
 
   const { id } = match.params;
 
-  function parseDecimal(numberVal, type) {
-    if (numberVal < 100 && type === 'height') {
-      return numberVal / 10;
-    }
-    if (numberVal < 1000 && type === 'weight') {
-      return numberVal;
-    }
-    if (numberVal < 10000 && type === 'weight') {
-      return numberVal / 100;
-    }
-    if (numberVal < 1000000 && type === 'weight') {
-      return numberVal / 1000;
-    }
-    return numberVal / 100;
-  }
-
   async function loadData() {
     try {
       const response = await api.get(`/students/${id}`);
@@ -73,13 +58,6 @@ function StudentForm({ match, history }) {
       loadData();
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function parseInteger(numberVal, type) {
-    if (type === 'height') {
-      return numberVal * 100;
-    }
-    return numberVal * 1000;
-  }
 
   async function handleSubmit(data) {
     const formatedData = {

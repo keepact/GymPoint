@@ -91,7 +91,7 @@ function PlansForm({ match, history }) {
       <TitleWrapper>
         <h1>{id ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
         <div>
-          <Link to="/plan">Voltar</Link>
+          <Link to="/plans">Voltar</Link>
           <button form="Form" type="submit">
             Salvar
           </button>

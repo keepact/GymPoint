@@ -18,7 +18,7 @@ const schema = Yup.object().shape({
   answer: Yup.string().required('Digite uma resposta.'),
 });
 
-export default function List() {
+function HelpOrders() {
   const [selectedQuestion, setSelectedQuestion] = useState();
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
@@ -33,6 +33,11 @@ export default function List() {
     setPage(page);
     setLoading(false);
   }
+
+  useEffect(() => {
+    loadHelpOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function openPopup() {
     setShowPopUp(!showPopUp);
@@ -80,11 +85,6 @@ export default function List() {
     }
   }
 
-  useEffect(() => {
-    loadHelpOrders();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <Container small>
       <TitleWrapper>
@@ -129,3 +129,5 @@ export default function List() {
     </Container>
   );
 }
+
+export default HelpOrders;
