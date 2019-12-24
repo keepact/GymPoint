@@ -23,8 +23,8 @@ export function parseInteger(numberVal, type) {
   function decimalRegex(number) {
     return String(number).replace(/[^0-9|-]/g, '');
   }
-  if (numberVal <= 1 < 2 && type === 'height') {
-    return numberVal * 100;
+  if (numberVal < 2 && type === 'height') {
+    return (numberVal * 1000) / 10;
   }
   if (numberVal >= 2 && type === 'height') {
     return decimalRegex((numberVal * 10).toFixed(1));

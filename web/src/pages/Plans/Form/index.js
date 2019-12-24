@@ -7,6 +7,9 @@ import { Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 
 import NumberInput from '~/components/NumberInput';
+import Animation from '~/components/Animation';
+
+import loadingAnimation from '~/assets/animations/loader.json';
 
 import api from '~/services/api';
 
@@ -16,7 +19,7 @@ import {
   MyForm,
   NumberInputs,
   TitleWrapper,
-} from '~/components/Container';
+} from '~/styles/shared';
 
 const fieldRequired = 'Esse campo é obrigatório';
 
@@ -30,7 +33,6 @@ function PlansForm({ match, history }) {
   const { id } = match.params;
 
   const [plan, setPlan] = useState('');
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
 
   async function loadData() {
@@ -88,57 +90,63 @@ function PlansForm({ match, history }) {
 
   return (
     <ContainerForm>
-      <TitleWrapper>
-        <h1>{id ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
-        <div>
-          <Link to="/plans">Voltar</Link>
-          <button form="Form" type="submit">
-            Salvar
-          </button>
-        </div>
-      </TitleWrapper>
-      <Content>
-        <MyForm
-          id="Form"
-          schema={schema}
-          initialData={plan}
-          onSubmit={handleSubmit}
-        >
-          <label htmlFor="title">Título do Plano</label>
-          <Input name="title" />
-          <NumberInputs>
+      {loading ? (
+        <Animation animation={loadingAnimation} loop size />
+      ) : (
+        <>
+          <TitleWrapper>
+            <h1>{id ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
             <div>
-              <label htmlFor="duration">
-                Duração <span>(em meses)</span>
-              </label>
-              <Input
-                type="number"
-                name="duration"
-                onChange={e => handleDuration(e.target.value)}
-              />
+              <Link to="/plans">Voltar</Link>
+              <button form="Form" type="submit">
+                Salvar
+              </button>
             </div>
-            <div>
-              <label htmlFor="price">Preço Mensal</label>
-              <NumberInput
-                name="price"
-                onChange={handlePrice}
-                decimalScale={2}
-                prefix="R$ "
-              />
-            </div>
-            <div>
-              <label htmlFor="finalPrice">Preço Total</label>
-              <NumberInput
-                name="finalPrice"
-                className="gray"
-                decimalScale={2}
-                prefix="R$ "
-                disabled
-              />
-            </div>
-          </NumberInputs>
-        </MyForm>
-      </Content>
+          </TitleWrapper>
+          <Content>
+            <MyForm
+              id="Form"
+              schema={schema}
+              initialData={plan}
+              onSubmit={handleSubmit}
+            >
+              <label htmlFor="title">Título do Plano</label>
+              <Input name="title" />
+              <NumberInputs>
+                <div>
+                  <label htmlFor="duration">
+                    Duração <span>(em meses)</span>
+                  </label>
+                  <Input
+                    type="number"
+                    name="duration"
+                    onChange={e => handleDuration(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="price">Preço Mensal</label>
+                  <NumberInput
+                    name="price"
+                    onChange={handlePrice}
+                    decimalScale={2}
+                    prefix="R$ "
+                  />
+                </div>
+                <div>
+                  <label htmlFor="finalPrice">Preço Total</label>
+                  <NumberInput
+                    name="finalPrice"
+                    className="gray"
+                    decimalScale={2}
+                    prefix="R$ "
+                    disabled
+                  />
+                </div>
+              </NumberInputs>
+            </MyForm>
+          </Content>
+        </>
+      )}
     </ContainerForm>
   );
 }

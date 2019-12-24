@@ -66,6 +66,7 @@ export const Profile = styled.div`
 
     button {
       border: 0;
+      background: none;
       color: #de3b3b;
       margin-top: 5px;
       font-size: 14px;
