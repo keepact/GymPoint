@@ -40,5 +40,6 @@ export const Table = styled.table`
     border: 0;
     margin-left: 15px;
     color: #de3b3b;
+    background: none;
   }
 `;

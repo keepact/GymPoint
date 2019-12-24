@@ -194,3 +194,13 @@ export const PageActions = styled.div`
     }
   }
 `;
+
+export const EmptyContainer = styled.div`
+  background-color: #fff;
+
+  h2 {
+    padding: 20px;
+    font-size: 16px;
+    text-align: center;
+  }
+`;

@@ -33,3 +33,10 @@ export const Wrapper = styled.div`
     background: unset;
   }
 `;
+
+export const AnimationContainer = styled.div`
+  position: absolute;
+  top: 300px;
+  right: 100px;
+  left: 100px;
+`;

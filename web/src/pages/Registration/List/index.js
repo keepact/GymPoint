@@ -2,6 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import Animation from '~/components/Animation';
+import loadingAnimation from '~/assets/animations/loader.json';
 
 import api from '~/services/api';
 
@@ -11,31 +15,38 @@ import {
   TitleWrapper,
   Table,
   PageActions,
-} from '~/components/Container';
+  EmptyContainer,
+} from '~/styles/shared';
 
 function List({ history }) {
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [registrations, setRegistrations] = useState([]);
 
   // eslint-disable-next-line no-shadow
   async function loadRegistrations(page = 1) {
-    const response = await api.get('/registrations', {
-      params: {
-        page,
-      },
-    });
+    try {
+      const response = await api.get('/registrations', {
+        params: {
+          page,
+        },
+      });
 
-    const data = response.data.map(registration => ({
-      ...registration,
-      startDateFormatted: format(parseISO(registration.start_date), "dd'/'M/Y"),
-      endDateFormatted: format(parseISO(registration.end_date), "dd'/'M/Y"),
-    }));
+      const data = response.data.map(registration => ({
+        ...registration,
+        startDateFormatted: format(
+          parseISO(registration.start_date),
+          "dd'/'M/Y"
+        ),
+        endDateFormatted: format(parseISO(registration.end_date), "dd'/'M/Y"),
+      }));
 
-    setRegistrations(data);
-    setPage(page);
-    setLoading(false);
+      setRegistrations(data);
+      setPage(page);
+      setLoading(false);
+    } catch (err) {
+      toast.error('Erro na requisição, tente novamente em alguns minutos');
+    }
   }
 
   useEffect(() => {
@@ -64,74 +75,97 @@ function List({ history }) {
   }
 
   async function handleDelete(registrationId) {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Você tem certeza que deseja apagar essa matrícula?')) {
-      await api.delete(`registrations/${registrationId}`);
-      loadRegistrations();
+    try {
+      if (
+        // eslint-disable-next-line no-alert
+        window.confirm('Você tem certeza que deseja apagar essa matrícula?')
+      ) {
+        await api.delete(`registrations/${registrationId}`);
+        toast.success('Matrícula removida com sucesso');
+        loadRegistrations();
+      }
+    } catch (err) {
+      toast.error('Houve um erro, tente novamente em alguns minutos');
     }
   }
 
   return (
     <Container large>
-      <TitleWrapper>
-        <h1>Gereciando Matrículas</h1>
-        <div>
-          <button
-            type="button"
-            onClick={() => history.push('registrations/create')}
-          >
-            Cadastrar
-          </button>
-        </div>
-      </TitleWrapper>
-      <Content large>
-        <Table>
-          <thead>
-            <tr>
-              <th>Aluno</th>
-              <th>Plano</th>
-              <th>Ínicio</th>
-              <th>Término</th>
-              <th>Ativa</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentRegistrations.map(registration => (
-              <tr key={registration.id}>
-                <td>{registration.student.name}</td>
-                <td>{registration.plan.title}</td>
-                <td>{registration.startDateFormatted}</td>
-                <td>{registration.endDateFormatted}</td>
-                <td>{registration.active ? 'Ativa' : 'Terminada'}</td>
-                <td>
-                  <div>
-                    <Link to={`/registrations/${registration.id}`}>editar</Link>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(registration.id)}
-                    >
-                      apagar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Content>
-      <PageActions>
-        <button type="button" disabled={page < 2} onClick={prevPage}>
-          Anterior
-        </button>
-        <span>Página {page}</span>
-        <button
-          type="button"
-          disabled={registrationsQty < 10}
-          onClick={nextPage}
-        >
-          Próximo
-        </button>
-      </PageActions>
+      {loading ? (
+        <Animation animation={loadingAnimation} loop size />
+      ) : (
+        <>
+          <TitleWrapper>
+            <h1>Gereciando Matrículas</h1>
+            <div>
+              <button
+                type="button"
+                onClick={() => history.push('registrations/create')}
+              >
+                Cadastrar
+              </button>
+            </div>
+          </TitleWrapper>
+          {registrationsQty > 0 ? (
+            <>
+              <Content large>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Aluno</th>
+                      <th>Plano</th>
+                      <th>Ínicio</th>
+                      <th>Término</th>
+                      <th>Ativa</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentRegistrations.map(registration => (
+                      <tr key={registration.id}>
+                        <td>{registration.student.name}</td>
+                        <td>{registration.plan.title}</td>
+                        <td>{registration.startDateFormatted}</td>
+                        <td>{registration.endDateFormatted}</td>
+                        <td>{registration.active ? 'Ativa' : 'Terminada'}</td>
+                        <td>
+                          <div>
+                            <Link to={`/registrations/${registration.id}`}>
+                              editar
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(registration.id)}
+                            >
+                              apagar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Content>
+              <PageActions>
+                <button type="button" disabled={page < 2} onClick={prevPage}>
+                  Anterior
+                </button>
+                <span>Página {page}</span>
+                <button
+                  type="button"
+                  disabled={registrationsQty < 10}
+                  onClick={nextPage}
+                >
+                  Próximo
+                </button>
+              </PageActions>
+            </>
+          ) : (
+            <EmptyContainer>
+              <h2>Não há matrículas cadastradas ainda.</h2>
+            </EmptyContainer>
+          )}
+        </>
+      )}
     </Container>
   );
 }

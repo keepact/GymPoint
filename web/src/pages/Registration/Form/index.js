@@ -10,6 +10,9 @@ import { formatPrice } from '~/utils';
 
 import history from '~/services/history';
 
+import Animation from '~/components/Animation';
+import loadingAnimation from '~/assets/animations/loader.json';
+
 import { StudentSelector } from '~/components/AsyncSelect/styles';
 import { PlanSelector } from '~/components/Select/styles';
 import DatePicker from '~/components/DatePicker';
@@ -22,7 +25,7 @@ import {
   MyForm,
   NumberInputs,
   TitleWrapper,
-} from '~/components/Container';
+} from '~/styles/shared';
 
 const fieldRequired = 'Esse campo é obrigatório';
 
@@ -37,15 +40,22 @@ const schema = Yup.object().shape({
 function RegistrationForm({ match }) {
   const { id } = match.params;
 
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [registrations, setRegistrations] = useState({});
   const [plans, setPlans] = useState([]);
   const [disableDate, setDisableDate] = useState(!id);
+  const [filter, setFilter] = useState('');
 
   function loadPromises(type) {
-    if (type === 'students') return api.get('students');
+    if (type === 'students')
+      return api.get('students', {
+        params: {
+          q: filter,
+        },
+      });
+
     if (type === 'plans') return api.get('plans');
+
     return api.get(`registrations/${id}`);
   }
 
@@ -65,12 +75,14 @@ function RegistrationForm({ match }) {
           start_date: parseISO(registration.data.start_date),
           end_date: parseISO(registration.data.end_date),
         });
+        setLoading(false);
       } else {
         const { data } = await loadPromises('plans');
         setPlans(data);
+        setLoading(false);
       }
     } catch (err) {
-      console.log(err);
+      toast.error('Houve um erro, tente novamente em alguns minutos');
     }
   }
 
@@ -86,13 +98,21 @@ function RegistrationForm({ match }) {
   };
 
   const loadStudentOptions = async inputValue => {
+    // eslint-disable-next-line consistent-return
     async function getStudents() {
-      const { data } = await loadPromises('students');
-      return data;
+      try {
+        const { data } = await loadPromises('students');
+        return data;
+      } catch (err) {
+        toast.error(
+          'Houve um erro na busca de aluno, verifique seus dados ou tente novamente'
+        );
+      }
     }
     const data = await getStudents();
 
     return new Promise(resolve => {
+      setFilter(inputValue);
       resolve(filterColors(data, inputValue));
     });
   };
@@ -130,87 +150,97 @@ function RegistrationForm({ match }) {
   }
 
   async function handleSubmit(data) {
+    const formatedData = {
+      student_id: data.student.id,
+      plan_id: data.plan.id,
+      start_date: data.start_date,
+    };
+
     try {
       if (id) {
-        await api.put(`registrations/${registrations.id}`, {
-          student_id: data.student.id,
-          plan_id: data.plan.id,
-          start_date: data.start_date,
-        });
+        await api.put(`registrations/${registrations.id}`, formatedData);
       } else {
-        await api.post('registrations', {
-          student_id: data.student.id,
-          plan_id: data.plan.id,
-          start_date: data.start_date,
-        });
+        await api.post('registrations', formatedData);
       }
-      toast.success(id ? 'Cadastro alterado' : 'Matrícula cadastrada');
+      toast.success(
+        id ? 'Matrícula alterada com sucesso' : 'Matrícula cadastrada'
+      );
       history.push('/registrations');
     } catch (err) {
-      toast.error(
-        'Falha na requisição. Verifique seus dados e tente novamente.'
-      );
-      console.log(err);
+      toast.error('Houve um erro, verifique seus dados e tente novamente');
     }
   }
 
   return (
     <ContainerForm>
-      <TitleWrapper>
-        <h1>{id ? 'Edição de Matrícula' : 'Cadastro de Matrícula'}</h1>
-        <div>
-          <Link to="/registrations">Voltar</Link>
-          <button form="Form" type="submit">
-            Salvar
-          </button>
-        </div>
-      </TitleWrapper>
-      <Content>
-        <MyForm
-          id="Form"
-          schema={schema}
-          initialData={registrations}
-          onSubmit={handleSubmit}
-        >
-          <label htmlFor="student">Aluno</label>
-          <StudentSelector name="student" loadOptions={loadStudentOptions} />
-          <NumberInputs columns>
+      {loading ? (
+        <Animation animation={loadingAnimation} loop size />
+      ) : (
+        <>
+          <TitleWrapper>
+            <h1>{id ? 'Edição de Matrícula' : 'Cadastro de Matrícula'}</h1>
             <div>
-              <label htmlFor="plan">Plano</label>
-              <PlanSelector name="plan" options={plans} onChange={handlePlan} />
+              <Link to="/registrations">Voltar</Link>
+              <button form="Form" type="submit">
+                Salvar
+              </button>
             </div>
-            <div>
-              <label htmlFor="start_date">Data de ínicio</label>
-              <DatePicker
-                name="start_date"
-                onChange={handleDate}
-                placeholder="dd/mm/yyyy"
-                disabled={disableDate}
+          </TitleWrapper>
+          <Content>
+            <MyForm
+              id="Form"
+              schema={schema}
+              initialData={registrations}
+              onSubmit={handleSubmit}
+            >
+              <label htmlFor="student">Aluno</label>
+              <StudentSelector
+                name="student"
+                loadOptions={loadStudentOptions}
               />
-            </div>
-            <div>
-              <label htmlFor="end_date">Data de término</label>
-              <DatePicker
-                className="gray"
-                name="end_date"
-                placeholder="dd/mm/yyyy"
-                disabled
-              />
-            </div>
-            <div>
-              <label htmlFor="price">Valor Final</label>
-              <input
-                name="price"
-                className="gray"
-                type="text"
-                placeholder="R$ 0,00"
-                readOnly
-                value={registrations.priceFormatted}
-              />
-            </div>
-          </NumberInputs>
-        </MyForm>
-      </Content>
+              <NumberInputs columns>
+                <div>
+                  <label htmlFor="plan">Plano</label>
+                  <PlanSelector
+                    name="plan"
+                    options={plans}
+                    onChange={handlePlan}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="start_date">Data de ínicio</label>
+                  <DatePicker
+                    name="start_date"
+                    onChange={handleDate}
+                    placeholder="dd/mm/yyyy"
+                    disabled={disableDate}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="end_date">Data de término</label>
+                  <DatePicker
+                    className="gray"
+                    name="end_date"
+                    placeholder="dd/mm/yyyy"
+                    disabled
+                  />
+                </div>
+                <div>
+                  <label htmlFor="price">Valor Final</label>
+                  <input
+                    name="price"
+                    className="gray"
+                    type="text"
+                    placeholder="R$ 0,00"
+                    readOnly
+                    value={registrations.priceFormatted}
+                  />
+                </div>
+              </NumberInputs>
+            </MyForm>
+          </Content>
+        </>
+      )}
     </ContainerForm>
   );
 }

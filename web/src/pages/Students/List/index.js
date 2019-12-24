@@ -5,11 +5,18 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
-import { Container, Content, PageActions } from '~/components/Container';
+import Animation from '~/components/Animation';
+import loadingAnimation from '~/assets/animations/loader.json';
+
+import {
+  Container,
+  Content,
+  PageActions,
+  EmptyContainer,
+} from '~/styles/shared';
 import { Table, TitleWrapper } from './styles';
 
 function List({ history }) {
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [page, setPage] = useState(1);
@@ -29,8 +36,7 @@ function List({ history }) {
       setPage(page);
       setLoading(false);
     } catch (err) {
-      console.log(err);
-      toast.error('Erro na requisição');
+      toast.error('Houve um erro, tente novamente em alguns minutos');
     }
   }
 
@@ -58,84 +64,107 @@ function List({ history }) {
   }
 
   async function handleDelete(studentId) {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
-      await api.delete(`students/${studentId}`);
-      loadStudents();
+    try {
+      // eslint-disable-next-line no-alert
+      if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
+        await api.delete(`students/${studentId}`);
+        toast.success('Aluno removido com sucesso');
+        loadStudents();
+      }
+    } catch (err) {
+      toast.error('Houve um erro, tente novamente em alguns minutos');
     }
   }
 
   return (
     <Container>
-      <TitleWrapper>
-        <h1>Gereciando alunos</h1>
+      {loading ? (
+        <Animation animation={loadingAnimation} loop size />
+      ) : (
+        <>
+          <TitleWrapper>
+            <h1>Gereciando alunos</h1>
 
-        <div>
-          <button
-            type="button"
-            onClick={() => history.push('/students/create')}
-          >
-            Cadastrar
-          </button>
-          <input
-            type="text"
-            placeholder="Buscar aluno"
-            onChange={handleSearch}
-          />
-        </div>
-      </TitleWrapper>
-      <Content>
-        <Table>
-          <thead>
-            <tr>
-              <th>
-                <strong>Nome</strong>
-              </th>
-              <th>
-                <strong>Email</strong>
-              </th>
-              <th>
-                <strong>Idade</strong>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map(student => (
-              <tr key={student.id}>
-                <td>
-                  <span>{student.name}</span>
-                </td>
-                <td>
-                  <span>{student.email}</span>
-                </td>
-                <td>
-                  <span>{student.age}</span>
-                </td>
-                <td>
-                  <div>
-                    <Link to={`/students/${student.id}`}>editar</Link>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(student.id)}
-                    >
-                      apagar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Content>
-      <PageActions>
-        <button type="button" disabled={page < 2} onClick={prevPage}>
-          Anterior
-        </button>
-        <span>Página {page}</span>
-        <button type="button" disabled={studentsSize < 10} onClick={nextPage}>
-          Próximo
-        </button>
-      </PageActions>
+            <div>
+              <button
+                type="button"
+                onClick={() => history.push('/students/create')}
+              >
+                Cadastrar
+              </button>
+              <input
+                type="text"
+                placeholder="Buscar aluno"
+                onChange={handleSearch}
+              />
+            </div>
+          </TitleWrapper>
+          {studentsSize > 0 ? (
+            <>
+              <Content>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>
+                        <strong>Nome</strong>
+                      </th>
+                      <th>
+                        <strong>Email</strong>
+                      </th>
+                      <th>
+                        <strong>Idade</strong>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {students.map(student => (
+                      <tr key={student.id}>
+                        <td>
+                          <span>{student.name}</span>
+                        </td>
+                        <td>
+                          <span>{student.email}</span>
+                        </td>
+                        <td>
+                          <span>{student.age}</span>
+                        </td>
+                        <td>
+                          <div>
+                            <Link to={`/students/${student.id}`}>editar</Link>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(student.id)}
+                            >
+                              apagar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Content>
+              <PageActions>
+                <button type="button" disabled={page < 2} onClick={prevPage}>
+                  Anterior
+                </button>
+                <span>Página {page}</span>
+                <button
+                  type="button"
+                  disabled={studentsSize < 10}
+                  onClick={nextPage}
+                >
+                  Próximo
+                </button>
+              </PageActions>
+            </>
+          ) : (
+            <EmptyContainer>
+              <h2>Não há estudantes cadastrados ainda.</h2>
+            </EmptyContainer>
+          )}
+        </>
+      )}
     </Container>
   );
 }

@@ -5,9 +5,12 @@ import PropTypes from 'prop-types';
 import { Input } from '@rocketseat/unform';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import { parseDecimal, parseInteger } from '~/utils';
 
 import InputNumber from '~/components/NumberInput';
+import Animation from '~/components/Animation';
+import loadingAnimation from '~/assets/animations/loader.json';
 
 import api from '~/services/api';
 
@@ -17,7 +20,7 @@ import {
   MyForm,
   NumberInputs,
   TitleWrapper,
-} from '~/components/Container';
+} from '~/styles/shared';
 
 const fieldRequired = 'Esse campo é obrigatório';
 
@@ -32,7 +35,6 @@ const schema = Yup.object().shape({
 });
 
 function StudentForm({ match, history }) {
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [student, setStudent] = useState('');
 
@@ -48,8 +50,7 @@ function StudentForm({ match, history }) {
       });
       setLoading(false);
     } catch (err) {
-      console.log(err);
-      toast.error('Erro na requisição');
+      toast.error('Houve um erro, tente novamente em alguns minutos');
     }
   }
 
@@ -80,62 +81,67 @@ function StudentForm({ match, history }) {
       );
       history.push('/students');
     } catch (err) {
-      console.log(err);
-      toast.error('Erro na requisição');
+      toast.error('Houve um erro, verifique seus dados e tente novamente');
     }
   }
 
   return (
     <ContainerForm>
-      <TitleWrapper>
-        <h1>{id ? 'Edição de aluno' : 'Cadastro de Aluno'}</h1>
-        <div>
-          <Link to="/">Voltar</Link>
-          <button form="Form" type="submit">
-            Salvar
-          </button>
-        </div>
-      </TitleWrapper>
-      <Content>
-        <MyForm
-          id="Form"
-          schema={schema}
-          initialData={student}
-          onSubmit={handleSubmit}
-        >
-          <>
-            <label htmlFor="name">Nome Completo</label>
-            <Input name="name" placeholder="John Doe" />
-            <label htmlFor="email">Endereço de Email</label>
-            <Input name="email" placeholder="example@email.com" />
+      {loading ? (
+        <Animation animation={loadingAnimation} loop size />
+      ) : (
+        <>
+          <TitleWrapper>
+            <h1>{id ? 'Edição de aluno' : 'Cadastro de Aluno'}</h1>
+            <div>
+              <Link to="/">Voltar</Link>
+              <button form="Form" type="submit">
+                Salvar
+              </button>
+            </div>
+          </TitleWrapper>
+          <Content>
+            <MyForm
+              id="Form"
+              schema={schema}
+              initialData={student}
+              onSubmit={handleSubmit}
+            >
+              <>
+                <label htmlFor="name">Nome Completo</label>
+                <Input name="name" placeholder="John Doe" />
+                <label htmlFor="email">Endereço de Email</label>
+                <Input name="email" placeholder="example@email.com" />
 
-            <NumberInputs>
-              <div>
-                <label htmlFor="age">Idade</label>
-                <Input name="age" type="number" placeholder="18" />
-              </div>
-              <div>
-                <label htmlFor="weight_formatted">
-                  Peso <span>(em kg)</span>
-                </label>
-                <InputNumber
-                  decimalScale="3"
-                  name="weight_formatted"
-                  placeholder="75.500"
-                />
-              </div>
-              <div>
-                <label htmlFor="height_formatted">Altura</label>
-                <InputNumber
-                  decimalScale="2"
-                  placeholder="1.70"
-                  name="height_formatted"
-                />
-              </div>
-            </NumberInputs>
-          </>
-        </MyForm>
-      </Content>
+                <NumberInputs>
+                  <div>
+                    <label htmlFor="age">Idade</label>
+                    <Input name="age" type="number" placeholder="18" />
+                  </div>
+                  <div>
+                    <label htmlFor="weight_formatted">
+                      Peso <span>(em kg)</span>
+                    </label>
+                    <InputNumber
+                      decimalScale="3"
+                      name="weight_formatted"
+                      placeholder="75.500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="height_formatted">Altura</label>
+                    <InputNumber
+                      decimalScale="2"
+                      placeholder="1.70"
+                      name="height_formatted"
+                    />
+                  </div>
+                </NumberInputs>
+              </>
+            </MyForm>
+          </Content>
+        </>
+      )}
     </ContainerForm>
   );
 }
