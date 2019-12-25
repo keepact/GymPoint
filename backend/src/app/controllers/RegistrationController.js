@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import { startOfDay, parseISO, isBefore, addMonths } from 'date-fns';
 import Registration from '../models/Registration';
 
@@ -13,27 +14,41 @@ const include = [
     model: Student,
     as: 'student',
     attributes: ['id', 'name'],
+    where: {
+      id: {
+        [Op.ne]: null,
+      },
+    },
   },
   {
     model: Plan,
     as: 'plan',
     attributes: ['id', 'title'],
+    where: {
+      id: {
+        [Op.ne]: null,
+      },
+    },
   },
 ];
 
 class RegistrationController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, limit = 10 } = req.query;
 
-    const registrations = await Registration.findAll({
-      order: ['start_date'],
+    const registrations = await Registration.findAndCountAll({
+      limit,
+      offset: (page - 1) * limit,
       attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
-      limit: 10,
-      offset: (page - 1) * 10,
       include,
     });
 
-    return res.json(registrations);
+    const lastPage = page * limit >= registrations.count;
+
+    return res.json({
+      content: registrations,
+      lastPage,
+    });
   }
 
   async show(req, res) {

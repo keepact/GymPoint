@@ -6,12 +6,12 @@ import File from '../models/File';
 
 class StudentController {
   async index(req, res) {
-    const { page = 1, q: query } = req.query;
+    const { page = 1, limit = 10, q: query } = req.query;
 
     const students = await Student.findAll({
-      order: ['id'],
-      limit: 10,
-      offset: (page - 1) * 10,
+      order: ['name'],
+      limit,
+      offset: (page - 1) * limit,
       attributes: ['id', 'name', 'email', 'age', 'height', 'weight'],
       include: [
         {
@@ -23,7 +23,13 @@ class StudentController {
       where: query ? { name: { [Op.iLike]: `%${query}%` } } : {},
     });
 
-    return res.json(students);
+    const studentsCount = await Student.count();
+    const lastPage = page * limit >= studentsCount;
+
+    return res.json({
+      content: students,
+      lastPage,
+    });
   }
 
   async show(req, res) {
