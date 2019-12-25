@@ -25,18 +25,25 @@ const schema = Yup.object().shape({
 });
 
 function HelpOrders() {
-  const [selectedQuestion, setSelectedQuestion] = useState();
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
   const [help, setHelp] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState('');
   const [showPopUp, setShowPopUp] = useState(false);
 
-  async function loadHelpOrders() {
-    const response = await api.get('students/help-orders/answers');
+  // eslint-disable-next-line no-shadow
+  async function loadHelpOrders(currentPage = 1) {
+    try {
+      const response = await api.get('students/help-orders/answers');
 
-    setHelp(response.data);
-    setPage(page);
-    setLoading(false);
+      setHelp(response.data.content.rows);
+      setCurrentPage(currentPage);
+      setLastPage(response.data.lastPage);
+      setLoading(false);
+    } catch (err) {
+      toast.error('Houve um erro, tente novamente em alguns minutos');
+    }
   }
 
   useEffect(() => {
@@ -53,22 +60,10 @@ function HelpOrders() {
     openPopup();
   }
 
-  const currentHelpOrders = useMemo(
-    () => help.filter(r => r.student !== null),
-    [help]
-  );
+  const helpQty = useMemo(() => help.length, [help]);
 
-  const helpQty = useMemo(() => currentHelpOrders.length, [currentHelpOrders]);
-
-  function prevPage() {
-    if (page === 1) return;
-    const pageNumber = page - 1;
-    loadHelpOrders(pageNumber);
-  }
-
-  function nextPage() {
-    if (helpQty < 10) return;
-    const pageNumber = page + 1;
+  function handlePage(action) {
+    const pageNumber = action === 'back' ? currentPage - 1 : currentPage + 1;
     loadHelpOrders(pageNumber);
   }
 
@@ -82,7 +77,6 @@ function HelpOrders() {
       openPopup();
       loadHelpOrders();
     } catch (err) {
-      console.log(err);
       toast.error(
         'Falha na requisição, por favor tente novamente em alguns minutos'
       );
@@ -105,7 +99,7 @@ function HelpOrders() {
                   <header>
                     <strong>Aluno</strong>
                   </header>
-                  {currentHelpOrders.map(question => (
+                  {help.map(question => (
                     <div key={question.id}>
                       <span>{question.student.name}</span>
                       <button
@@ -119,14 +113,18 @@ function HelpOrders() {
                 </Wrapper>
               </Content>
               <PageActions>
-                <button type="button" disabled={page < 2} onClick={prevPage}>
-                  Anterior
-                </button>
-                <span>Página {page}</span>
                 <button
                   type="button"
-                  disabled={helpQty < 10}
-                  onClick={nextPage}
+                  disabled={currentPage < 2}
+                  onClick={() => handlePage('back')}
+                >
+                  Anterior
+                </button>
+                <span>Página {currentPage}</span>
+                <button
+                  type="button"
+                  disabled={lastPage}
+                  onClick={() => handlePage('next')}
                 >
                   Próximo
                 </button>

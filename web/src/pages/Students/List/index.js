@@ -16,24 +16,26 @@ import {
 } from '~/styles/shared';
 import { Table, TitleWrapper } from './styles';
 
-function List({ history }) {
+function StudentsList({ history }) {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState('');
   const [students, setStudents] = useState([]);
 
   // eslint-disable-next-line no-shadow
-  async function loadStudents(page = 1) {
+  async function loadStudents(currentPage = 1) {
     try {
       const response = await api.get('/students', {
         params: {
-          page,
+          page: currentPage,
           q: filter,
         },
       });
 
-      setStudents(response.data);
-      setPage(page);
+      setStudents(response.data.content);
+      setCurrentPage(currentPage);
+      setLastPage(response.data.lastPage);
       setLoading(false);
     } catch (err) {
       toast.error('Houve um erro, tente novamente em alguns minutos');
@@ -47,15 +49,8 @@ function List({ history }) {
 
   const studentsSize = useMemo(() => students.length, [students]);
 
-  function prevPage() {
-    if (page === 1) return;
-    const pageNumber = page - 1;
-    loadStudents(pageNumber);
-  }
-
-  function nextPage() {
-    if (studentsSize < 10) return;
-    const pageNumber = page + 1;
+  function handleChange(action) {
+    const pageNumber = action === 'back' ? currentPage - 1 : currentPage + 1;
     loadStudents(pageNumber);
   }
 
@@ -145,14 +140,18 @@ function List({ history }) {
                 </Table>
               </Content>
               <PageActions>
-                <button type="button" disabled={page < 2} onClick={prevPage}>
-                  Anterior
-                </button>
-                <span>Página {page}</span>
                 <button
                   type="button"
-                  disabled={studentsSize < 10}
-                  onClick={nextPage}
+                  disabled={currentPage < 2}
+                  onClick={() => handleChange('back')}
+                >
+                  Anterior
+                </button>
+                <span>Página {currentPage}</span>
+                <button
+                  type="button"
+                  disabled={lastPage}
+                  onClick={() => handleChange('next')}
                 >
                   Próximo
                 </button>
@@ -169,10 +168,10 @@ function List({ history }) {
   );
 }
 
-List.propTypes = {
+StudentsList.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
 };
 
-export default List;
+export default StudentsList;
