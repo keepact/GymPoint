@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Student';
@@ -8,28 +9,38 @@ import Queue from '../../lib/Queue';
 
 class SupportController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, limit = 10 } = req.query;
 
-    const supportOrder = await HelpOrder.findAll({
+    const supportOrder = await HelpOrder.findAndCountAll({
       where: {
         answer: null,
       },
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit,
+      offset: (page - 1) * limit,
       include: [
         {
           model: Student,
           as: 'student',
           attributes: ['name', 'email'],
+          where: {
+            id: {
+              [Op.ne]: null,
+            },
+          },
         },
       ],
     });
+
+    const lastPage = page * limit >= supportOrder.count;
 
     if (supportOrder.length === 0) {
       return res.status(200).json('All clear');
     }
 
-    return res.json(supportOrder);
+    return res.json({
+      content: supportOrder,
+      lastPage,
+    });
   }
 
   async store(req, res) {

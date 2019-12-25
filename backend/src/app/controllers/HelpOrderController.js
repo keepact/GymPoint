@@ -3,13 +3,13 @@ import Student from '../models/Student';
 
 class HelpOrderController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, limit = 10 } = req.query;
 
     const { id } = req.params;
     const supportOrder = await HelpOrder.findAll({
       where: { student_id: id },
-      limit: 10,
-      offset: (page - 1) * 10,
+      limit,
+      offset: (page - 1) * limit,
       include: [
         {
           model: Student,
