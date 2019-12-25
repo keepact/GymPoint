@@ -18,21 +18,22 @@ import {
   EmptyContainer,
 } from '~/styles/shared';
 
-function List({ history }) {
+function RegistrationList({ history }) {
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState('');
   const [registrations, setRegistrations] = useState([]);
 
   // eslint-disable-next-line no-shadow
-  async function loadRegistrations(page = 1) {
+  async function loadRegistrations(currentPage = 1) {
     try {
       const response = await api.get('/registrations', {
         params: {
-          page,
+          page: currentPage,
         },
       });
 
-      const data = response.data.map(registration => ({
+      const data = response.data.content.rows.map(registration => ({
         ...registration,
         startDateFormatted: format(
           parseISO(registration.start_date),
@@ -42,7 +43,8 @@ function List({ history }) {
       }));
 
       setRegistrations(data);
-      setPage(page);
+      setCurrentPage(currentPage);
+      setLastPage(response.data.lastPage);
       setLoading(false);
     } catch (err) {
       toast.error('Erro na requisição, tente novamente em alguns minutos');
@@ -51,26 +53,13 @@ function List({ history }) {
 
   useEffect(() => {
     loadRegistrations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const currentRegistrations = useMemo(
-    () => registrations.filter(r => r.student && r.plan !== null),
-    [registrations]
-  );
+  const registrationsQty = useMemo(() => registrations.length, [registrations]);
 
-  const registrationsQty = useMemo(() => currentRegistrations.length, [
-    currentRegistrations,
-  ]);
-
-  function prevPage() {
-    if (page === 1) return;
-    const pageNumber = page - 1;
-    loadRegistrations(pageNumber);
-  }
-
-  function nextPage() {
-    if (registrationsQty < 10) return;
-    const pageNumber = page + 1;
+  function handlePage(action) {
+    const pageNumber = action === 'back' ? currentPage - 1 : currentPage + 1;
     loadRegistrations(pageNumber);
   }
 
@@ -120,7 +109,7 @@ function List({ history }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentRegistrations.map(registration => (
+                    {registrations.map(registration => (
                       <tr key={registration.id}>
                         <td>{registration.student.name}</td>
                         <td>{registration.plan.title}</td>
@@ -146,14 +135,18 @@ function List({ history }) {
                 </Table>
               </Content>
               <PageActions>
-                <button type="button" disabled={page < 2} onClick={prevPage}>
-                  Anterior
-                </button>
-                <span>Página {page}</span>
                 <button
                   type="button"
-                  disabled={registrationsQty < 10}
-                  onClick={nextPage}
+                  disabled={currentPage < 2}
+                  onClick={() => handlePage('back')}
+                >
+                  Anterior
+                </button>
+                <span>Página {currentPage}</span>
+                <button
+                  type="button"
+                  disabled={lastPage}
+                  onClick={() => handlePage('next')}
                 >
                   Próximo
                 </button>
@@ -170,10 +163,10 @@ function List({ history }) {
   );
 }
 
-List.propTypes = {
+RegistrationList.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
 };
 
-export default List;
+export default RegistrationList;
