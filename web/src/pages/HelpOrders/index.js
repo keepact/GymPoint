@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 
+import PageActions from '~/components/Pagination';
 import PopUp from '~/components/PopUp';
 import Animation from '~/components/Animation';
 
@@ -14,7 +15,6 @@ import {
   Container,
   Content,
   TitleWrapper,
-  PageActions,
   EmptyContainer,
 } from '~/styles/shared';
 
@@ -32,7 +32,6 @@ function HelpOrders() {
   const [lastPage, setLastPage] = useState('');
   const [showPopUp, setShowPopUp] = useState(false);
 
-  // eslint-disable-next-line no-shadow
   async function loadHelpOrders(currentPage = 1) {
     try {
       const response = await api.get('students/help-orders/answers');
@@ -62,11 +61,6 @@ function HelpOrders() {
 
   const helpQty = useMemo(() => help.length, [help]);
 
-  function handlePage(action) {
-    const pageNumber = action === 'back' ? currentPage - 1 : currentPage + 1;
-    loadHelpOrders(pageNumber);
-  }
-
   async function handleSubmit(data) {
     try {
       await api.post(
@@ -86,7 +80,7 @@ function HelpOrders() {
   return (
     <Container small>
       {loading ? (
-        <Animation animation={loadingAnimation} loop size />
+        <Animation animation={loadingAnimation} loop height width />
       ) : (
         <>
           <TitleWrapper>
@@ -112,23 +106,13 @@ function HelpOrders() {
                   ))}
                 </Wrapper>
               </Content>
-              <PageActions>
-                <button
-                  type="button"
-                  disabled={currentPage < 2}
-                  onClick={() => handlePage('back')}
-                >
-                  Anterior
-                </button>
-                <span>Página {currentPage}</span>
-                <button
-                  type="button"
-                  disabled={lastPage}
-                  onClick={() => handlePage('next')}
-                >
-                  Próximo
-                </button>
-              </PageActions>
+              <PageActions
+                disableNext={lastPage}
+                disbaleBack={currentPage < 2}
+                pageLabel={currentPage}
+                refresh={loadHelpOrders}
+                currentPage={currentPage}
+              />
               {showPopUp ? (
                 <PopUp
                   schema={schema}

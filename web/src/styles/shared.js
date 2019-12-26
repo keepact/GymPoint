@@ -31,6 +31,17 @@ export const TitleWrapper = styled.div`
     color: #fff;
     font-weight: bold;
     text-transform: uppercase;
+
+    span {
+      margin-right: 15px;
+      text-transform: uppercase;
+    }
+
+    svg {
+      position: absolute;
+      margin-top: -2px;
+      margin-left: -8px;
+    }
   }
 
   input {
@@ -87,6 +98,10 @@ export const Table = styled.table`
     border: 0;
     margin-left: 15px;
     color: #de3b3b;
+  }
+
+  span {
+    margin-left: 10px;
   }
 `;
 
@@ -156,42 +171,6 @@ export const NumberInputs = styled.div`
 
   .gray {
     background: #f5f5f5;
-  }
-`;
-
-export const PageActions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  margin: 30px auto 0;
-
-  span {
-    font-weight: bold;
-    font-size: 18px;
-  }
-
-  button {
-    background: #ee4d64;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    transition: opacity 0.25s ease-out;
-    border-radius: 4px;
-    outline: 0;
-    border: 0;
-    padding: 8px;
-
-    &[disabled] {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-    &[disabled]:hover {
-      opacity: 0.35;
-    }
-    &:hover {
-      opacity: 0.7;
-    }
   }
 `;
 
