@@ -4,23 +4,8 @@ import Lottie from 'react-lottie';
 
 import { AnimationContainer } from './styles';
 
-export default function LottieControl({ animation, size, loop, autoplay }) {
-  LottieControl.defaultProps = {
-    size: 300,
-    loop: true,
-    autoplay: true,
-  };
-
-  LottieControl.propTypes = {
-    animation: PropTypes.oneOfType([PropTypes.object]).isRequired,
-    size: PropTypes.number,
-    loop: PropTypes.bool,
-    autoplay: PropTypes.bool,
-  };
-
-  // eslint-disable-next-line no-unused-vars
+function LottieControl({ animation, width, height, loop, autoplay }) {
   const [isStopped, setStopped] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [isPaused, setPaused] = useState(false);
 
   const defaultOptions = {
@@ -39,9 +24,26 @@ export default function LottieControl({ animation, size, loop, autoplay }) {
         isStopped={isStopped}
         isClickToPauseDisabled
         isPaused={isPaused}
-        height={size}
-        width={size}
+        height={height}
+        width={width}
       />
     </AnimationContainer>
   );
 }
+
+LottieControl.defaultProps = {
+  width: 300,
+  height: 300,
+  loop: true,
+  autoplay: true,
+};
+
+LottieControl.propTypes = {
+  animation: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  loop: PropTypes.bool,
+  autoplay: PropTypes.bool,
+};
+
+export default LottieControl;

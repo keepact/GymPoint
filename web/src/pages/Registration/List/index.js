@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isBefore, startOfDay } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { FaCircle } from 'react-icons/fa';
+import { FiPlusCircle } from 'react-icons/fi';
+
+import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -14,7 +18,6 @@ import {
   Content,
   TitleWrapper,
   Table,
-  PageActions,
   EmptyContainer,
 } from '~/styles/shared';
 
@@ -24,7 +27,6 @@ function RegistrationList({ history }) {
   const [lastPage, setLastPage] = useState('');
   const [registrations, setRegistrations] = useState([]);
 
-  // eslint-disable-next-line no-shadow
   async function loadRegistrations(currentPage = 1) {
     try {
       const response = await api.get('/registrations', {
@@ -40,6 +42,7 @@ function RegistrationList({ history }) {
           "dd'/'M/Y"
         ),
         endDateFormatted: format(parseISO(registration.end_date), "dd'/'M/Y"),
+        activePlan: handleActive(registration.active, registration.start_date),
       }));
 
       setRegistrations(data);
@@ -58,15 +61,9 @@ function RegistrationList({ history }) {
 
   const registrationsQty = useMemo(() => registrations.length, [registrations]);
 
-  function handlePage(action) {
-    const pageNumber = action === 'back' ? currentPage - 1 : currentPage + 1;
-    loadRegistrations(pageNumber);
-  }
-
   async function handleDelete(registrationId) {
     try {
       if (
-        // eslint-disable-next-line no-alert
         window.confirm('Você tem certeza que deseja apagar essa matrícula?')
       ) {
         await api.delete(`registrations/${registrationId}`);
@@ -78,10 +75,31 @@ function RegistrationList({ history }) {
     }
   }
 
+  function handleActive(active, date) {
+    const startOfPlan = startOfDay(parseISO(date));
+
+    if (active) {
+      return {
+        title: 'Ativo',
+        color: 'green',
+      };
+    }
+    if (isBefore(new Date(), startOfPlan)) {
+      return {
+        title: 'Agendado',
+        color: 'orange',
+      };
+    }
+    return {
+      title: 'Terminado',
+      color: 'red',
+    };
+  }
+
   return (
     <Container large>
       {loading ? (
-        <Animation animation={loadingAnimation} loop size />
+        <Animation animation={loadingAnimation} loop height width />
       ) : (
         <>
           <TitleWrapper>
@@ -91,7 +109,8 @@ function RegistrationList({ history }) {
                 type="button"
                 onClick={() => history.push('registrations/create')}
               >
-                Cadastrar
+                <span>Cadastrar</span>
+                <FiPlusCircle size={20} />
               </button>
             </div>
           </TitleWrapper>
@@ -115,7 +134,10 @@ function RegistrationList({ history }) {
                         <td>{registration.plan.title}</td>
                         <td>{registration.startDateFormatted}</td>
                         <td>{registration.endDateFormatted}</td>
-                        <td>{registration.active ? 'Ativa' : 'Terminada'}</td>
+                        <td>
+                          <FaCircle color={registration.activePlan.color} />
+                          <span>{registration.activePlan.title}</span>
+                        </td>
                         <td>
                           <div>
                             <Link to={`/registrations/${registration.id}`}>
@@ -134,23 +156,13 @@ function RegistrationList({ history }) {
                   </tbody>
                 </Table>
               </Content>
-              <PageActions>
-                <button
-                  type="button"
-                  disabled={currentPage < 2}
-                  onClick={() => handlePage('back')}
-                >
-                  Anterior
-                </button>
-                <span>Página {currentPage}</span>
-                <button
-                  type="button"
-                  disabled={lastPage}
-                  onClick={() => handlePage('next')}
-                >
-                  Próximo
-                </button>
-              </PageActions>
+              <PageActions
+                disableNext={lastPage}
+                disableBack={currentPage < 2}
+                pageLabel={currentPage}
+                refresh={loadRegistrations}
+                currentPage={currentPage}
+              />
             </>
           ) : (
             <EmptyContainer>

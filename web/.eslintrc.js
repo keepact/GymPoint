@@ -40,7 +40,11 @@ module.exports = {
     'camelcase': 'off',
     'no-console': ['error', { allow: ['tron', 'log'] }],
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn'
+    'react-hooks/exhaustive-deps': 'warn',
+    'no-use-before-define': ["error", { "functions": false }],
+    'no-shadow': 'off',
+    'no-alert': 'off',
+    'no-unused-vars': 'off',
   },
   settings: {
     'import/resolver': {

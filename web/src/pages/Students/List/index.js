@@ -3,17 +3,15 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { FiPlusCircle } from 'react-icons/fi';
 import api from '~/services/api';
+
+import PageActions from '~/components/Pagination';
 
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
-import {
-  Container,
-  Content,
-  PageActions,
-  EmptyContainer,
-} from '~/styles/shared';
+import { Container, Content, EmptyContainer } from '~/styles/shared';
 import { Table, TitleWrapper } from './styles';
 
 function StudentsList({ history }) {
@@ -49,18 +47,12 @@ function StudentsList({ history }) {
 
   const studentsSize = useMemo(() => students.length, [students]);
 
-  function handleChange(action) {
-    const pageNumber = action === 'back' ? currentPage - 1 : currentPage + 1;
-    loadStudents(pageNumber);
-  }
-
   function handleSearch(e) {
     setFilter(e.target.value);
   }
 
   async function handleDelete(studentId) {
     try {
-      // eslint-disable-next-line no-alert
       if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
         await api.delete(`students/${studentId}`);
         toast.success('Aluno removido com sucesso');
@@ -85,7 +77,8 @@ function StudentsList({ history }) {
                 type="button"
                 onClick={() => history.push('/students/create')}
               >
-                Cadastrar
+                <span>Cadastrar</span>
+                <FiPlusCircle size={20} />
               </button>
               <input
                 type="text"
@@ -139,23 +132,13 @@ function StudentsList({ history }) {
                   </tbody>
                 </Table>
               </Content>
-              <PageActions>
-                <button
-                  type="button"
-                  disabled={currentPage < 2}
-                  onClick={() => handleChange('back')}
-                >
-                  Anterior
-                </button>
-                <span>Página {currentPage}</span>
-                <button
-                  type="button"
-                  disabled={lastPage}
-                  onClick={() => handleChange('next')}
-                >
-                  Próximo
-                </button>
-              </PageActions>
+              <PageActions
+                disableNext={lastPage}
+                disableBack={currentPage < 2}
+                pageLabel={currentPage}
+                refresh={loadStudents}
+                currentPage={currentPage}
+              />
             </>
           ) : (
             <EmptyContainer>

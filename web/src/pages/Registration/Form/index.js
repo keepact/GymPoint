@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 
 import { parseISO, addMonths } from 'date-fns';
 import { toast } from 'react-toastify';
+import { FiUpload } from 'react-icons/fi';
+
 import { formatPrice } from '~/utils';
 
 import history from '~/services/history';
@@ -46,19 +48,6 @@ function RegistrationForm({ match }) {
   const [disableDate, setDisableDate] = useState(!id);
   const [filter, setFilter] = useState('');
 
-  function loadPromises(type) {
-    if (type === 'students')
-      return api.get('students', {
-        params: {
-          q: filter,
-        },
-      });
-
-    if (type === 'plans') return api.get('plans');
-
-    return api.get(`registrations/${id}`);
-  }
-
   async function loadData() {
     try {
       if (id) {
@@ -91,7 +80,20 @@ function RegistrationForm({ match }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const filterColors = (data, inputValue) => {
+  function loadPromises(type) {
+    if (type === 'students')
+      return api.get('students', {
+        params: {
+          q: filter,
+        },
+      });
+
+    if (type === 'plans') return api.get('plans');
+
+    return api.get(`registrations/${id}`);
+  }
+
+  const filterStudent = (data, inputValue) => {
     return data.filter(i =>
       i.name.toLowerCase().includes(inputValue.toLowerCase())
     );
@@ -113,7 +115,7 @@ function RegistrationForm({ match }) {
 
     return new Promise(resolve => {
       setFilter(inputValue);
-      resolve(filterColors(data, inputValue));
+      resolve(filterStudent(data, inputValue));
     });
   };
 
@@ -174,7 +176,7 @@ function RegistrationForm({ match }) {
   return (
     <ContainerForm>
       {loading ? (
-        <Animation animation={loadingAnimation} loop size />
+        <Animation animation={loadingAnimation} loop height width />
       ) : (
         <>
           <TitleWrapper>
@@ -182,7 +184,8 @@ function RegistrationForm({ match }) {
             <div>
               <Link to="/registrations">Voltar</Link>
               <button form="Form" type="submit">
-                Salvar
+                <span>Salvar</span>
+                <FiUpload size={20} />
               </button>
             </div>
           </TitleWrapper>

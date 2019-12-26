@@ -70,6 +70,17 @@ export const TitleWrapper = styled.div`
     background-color: #ee4d64;
     color: #fff;
     font-weight: bold;
+
+    span {
+      margin-right: 15px;
+      text-transform: uppercase;
+    }
+
+    svg {
+      position: absolute;
+      margin-top: -2px;
+      margin-left: -8px;
+    }
   }
 
   input {

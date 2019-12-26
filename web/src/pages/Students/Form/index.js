@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Input } from '@rocketseat/unform';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FiUpload } from 'react-icons/fi';
 
 import { parseDecimal, parseInteger } from '~/utils';
 
@@ -57,7 +58,10 @@ function StudentForm({ match, history }) {
   useEffect(() => {
     if (id) {
       loadData();
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
+    } else {
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleSubmit(data) {
@@ -96,7 +100,8 @@ function StudentForm({ match, history }) {
             <div>
               <Link to="/">Voltar</Link>
               <button form="Form" type="submit">
-                Salvar
+                <span>Salvar</span>
+                <FiUpload size={20} />
               </button>
             </div>
           </TitleWrapper>

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FiPlusCircle } from 'react-icons/fi';
+
 import { formatPrice } from '~/utils';
 
 import Animation from '~/components/Animation';
@@ -48,7 +50,6 @@ function PlansList({ history }) {
 
   async function handleDelete(planId) {
     try {
-      // eslint-disable-next-line no-alert
       if (window.confirm('Você tem certeza que deseja apagar esse plano?')) {
         await api.delete(`plans/${planId}`);
         toast.error('Plano deletado com sucesso');
@@ -62,7 +63,7 @@ function PlansList({ history }) {
   return (
     <Container>
       {loading ? (
-        <Animation animation={loadingAnimation} loop size />
+        <Animation animation={loadingAnimation} loop height width />
       ) : (
         <>
           <TitleWrapper>
@@ -72,7 +73,8 @@ function PlansList({ history }) {
                 type="button"
                 onClick={() => history.push('plans/create')}
               >
-                Cadastrar
+                <span>Cadastrar</span>
+                <FiPlusCircle size={20} />
               </button>
             </div>
           </TitleWrapper>

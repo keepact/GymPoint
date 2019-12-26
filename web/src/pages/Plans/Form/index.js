@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
+import { FiUpload } from 'react-icons/fi';
 
 import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
@@ -30,10 +31,10 @@ const schema = Yup.object().shape({
 });
 
 function PlansForm({ match, history }) {
-  const { id } = match.params;
-
   const [plan, setPlan] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const { id } = match.params;
 
   async function loadData() {
     try {
@@ -46,13 +47,14 @@ function PlansForm({ match, history }) {
       setLoading(false);
     } catch (err) {
       toast.error('Falha na requisição, tente novamente em alguns instantes');
-      console.log(err);
     }
   }
 
   useEffect(() => {
     if (id) {
       loadData();
+    } else {
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -68,7 +70,6 @@ function PlansForm({ match, history }) {
       history.push('/plans');
     } catch (err) {
       toast.error('Falha na requisição, tente novamente');
-      console.log(err);
     }
   }
 
@@ -91,7 +92,7 @@ function PlansForm({ match, history }) {
   return (
     <ContainerForm>
       {loading ? (
-        <Animation animation={loadingAnimation} loop size />
+        <Animation animation={loadingAnimation} loop height width />
       ) : (
         <>
           <TitleWrapper>
@@ -99,7 +100,8 @@ function PlansForm({ match, history }) {
             <div>
               <Link to="/plans">Voltar</Link>
               <button form="Form" type="submit">
-                Salvar
+                <span>Salvar</span>
+                <FiUpload size={20} />
               </button>
             </div>
           </TitleWrapper>
