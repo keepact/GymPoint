@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
-import Select from '~/components/Select';
+import Select from 'react-select';
 
-export const PlanSelector = styled(Select)`
+export const MySelector = styled(Select)`
   width: 198px;
+  padding-bottom: 15px;
 
   .react-select__control {
     margin-top: 4px;

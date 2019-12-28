@@ -24,37 +24,58 @@ export const TitleWrapper = styled.div`
   margin: 50px auto 30px auto;
 
   button {
+    color: #fff;
     width: 142px;
     height: 36px;
     border-radius: 4px;
-    background-color: #ee4d64;
-    color: #fff;
     font-weight: bold;
+    font-size: 14px;
     text-transform: uppercase;
+  }
 
-    span {
-      margin-right: 15px;
-      text-transform: uppercase;
-    }
+  button:first-child {
+    background-color: ${props => (props.homepage ? '#ee4d64' : '#ccc')};
+    margin-right: 5px;
 
-    svg {
-      position: absolute;
-      margin-top: -2px;
-      margin-left: -8px;
+    &[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
     }
+    &[disabled]:hover {
+      opacity: 0.55;
+    }
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  button:last-child {
+    background-color: #ee4d64;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  span {
+    margin-right: 15px;
+    text-transform: uppercase;
+  }
+
+  svg {
+    position: absolute;
+    margin-top: -2px;
+    margin-left: -8px;
   }
 
   input {
     width: 237px;
     height: 36px;
     border-radius: 4px;
-    border: solid 1px #dddddd;
-    background-color: #ffffff;
+    border: solid 1px #ddd;
+    background-color: #fff;
     margin-left: 10px;
-
-    &::placeholder {
-      padding-left: 30px;
-    }
+    padding-left: 15px;
   }
 `;
 
@@ -78,25 +99,28 @@ export const Table = styled.table`
   }
 
   tbody td {
-    padding: 20px 20px 10px 40px;
+    padding: 10px 20px 10px 40px;
   }
 
   div {
     display: flex;
     align-items: center;
-    width: 50px;
+    width: 80px;
     padding: 10px;
-  }
-
-  a {
-    text-decoration: none;
-    font-size: 15px;
   }
 
   button {
     font-size: 15px;
     border: 0;
     margin-left: 15px;
+    background: none;
+  }
+
+  button:first-child {
+    color: blue;
+  }
+
+  button:last-child {
     color: #de3b3b;
   }
 
@@ -108,17 +132,6 @@ export const Table = styled.table`
 export const ContainerForm = styled.div`
   width: 900px;
   margin: 0 auto;
-
-  a {
-    padding: 10px 40px;
-    border-radius: 4px;
-    color: #fff;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-decoration: none;
-    background-color: #ccc;
-    margin-right: 10px;
-  }
 `;
 
 export const MyForm = styled(Form)`
@@ -149,6 +162,11 @@ export const MyForm = styled(Form)`
     height: 45px;
     border-radius: 4px;
     border: solid 1px #ddd;
+    margin-bottom: 10px;
+  }
+
+  span {
+    color: red;
   }
 `;
 
@@ -165,8 +183,9 @@ export const NumberInputs = styled.div`
     margin-top: 5px;
   }
 
-  span {
+  .label {
     text-transform: lowercase;
+    color: #000;
   }
 
   .gray {

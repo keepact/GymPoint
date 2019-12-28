@@ -3,10 +3,10 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 
 import { Input } from '@rocketseat/unform';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
+import history from '~/services/history';
 import { parseDecimal, parseInteger } from '~/utils';
 
 import InputNumber from '~/components/NumberInput';
@@ -35,7 +35,7 @@ const schema = Yup.object().shape({
   height_formatted: Yup.number().required(fieldRequired),
 });
 
-function StudentForm({ match, history }) {
+function StudentForm({ match }) {
   const [loading, setLoading] = useState(true);
   const [student, setStudent] = useState('');
 
@@ -43,7 +43,10 @@ function StudentForm({ match, history }) {
 
   async function loadData() {
     try {
-      const response = await api.get(`/students/${id}`);
+      const response = await api.get('/students', {
+        params: { id },
+      });
+
       setStudent({
         ...response.data,
         height_formatted: parseDecimal(response.data.height, 'height'),
@@ -92,13 +95,15 @@ function StudentForm({ match, history }) {
   return (
     <ContainerForm>
       {loading ? (
-        <Animation animation={loadingAnimation} loop size />
+        <Animation animation={loadingAnimation} loop height width />
       ) : (
         <>
           <TitleWrapper>
             <h1>{id ? 'Edição de aluno' : 'Cadastro de Aluno'}</h1>
             <div>
-              <Link to="/">Voltar</Link>
+              <button type="button" onClick={() => history.push('/')}>
+                Voltar
+              </button>
               <button form="Form" type="submit">
                 <span>Salvar</span>
                 <FiUpload size={20} />
@@ -125,10 +130,10 @@ function StudentForm({ match, history }) {
                   </div>
                   <div>
                     <label htmlFor="weight_formatted">
-                      Peso <span>(em kg)</span>
+                      Peso <span className="label">(em kg)</span>
                     </label>
                     <InputNumber
-                      decimalScale="3"
+                      decimalScale={3}
                       name="weight_formatted"
                       placeholder="75.500"
                     />
@@ -136,7 +141,7 @@ function StudentForm({ match, history }) {
                   <div>
                     <label htmlFor="height_formatted">Altura</label>
                     <InputNumber
-                      decimalScale="2"
+                      decimalScale={2}
                       placeholder="1.70"
                       name="height_formatted"
                     />

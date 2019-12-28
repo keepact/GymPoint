@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { format, parseISO, isBefore, startOfDay } from 'date-fns';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { FaCircle } from 'react-icons/fa';
 import { FiPlusCircle } from 'react-icons/fi';
+
+import history from '~/services/history';
 
 import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
@@ -21,31 +22,47 @@ import {
   EmptyContainer,
 } from '~/styles/shared';
 
-function RegistrationList({ history }) {
+function RegistrationList() {
+  const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState('');
-  const [registrations, setRegistrations] = useState([]);
+  const [removedPage, setRemovedPage] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
 
-  async function loadRegistrations(currentPage = 1) {
+  async function loadRegistrations(pending, currentPage = 1) {
     try {
-      const response = await api.get('/registrations', {
-        params: {
-          page: currentPage,
-        },
-      });
+      const response = !pending
+        ? await api.get('/registrations', {
+            params: {
+              page: currentPage,
+            },
+          })
+        : await api.get('registrations/pending/removed');
 
       const data = response.data.content.rows.map(registration => ({
         ...registration,
+        student_name: registration.student
+          ? registration.student.name
+          : 'Aluno Removido',
+        plan_title: registration.plan
+          ? registration.plan.title
+          : 'Plano Removido',
         startDateFormatted: format(
           parseISO(registration.start_date),
           "dd'/'M/Y"
         ),
         endDateFormatted: format(parseISO(registration.end_date), "dd'/'M/Y"),
-        activePlan: handleActive(registration.active, registration.start_date),
+        activePlan: handleActive(
+          registration.student && registration.plan
+            ? registration.active
+            : 'Pendente',
+          registration.start_date
+        ),
       }));
 
       setRegistrations(data);
+      setPendingCount(response.data.pending);
       setCurrentPage(currentPage);
       setLastPage(response.data.lastPage);
       setLoading(false);
@@ -78,6 +95,12 @@ function RegistrationList({ history }) {
   function handleActive(active, date) {
     const startOfPlan = startOfDay(parseISO(date));
 
+    if (active === 'Pendente') {
+      return {
+        title: 'Pendente',
+        color: 'black',
+      };
+    }
     if (active) {
       return {
         title: 'Ativo',
@@ -96,6 +119,17 @@ function RegistrationList({ history }) {
     };
   }
 
+  async function handleRemovedPage(action) {
+    const linkToPage =
+      action === 'back'
+        ? await loadRegistrations()
+        : await loadRegistrations('pending');
+
+    setRemovedPage(!removedPage);
+
+    return linkToPage;
+  }
+
   return (
     <Container large>
       {loading ? (
@@ -105,6 +139,13 @@ function RegistrationList({ history }) {
           <TitleWrapper>
             <h1>Gereciando Matrículas</h1>
             <div>
+              <button
+                type="button"
+                disabled={pendingCount <= 0 && !removedPage}
+                onClick={() => handleRemovedPage(!removedPage ? 'go' : 'back')}
+              >
+                {!removedPage ? 'Pendentes' : 'Voltar'} {pendingCount}
+              </button>
               <button
                 type="button"
                 onClick={() => history.push('registrations/create')}
@@ -124,14 +165,14 @@ function RegistrationList({ history }) {
                       <th>Plano</th>
                       <th>Ínicio</th>
                       <th>Término</th>
-                      <th>Ativa</th>
+                      <th>Estado</th>
                     </tr>
                   </thead>
                   <tbody>
                     {registrations.map(registration => (
                       <tr key={registration.id}>
-                        <td>{registration.student.name}</td>
-                        <td>{registration.plan.title}</td>
+                        <td>{registration.student_name}</td>
+                        <td>{registration.plan_title}</td>
                         <td>{registration.startDateFormatted}</td>
                         <td>{registration.endDateFormatted}</td>
                         <td>
@@ -140,9 +181,16 @@ function RegistrationList({ history }) {
                         </td>
                         <td>
                           <div>
-                            <Link to={`/registrations/${registration.id}`}>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                history.push(
+                                  `/registrations/${registration.id}/edit`
+                                )
+                              }
+                            >
                               editar
-                            </Link>
+                            </button>
                             <button
                               type="button"
                               onClick={() => handleDelete(registration.id)}
@@ -160,7 +208,12 @@ function RegistrationList({ history }) {
                 disableNext={lastPage}
                 disableBack={currentPage < 2}
                 pageLabel={currentPage}
-                refresh={loadRegistrations}
+                refresh={() =>
+                  loadRegistrations(
+                    '',
+                    !lastPage ? currentPage + 1 : currentPage - 1
+                  )
+                }
                 currentPage={currentPage}
               />
             </>
