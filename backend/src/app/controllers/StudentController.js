@@ -6,7 +6,7 @@ import File from '../models/File';
 
 class StudentController {
   async index(req, res) {
-    const { page = 1, limit = 10, q: query } = req.query;
+    const { page = 1, id, limit = 10, q: query } = req.query;
 
     const students = await Student.findAll({
       order: ['name'],
@@ -26,18 +26,16 @@ class StudentController {
     const studentsCount = await Student.count();
     const lastPage = page * limit >= studentsCount;
 
+    if (id) {
+      const student = await Student.findByPk(id);
+
+      return res.json(student);
+    }
+
     return res.json({
       content: students,
       lastPage,
     });
-  }
-
-  async show(req, res) {
-    const { id } = req.params;
-
-    const student = await Student.findByPk(id);
-
-    return res.json(student);
   }
 
   async store(req, res) {

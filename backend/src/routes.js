@@ -8,6 +8,7 @@ import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import PlanController from './app/controllers/PlanController';
 import RegistrationController from './app/controllers/RegistrationController';
+import PendingController from './app/controllers/PendingController';
 import CheckinController from './app/controllers/CheckinController';
 import HelpOrderController from './app/controllers/HelpOrderController';
 import SupportController from './app/controllers/SupportController';
@@ -34,25 +35,23 @@ routes.delete('/users/:id', UserController.delete);
 
 routes.get('/students', StudentController.index);
 routes.post('/students', StudentController.store);
-routes.get('/students/:id', StudentController.show);
 routes.put('/students/:id', StudentController.update);
 routes.delete('/students/:id', StudentController.delete);
 
-routes.post('/files', upload.single('file'), FileController.store);
-
 routes.get('/plans', PlanController.index);
-routes.get('/plans/:id', PlanController.show);
 routes.post('/plans', PlanController.store);
 routes.put('/plans/:id', PlanController.update);
 routes.delete('/plans/:id', PlanController.delete);
 
 routes.get('/registrations', RegistrationController.index);
 routes.post('/registrations', RegistrationController.store);
-routes.get('/registrations/:id', RegistrationController.show);
 routes.put('/registrations/:id', RegistrationController.update);
 routes.delete('/registrations/:id', RegistrationController.delete);
 
 routes.get('/students/help-orders/answers', SupportController.index);
 routes.post('/students/help-orders/:id/answer', SupportController.store);
+
+routes.get('/registrations/pending/removed', PendingController.index);
+routes.post('/files', upload.single('file'), FileController.store);
 
 export default routes;
