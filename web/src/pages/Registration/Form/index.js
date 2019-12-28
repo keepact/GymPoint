@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 
@@ -9,14 +7,13 @@ import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
 import { formatPrice } from '~/utils';
-
 import history from '~/services/history';
 
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
-import { StudentSelector } from '~/components/AsyncSelect/styles';
-import { PlanSelector } from '~/components/Select/styles';
+import StudentSelector from '~/components/AsyncSelect';
+import PlanSelector from '~/components/Select';
 import DatePicker from '~/components/DatePicker';
 
 import api from '~/services/api';
@@ -51,23 +48,20 @@ function RegistrationForm({ match }) {
   async function loadData() {
     try {
       if (id) {
-        const loadRegistrationPromise = loadPromises();
-        const loadPlanPromise = loadPromises('plans');
+        const { data } = await loadPromises();
+        const { data: dataPlan } = await loadPromises('plans');
 
-        const plan = await loadPlanPromise;
-        const registration = await loadRegistrationPromise;
-
-        setPlans(plan.data);
+        setPlans(dataPlan.content);
         setRegistrations({
-          ...registration.data,
-          priceFormatted: formatPrice(registration.data.price),
-          start_date: parseISO(registration.data.start_date),
-          end_date: parseISO(registration.data.end_date),
+          ...data,
+          priceFormatted: formatPrice(data.price),
+          start_date: parseISO(data.start_date),
+          end_date: parseISO(data.end_date),
         });
         setLoading(false);
       } else {
         const { data } = await loadPromises('plans');
-        setPlans(data);
+        setPlans(data.content);
         setLoading(false);
       }
     } catch (err) {
@@ -90,7 +84,9 @@ function RegistrationForm({ match }) {
 
     if (type === 'plans') return api.get('plans');
 
-    return api.get(`registrations/${id}`);
+    return api.get('registrations', {
+      params: { id },
+    });
   }
 
   const filterStudent = (data, inputValue) => {
@@ -104,7 +100,7 @@ function RegistrationForm({ match }) {
     async function getStudents() {
       try {
         const { data } = await loadPromises('students');
-        return data;
+        return data.content;
       } catch (err) {
         toast.error(
           'Houve um erro na busca de aluno, verifique seus dados ou tente novamente'
@@ -182,7 +178,12 @@ function RegistrationForm({ match }) {
           <TitleWrapper>
             <h1>{id ? 'Edição de Matrícula' : 'Cadastro de Matrícula'}</h1>
             <div>
-              <Link to="/registrations">Voltar</Link>
+              <button
+                type="button"
+                onClick={() => history.push('/registrations')}
+              >
+                Voltar
+              </button>
               <button form="Form" type="submit">
                 <span>Salvar</span>
                 <FiUpload size={20} />
@@ -253,6 +254,9 @@ RegistrationForm.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string,
     }),
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
   }).isRequired,
 };
 

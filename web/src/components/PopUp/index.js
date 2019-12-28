@@ -26,11 +26,9 @@ function PopUp({
             placeholder={placeholder}
             onChange={e => e.target.value}
           />
-          <button type="submit">
-            <span>{buttonLabel}</span>
-          </button>
+          <button type="submit">{buttonLabel}</button>
           <button cancel="true" type="button" onClick={modal}>
-            <span>Cancelar</span>
+            Cancelar
           </button>
         </FormPopUp>
       </Content>
@@ -43,6 +41,7 @@ PopUp.defaultProps = {
 };
 
 PopUp.propTypes = {
+  schema: PropTypes.oneOfType([PropTypes.object]).isRequired,
   name: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   question: PropTypes.string.isRequired,
@@ -50,7 +49,6 @@ PopUp.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   modal: PropTypes.func.isRequired,
-  schema: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 

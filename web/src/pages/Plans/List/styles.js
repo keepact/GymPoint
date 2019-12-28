@@ -30,16 +30,18 @@ export const Table = styled.table`
     padding: 10px;
   }
 
-  a {
-    text-decoration: none;
-    font-size: 15px;
-  }
-
   button {
     font-size: 15px;
     border: 0;
     margin-left: 15px;
-    color: #de3b3b;
     background: none;
+  }
+
+  button:first-child {
+    color: blue;
+  }
+
+  button:last-child {
+    color: #de3b3b;
   }
 `;

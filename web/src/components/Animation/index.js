@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Lottie from 'react-lottie';
 
 import { AnimationContainer } from './styles';
 
 function LottieControl({ animation, width, height, loop, autoplay }) {
-  const [isStopped, setStopped] = useState(false);
-  const [isPaused, setPaused] = useState(false);
-
   const defaultOptions = {
     loop,
     autoplay,
@@ -21,11 +18,9 @@ function LottieControl({ animation, width, height, loop, autoplay }) {
     <AnimationContainer>
       <Lottie
         options={defaultOptions}
-        isStopped={isStopped}
         isClickToPauseDisabled
-        isPaused={isPaused}
-        height={height}
-        width={width}
+        height={`${height}`}
+        width={`${width}`}
       />
     </AnimationContainer>
   );
@@ -40,8 +35,8 @@ LottieControl.defaultProps = {
 
 LottieControl.propTypes = {
   animation: PropTypes.oneOfType([PropTypes.object]).isRequired,
-  width: PropTypes.number,
-  height: PropTypes.number,
+  width: PropTypes.bool,
+  height: PropTypes.bool,
   loop: PropTypes.bool,
   autoplay: PropTypes.bool,
 };

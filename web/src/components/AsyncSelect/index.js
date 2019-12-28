@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
-import AsyncSelect from 'react-select/async';
 import PropTypes from 'prop-types';
 
 import { useField } from '@rocketseat/unform';
+
+import { MyAsyncSelect } from './styles';
 
 export default function AsyncSelector({
   name,
@@ -30,7 +31,7 @@ export default function AsyncSelector({
 
   return (
     <>
-      <AsyncSelect
+      <MyAsyncSelect
         name={fieldName}
         loadOptions={loadOptions}
         value={value}

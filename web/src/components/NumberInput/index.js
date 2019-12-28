@@ -74,7 +74,7 @@ InputNumber.propTypes = {
   disabled: PropTypes.bool,
   prefix: PropTypes.string,
   thousandSeparator: PropTypes.string,
-  decimalScale: PropTypes.string,
+  decimalScale: PropTypes.number,
   onChange: PropTypes.func,
 };
 

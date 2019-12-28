@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiPlusCircle } from 'react-icons/fi';
 
 import { formatPrice } from '~/utils';
+
+import history from '~/services/history';
 
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
@@ -20,7 +21,7 @@ import {
 } from '~/styles/shared';
 import { Table } from './styles';
 
-function PlansList({ history }) {
+function PlansList() {
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState([]);
 
@@ -28,7 +29,7 @@ function PlansList({ history }) {
     try {
       const response = await api.get('/plans');
 
-      const data = response.data.map(r => ({
+      const data = response.data.content.map(r => ({
         ...r,
         priceFormatted: formatPrice(r.price),
         labelTitle: `${r.duration} ${r.duration >= 2 ? 'meses' : 'mês'}`,
@@ -97,7 +98,14 @@ function PlansList({ history }) {
                         <td>{plan.priceFormatted}</td>
                         <td>
                           <div>
-                            <Link to={`/plans/${plan.id}`}>editar</Link>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                history.push(`/plans/${plan.id}/edit`)
+                              }
+                            >
+                              editar
+                            </button>
                             <button
                               type="button"
                               onClick={() => handleDelete(plan.id)}

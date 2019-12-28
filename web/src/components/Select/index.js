@@ -1,10 +1,11 @@
-import React, { useRef, useEffect, useMemo, useState } from 'react';
-import Select from 'react-select';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { useField } from '@rocketseat/unform';
 
-export default function MySelector({ name, options, onChange, ...rest }) {
+import { MySelector } from './styles';
+
+export default function Selector({ name, options, onChange, ...rest }) {
   const ref = useRef();
   const { fieldName, registerField, defaultValue, error } = useField(name);
   const [value, setValue] = useState(defaultValue);
@@ -25,7 +26,7 @@ export default function MySelector({ name, options, onChange, ...rest }) {
 
   return (
     <>
-      <Select
+      <MySelector
         name={fieldName}
         options={options}
         value={value}
@@ -47,11 +48,11 @@ export default function MySelector({ name, options, onChange, ...rest }) {
   );
 }
 
-MySelector.defaultProps = {
+Selector.defaultProps = {
   onChange: null,
 };
 
-MySelector.propTypes = {
+Selector.propTypes = {
   name: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func,

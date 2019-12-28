@@ -31,19 +31,22 @@ export const Table = styled.table`
   div {
     display: flex;
     align-items: center;
-    width: 50px;
+    width: 80px;
     padding: 10px;
-  }
-
-  a {
-    text-decoration: none;
-    font-size: 15px;
   }
 
   button {
     font-size: 15px;
     border: 0;
     margin-left: 15px;
+    background: none;
+  }
+
+  button:first-child {
+    color: blue;
+  }
+
+  button:last-child {
     color: #de3b3b;
   }
 `;
@@ -55,41 +58,4 @@ export const Content = styled.div`
   border-radius: 4px;
   background: #fff;
   max-width: 1200px;
-`;
-
-export const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 50px auto 30px auto;
-
-  button {
-    width: 142px;
-    height: 36px;
-    border-radius: 4px;
-    background-color: #ee4d64;
-    color: #fff;
-    font-weight: bold;
-
-    span {
-      margin-right: 15px;
-      text-transform: uppercase;
-    }
-
-    svg {
-      position: absolute;
-      margin-top: -2px;
-      margin-left: -8px;
-    }
-  }
-
-  input {
-    width: 237px;
-    height: 36px;
-    border-radius: 4px;
-    border: solid 1px #dddddd;
-    background-color: #ffffff;
-    margin-left: 10px;
-    padding: 20px;
-  }
 `;

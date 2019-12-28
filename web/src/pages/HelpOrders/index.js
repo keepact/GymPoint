@@ -108,7 +108,7 @@ function HelpOrders() {
               </Content>
               <PageActions
                 disableNext={lastPage}
-                disbaleBack={currentPage < 2}
+                disableBack={currentPage < 2}
                 pageLabel={currentPage}
                 refresh={loadHelpOrders}
                 currentPage={currentPage}
@@ -119,7 +119,7 @@ function HelpOrders() {
                   name="answer"
                   title="Pergunta do Aluno"
                   label="Sua Resposta aqui"
-                  buttonLabel="Resposta do Aluno"
+                  buttonLabel="Enviar Resposta"
                   modal={openPopup}
                   question={selectedQuestion.question}
                   onSubmit={handleSubmit}
@@ -130,7 +130,12 @@ function HelpOrders() {
             <EmptyContainer>
               <h2>Parabéns! Os pedidos de auxílio estão em dia!</h2>
               <AnimationContainer>
-                <Animation animation={clearAnimation} loop={false} size={100} />
+                <Animation
+                  animation={clearAnimation}
+                  loop={false}
+                  height="100"
+                  width="100"
+                />
               </AnimationContainer>
             </EmptyContainer>
           )}

@@ -55,12 +55,20 @@ export const FormPopUp = styled(Form)`
     padding: 0 14px;
   }
 
-  span {
+  span:first-of-type {
     font-size: 14px;
+    color: black;
     font-weight: bold;
     margin-bottom: 10px;
     padding: 5px 10px;
     text-transform: uppercase;
+  }
+
+  span {
+    color: red;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-bottom: 10px;
   }
 
   label {
@@ -78,17 +86,15 @@ export const FormPopUp = styled(Form)`
 
   button {
     align-self: center;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
     min-width: 390px;
     min-height: 45px;
     border-radius: 4px;
     color: #fff;
     background: #ee4d64;
     margin-top: 5px;
-
-    span {
-      color: #fff;
-      font-size: 16px;
-    }
   }
 `;
 

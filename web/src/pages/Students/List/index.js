@@ -1,20 +1,24 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { FiPlusCircle } from 'react-icons/fi';
 import api from '~/services/api';
-
+import history from '~/services/history';
 import PageActions from '~/components/Pagination';
 
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
-import { Container, Content, EmptyContainer } from '~/styles/shared';
-import { Table, TitleWrapper } from './styles';
+import {
+  Container,
+  Content,
+  EmptyContainer,
+  TitleWrapper,
+} from '~/styles/shared';
+import { Table } from './styles';
 
-function StudentsList({ history }) {
+function StudentsList() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -66,10 +70,10 @@ function StudentsList({ history }) {
   return (
     <Container>
       {loading ? (
-        <Animation animation={loadingAnimation} loop size />
+        <Animation animation={loadingAnimation} width height loop />
       ) : (
         <>
-          <TitleWrapper>
+          <TitleWrapper homepage>
             <h1>Gereciando alunos</h1>
 
             <div>
@@ -118,7 +122,14 @@ function StudentsList({ history }) {
                         </td>
                         <td>
                           <div>
-                            <Link to={`/students/${student.id}`}>editar</Link>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                history.push(`/students/${student.id}/edit`)
+                              }
+                            >
+                              editar
+                            </button>
                             <button
                               type="button"
                               onClick={() => handleDelete(student.id)}

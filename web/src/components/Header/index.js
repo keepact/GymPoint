@@ -8,7 +8,7 @@ import logo from '~/assets/images/header-logo.svg';
 
 import { Container, Content, Profile } from './styles';
 
-export default function Header() {
+function Header() {
   const dispatch = useDispatch();
   const profile = useSelector(state => state.user.profile);
 
@@ -50,3 +50,5 @@ export default function Header() {
     </Container>
   );
 }
+
+export default Header;

@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 
-import { Link } from 'react-router-dom';
 import { Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
 import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
+
+import history from '~/services/history';
 
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -26,19 +27,23 @@ const fieldRequired = 'Esse campo é obrigatório';
 
 const schema = Yup.object().shape({
   title: Yup.string().required(fieldRequired),
-  duration: Yup.number().required(fieldRequired),
+  duration: Yup.number()
+    .typeError(fieldRequired)
+    .required(fieldRequired),
   price: Yup.number().required(fieldRequired),
 });
 
-function PlansForm({ match, history }) {
-  const [plan, setPlan] = useState('');
+function PlansForm({ match }) {
+  const [plan, setPlan] = useState({});
   const [loading, setLoading] = useState(true);
 
   const { id } = match.params;
 
   async function loadData() {
     try {
-      const response = await api.get(`/plans/${id}`);
+      const response = await api.get('/plans', {
+        params: { id },
+      });
 
       setPlan({
         ...response.data,
@@ -98,7 +103,9 @@ function PlansForm({ match, history }) {
           <TitleWrapper>
             <h1>{id ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
             <div>
-              <Link to="/plans">Voltar</Link>
+              <button type="button" onClick={() => history.push('/plans')}>
+                Voltar
+              </button>
               <button form="Form" type="submit">
                 <span>Salvar</span>
                 <FiUpload size={20} />
@@ -117,7 +124,7 @@ function PlansForm({ match, history }) {
               <NumberInputs>
                 <div>
                   <label htmlFor="duration">
-                    Duração <span>(em meses)</span>
+                    Duração <span className="label">(em meses)</span>
                   </label>
                   <Input
                     type="number"
