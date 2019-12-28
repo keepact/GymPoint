@@ -9,56 +9,82 @@ import Plan from '../models/Plan';
 import RegistrationMail from '../jobs/RegistrationMail';
 import Queue from '../../lib/Queue';
 
-const include = [
-  {
-    model: Student,
-    as: 'student',
-    attributes: ['id', 'name'],
-    where: {
-      id: {
-        [Op.ne]: null,
-      },
-    },
-  },
-  {
-    model: Plan,
-    as: 'plan',
-    attributes: ['id', 'title'],
-    where: {
-      id: {
-        [Op.ne]: null,
-      },
-    },
-  },
-];
-
 class RegistrationController {
   async index(req, res) {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, id, limit = 10 } = req.query;
 
     const registrations = await Registration.findAndCountAll({
+      order: ['created_at'],
       limit,
       offset: (page - 1) * limit,
       attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
-      include,
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['id', 'name'],
+          where: {
+            id: {
+              [Op.ne]: null,
+            },
+          },
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['id', 'title'],
+          where: {
+            id: {
+              [Op.ne]: null,
+            },
+          },
+        },
+      ],
+    });
+
+    const pending = await Registration.count({
+      where: {
+        [Op.or]: [
+          {
+            plan_id: {
+              [Op.eq]: null,
+            },
+          },
+          {
+            student_id: {
+              [Op.eq]: null,
+            },
+          },
+        ],
+      },
     });
 
     const lastPage = page * limit >= registrations.count;
 
+    if (id) {
+      const registration = await Registration.findByPk(id, {
+        include: [
+          {
+            model: Student,
+            as: 'student',
+            attributes: ['id', 'name'],
+          },
+          {
+            model: Plan,
+            as: 'plan',
+            attributes: ['id', 'title'],
+          },
+        ],
+      });
+
+      return res.json(registration);
+    }
+
     return res.json({
       content: registrations,
+      pending,
       lastPage,
     });
-  }
-
-  async show(req, res) {
-    const { id } = req.params;
-
-    const registration = await Registration.findByPk(id, {
-      include,
-    });
-
-    return res.json(registration);
   }
 
   async store(req, res) {
@@ -101,11 +127,19 @@ class RegistrationController {
       price: finalPrice,
     });
 
-    /**
-     * Notify registration student
-     */
     const registrationComplete = await Registration.findByPk(registration.id, {
-      include,
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['id', 'name'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['id', 'title'],
+        },
+      ],
     });
 
     await Queue.add(RegistrationMail.key, {
@@ -129,9 +163,7 @@ class RegistrationController {
     const { id } = req.params;
     const { student_id, plan_id, start_date } = req.body;
 
-    const registration = await Registration.findByPk(id, {
-      include,
-    });
+    const registration = await Registration.findByPk(id);
     const plan = await Plan.findByPk(plan_id);
 
     if (!registration) {
