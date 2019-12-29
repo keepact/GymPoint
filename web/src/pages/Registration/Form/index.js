@@ -32,6 +32,8 @@ const schema = Yup.object().shape({
   student: Yup.mixed().required(fieldRequired),
   plan: Yup.mixed().required(fieldRequired),
   start_date: Yup.date()
+    .min(new Date(), 'Datas passadas não são permitidas')
+    .max(addMonths(new Date(), 3), 'Agendamento até 3 meses')
     .typeError(fieldRequired)
     .required(fieldRequired),
 });
