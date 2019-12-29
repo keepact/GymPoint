@@ -29,6 +29,9 @@ class StudentController {
     if (id) {
       const student = await Student.findByPk(id);
 
+      if (!student) {
+        return res.status(400).json({ error: 'Aluno não encontrado' });
+      }
       return res.json(student);
     }
 
@@ -50,7 +53,9 @@ class StudentController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res.status(400).json({
+        error: 'A validação falhou, verifique seus dados e tente novamente',
+      });
     }
 
     const studentExists = await Student.findOne({
@@ -58,7 +63,7 @@ class StudentController {
     });
 
     if (studentExists) {
-      return res.status(400).json({ error: 'Student already exists.' });
+      return res.status(400).json({ error: 'O estudante já existe' });
     }
 
     const { id, name, email, age, weight, height } = await Student.create(
@@ -85,7 +90,9 @@ class StudentController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res.status(400).json({
+        error: 'A validação falhou, verifique seus dados e tente novamente',
+      });
     }
 
     const { id } = req.params;
@@ -93,7 +100,7 @@ class StudentController {
     const student = await Student.findOne({ where: { id } });
 
     if (!student) {
-      return res.status(400).json({ error: 'Student does not exists.' });
+      return res.status(400).json({ error: 'O estudante já existe' });
     }
 
     await student.update(req.body);
@@ -124,6 +131,12 @@ class StudentController {
 
   async delete(req, res) {
     const { id } = req.params;
+
+    const studentExists = await Student.findByPk(id);
+
+    if (!studentExists) {
+      return res.status(400).json({ error: 'Estudante não encontrado' });
+    }
 
     await Student.destroy({ where: { id } });
 

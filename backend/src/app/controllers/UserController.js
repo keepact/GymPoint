@@ -42,13 +42,13 @@ class UserController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.json({ error: 'Validation Fails' });
+      return res.status(400).json({ error: 'Validação falhou' });
     }
 
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
     if (userExists) {
-      return res.status(400).json({ error: 'User already exists.' });
+      return res.status(400).json({ error: 'Usuário já existe' });
     }
     const { id, name, email } = await User.create(req.body);
 
@@ -75,7 +75,7 @@ class UserController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res.status(400).json({ error: 'Validação falhou' });
     }
 
     const { email, oldPassword } = req.body;
@@ -86,12 +86,14 @@ class UserController {
       const userExists = await User.findOne({ where: { email } });
 
       if (userExists) {
-        return res.status(400).json({ error: 'User already exists.' });
+        return res.status(400).json({ error: 'Usuário já existe' });
       }
     }
 
     if (oldPassword && !(await user.checkPassword(oldPassword))) {
-      return res.status(401).json({ error: 'Password does not match' });
+      return res
+        .status(401)
+        .json({ error: 'As senhas não batem, tente novamentes' });
     }
 
     await user.update(req.body);
@@ -116,6 +118,12 @@ class UserController {
 
   async delete(req, res) {
     const { id } = req.params;
+
+    const userExists = await User.findByPk(id);
+
+    if (!userExists) {
+      return res.status(400).json({ error: 'Usuário não encontrado' });
+    }
 
     await User.destroy({ where: { id } });
 

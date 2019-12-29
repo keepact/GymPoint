@@ -77,6 +77,10 @@ class RegistrationController {
         ],
       });
 
+      if (!registration) {
+        return res.status(400).json({ error: 'Não há matrículas cadastradas' });
+      }
+
       return res.json(registration);
     }
 
@@ -99,7 +103,9 @@ class RegistrationController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'validation fails' });
+      return res.status(400).json({
+        error: 'A validação falhou, verifique seus dados e tente novamente',
+      });
     }
 
     const { student_id, plan_id, start_date } = req.body;
@@ -109,13 +115,15 @@ class RegistrationController {
     });
 
     if (checkRegistration) {
-      return res.json('Student already has a plan');
+      return res.status(400).json({ error: 'O aluno já tem um plano' });
     }
 
     const dateStart = startOfDay(parseISO(start_date));
 
     if (isBefore(dateStart, new Date())) {
-      return res.status(400).json({ error: 'Past dates are not permitted' });
+      return res
+        .status(400)
+        .json({ error: 'Datas passadas não são permitidas' });
     }
 
     const student = await Student.findByPk(student_id);
@@ -171,7 +179,9 @@ class RegistrationController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'validation fails' });
+      return res.status(400).json({
+        error: 'A validação falhou, verifique seus dados e tente novamente',
+      });
     }
 
     const { id } = req.params;
@@ -181,13 +191,15 @@ class RegistrationController {
     const plan = await Plan.findByPk(plan_id);
 
     if (!registration) {
-      return res.status(400).json('This registration does not exist');
+      return res.status(400).json({ error: 'Matrícula inexistente' });
     }
 
     const dateStart = startOfDay(parseISO(start_date));
 
     if (isBefore(dateStart, new Date())) {
-      return res.status(400).json({ error: 'Past dates are not permitted' });
+      return res
+        .status(400)
+        .json({ error: 'Datas passadas não são permitidas' });
     }
 
     const endOfPlan = addMonths(parseISO(start_date), plan.duration);
@@ -207,6 +219,12 @@ class RegistrationController {
 
   async delete(req, res) {
     const { id } = req.params;
+
+    const registrationExists = await Registration.findByPk(id);
+
+    if (!registrationExists) {
+      return res.status(400).json({ error: 'Matrícula não encontrada' });
+    }
 
     await Registration.destroy({ where: { id } });
 

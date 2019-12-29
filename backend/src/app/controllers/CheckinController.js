@@ -37,7 +37,7 @@ class CheckinController {
     if (checkValidCheckin.length >= 5) {
       return res
         .status(401)
-        .json({ error: 'You can only do 5 checkins per week' });
+        .json({ error: 'Só é possível realizar 5 checkins por semana' });
     }
 
     const checkin = await Checkin.create({
