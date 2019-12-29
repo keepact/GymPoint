@@ -89,8 +89,12 @@ class RegistrationController {
 
   async store(req, res) {
     const schema = Yup.object().shape({
-      student_id: Yup.number().required(),
-      plan_id: Yup.number().required(),
+      student_id: Yup.number()
+        .positive()
+        .required(),
+      plan_id: Yup.number()
+        .positive()
+        .required(),
       start_date: Yup.date().required(),
     });
 
@@ -114,7 +118,17 @@ class RegistrationController {
       return res.status(400).json({ error: 'Past dates are not permitted' });
     }
 
+    const student = await Student.findByPk(student_id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'Aluno não encontrado' });
+    }
+
     const plan = await Plan.findByPk(plan_id);
+
+    if (!plan) {
+      return res.status(400).json({ error: 'Plano não encontrado' });
+    }
 
     const endOfPlan = addMonths(parseISO(start_date), plan.duration);
     const finalPrice = plan.price * plan.duration;
