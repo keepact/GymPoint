@@ -172,7 +172,7 @@ function RegistrationForm({ match }) {
   return (
     <ContainerForm>
       {loading ? (
-        <Animation animation={loadingAnimation} loop height width />
+        <Animation animation={loadingAnimation} />
       ) : (
         <>
           <TitleWrapper>

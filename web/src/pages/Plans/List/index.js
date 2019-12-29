@@ -64,7 +64,7 @@ function PlansList() {
   return (
     <Container>
       {loading ? (
-        <Animation animation={loadingAnimation} loop height width />
+        <Animation animation={loadingAnimation} />
       ) : (
         <>
           <TitleWrapper>

@@ -9,9 +9,10 @@ import AvatarInput from './AvatarInput';
 
 import { Container } from './styles';
 
-export default function Profile() {
+function Profile() {
   const dispatch = useDispatch();
-  const profile = useSelector(state => state.user.profile);
+
+  const { profile, loading } = useSelector(state => state.user);
 
   function handleSubmit(data) {
     dispatch(updateProfileRequest(data));
@@ -43,7 +44,9 @@ export default function Profile() {
           placeholder="Confirmação de senha"
         />
 
-        <button type="submit">Atualizar perfil</button>
+        <button type="submit">
+          {loading ? 'Carregando...' : 'Atualizar perfil'}
+        </button>
       </Form>
 
       <button type="button" onClick={handleSignOut}>
@@ -52,3 +55,5 @@ export default function Profile() {
     </Container>
   );
 }
+
+export default Profile;

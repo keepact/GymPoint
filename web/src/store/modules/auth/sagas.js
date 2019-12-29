@@ -17,18 +17,15 @@ export function* signIn({ payload }) {
 
     const { token, user } = response.data;
 
-    // if (!user.provider) {
-    //   console.tron.error('Usuário não é prestador');
-    //   return;
-    // }
-
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
     yield put(signInSuccess(token, user));
 
     history.push('/students');
   } catch (err) {
-    toast.error('Falha na autenticação, verifique seus dados');
+    toast.error(
+      'Falha na autenticação, verifique seus dados e tente novamente'
+    );
     yield put(signFailure());
   }
 }

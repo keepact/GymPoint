@@ -36,7 +36,7 @@ export const Wrapper = styled.div`
 
 export const AnimationContainer = styled.div`
   position: absolute;
-  top: 300px;
+  top: 100px;
   right: 100px;
   left: 100px;
 `;
