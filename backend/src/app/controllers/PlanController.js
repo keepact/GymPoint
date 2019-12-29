@@ -12,6 +12,10 @@ class PlanController {
 
     if (id) {
       const plan = await Plan.findByPk(id);
+
+      if (!plan) {
+        return res.status(400).json({ error: 'Plano não existe' });
+      }
       return res.json(plan);
     }
 
@@ -29,13 +33,15 @@ class PlanController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.json('Validation fail');
+      return res.status(400).json({
+        error: 'A validação falhou, verifique seus dados e tente novamente',
+      });
     }
 
     const planExists = await Plan.findOne({ where: { title: req.body.title } });
 
     if (planExists) {
-      return res.json('Plan already exist');
+      return res.status(400).json({ error: 'O plano já existe' });
     }
 
     const { id, title, duration, price } = req.body;
@@ -81,6 +87,12 @@ class PlanController {
 
   async delete(req, res) {
     const { id } = req.params;
+
+    const planExists = await Plan.findByPk(id);
+
+    if (!planExists) {
+      return res.status(400).json({ error: 'Plano não encontrado' });
+    }
 
     await Plan.destroy({ where: { id } });
 

@@ -40,6 +40,10 @@ class PendingController {
       },
     });
 
+    if (!registrations) {
+      return res.status(400).json({ error: 'Não há matrículas pendentes' });
+    }
+
     const lastPage = page * limit >= registrations.count;
 
     return res.json({

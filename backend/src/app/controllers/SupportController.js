@@ -33,8 +33,10 @@ class SupportController {
 
     const lastPage = page * limit >= supportOrder.count;
 
-    if (supportOrder.length === 0) {
-      return res.status(200).json('All clear');
+    if (!supportOrder) {
+      return res
+        .status(400)
+        .json({ error: 'Sem pedidos de auxílio cadastrados' });
     }
 
     return res.json({
@@ -49,7 +51,9 @@ class SupportController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'validation fails' });
+      return res.status(400).json({
+        error: 'A validação falhou, verifique seus dados e tente novamente',
+      });
     }
 
     const { id } = req.params;

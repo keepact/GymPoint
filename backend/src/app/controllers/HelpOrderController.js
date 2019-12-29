@@ -4,8 +4,8 @@ import Student from '../models/Student';
 class HelpOrderController {
   async index(req, res) {
     const { page = 1, limit = 10 } = req.query;
-
     const { id } = req.params;
+
     const supportOrder = await HelpOrder.findAll({
       where: { student_id: id },
       limit,
@@ -19,6 +19,12 @@ class HelpOrderController {
       ],
     });
 
+    if (!supportOrder) {
+      return res
+        .status(400)
+        .json({ error: 'Sem pedidos de auxílio cadastrado' });
+    }
+
     return res.json(supportOrder);
   }
 
@@ -30,6 +36,12 @@ class HelpOrderController {
       student_id: id,
       question,
     });
+
+    if (!addSupportQuestion) {
+      return res
+        .status(400)
+        .json({ error: 'Pedido de auxílio não encontrado' });
+    }
 
     return res.json(addSupportQuestion);
   }

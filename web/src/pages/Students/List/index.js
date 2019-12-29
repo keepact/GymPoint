@@ -40,7 +40,7 @@ function StudentsList() {
       setLastPage(response.data.lastPage);
       setLoading(false);
     } catch (err) {
-      toast.error('Houve um erro, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 
@@ -63,7 +63,7 @@ function StudentsList() {
         loadStudents();
       }
     } catch (err) {
-      toast.error('Houve um erro, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 

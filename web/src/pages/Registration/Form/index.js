@@ -67,7 +67,7 @@ function RegistrationForm({ match }) {
         setLoading(false);
       }
     } catch (err) {
-      toast.error('Houve um erro, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 
@@ -104,9 +104,7 @@ function RegistrationForm({ match }) {
         const { data } = await loadPromises('students');
         return data.content;
       } catch (err) {
-        toast.error(
-          'Houve um erro na busca de aluno, verifique seus dados ou tente novamente'
-        );
+        toast.error(err.response.data.error);
       }
     }
     const data = await getStudents();
@@ -167,7 +165,7 @@ function RegistrationForm({ match }) {
       );
       history.push('/registrations');
     } catch (err) {
-      toast.error('Houve um erro, verifique seus dados e tente novamente');
+      toast.error(err.response.data.error);
     }
   }
 

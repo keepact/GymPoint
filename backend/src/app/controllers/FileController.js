@@ -9,6 +9,10 @@ class FileController {
       path,
     });
 
+    if (!file) {
+      return res.status(400).json({ error: 'Arquivo não encontrado' });
+    }
+
     return res.json(file);
   }
 }

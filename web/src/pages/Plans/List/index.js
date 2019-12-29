@@ -38,7 +38,7 @@ function PlansList() {
       setPlans(data);
       setLoading(false);
     } catch (err) {
-      toast.error('Houve um erro, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 
@@ -57,7 +57,7 @@ function PlansList() {
         loadPlans();
       }
     } catch (err) {
-      toast.error('Houve um erro, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 
