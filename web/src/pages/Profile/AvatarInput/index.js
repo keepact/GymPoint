@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useField } from '@rocketseat/unform';
 
 import api from '~/services/api';
@@ -29,12 +30,16 @@ export default function AvatarInput() {
 
     data.append('file', e.target.files[0]);
 
-    const response = await api.post('files', data);
+    try {
+      const response = await api.post('files', data);
 
-    const { id, url } = response.data;
+      const { id, url } = response.data;
 
-    setFile(id);
-    setPreview(url);
+      setFile(id);
+      setPreview(url);
+    } catch (err) {
+      toast.error(err.response.data.error);
+    }
   }
 
   return (
@@ -44,7 +49,7 @@ export default function AvatarInput() {
           src={
             preview || 'https://api.adorable.io/avatars/50/abott@adorable.png'
           }
-          alt=""
+          alt="avatar"
         />
 
         <input

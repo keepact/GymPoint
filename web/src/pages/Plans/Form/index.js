@@ -62,7 +62,7 @@ function PlansForm({ match }) {
       });
       setLoading(false);
     } catch (err) {
-      toast.error('Falha na requisição, tente novamente em alguns instantes');
+      toast.error(err.response.data.error);
     }
   }
 
@@ -82,10 +82,12 @@ function PlansForm({ match }) {
       } else {
         await api.post('/plans', data);
       }
-      toast.success('Plano editado com sucesso');
+      toast.success(
+        id ? 'Plano editado com sucesso' : 'Plano cadastrado com sucesso'
+      );
       history.push('/plans');
     } catch (err) {
-      toast.error('Falha na requisição, tente novamente');
+      toast.error(err.response.data.error);
     }
   }
 

@@ -71,7 +71,7 @@ function StudentForm({ match }) {
       });
       setLoading(false);
     } catch (err) {
-      toast.error('Houve um erro, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 
@@ -105,7 +105,7 @@ function StudentForm({ match }) {
       );
       history.push('/students');
     } catch (err) {
-      toast.error('Houve um erro, verifique seus dados e tente novamente');
+      toast.error(err.response.data.error);
     }
   }
 

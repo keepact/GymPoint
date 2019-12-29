@@ -7,11 +7,13 @@ import { signInRequest } from '~/store/modules/auth/actions';
 
 import logo from '~/assets/images/logo.svg';
 
+const fieldRequired = 'Esse campo é obrigatório';
+
 const schema = Yup.object().shape({
   email: Yup.string()
     .email('Insira um e-mail válido')
-    .required('O e-mail é obrigatório'),
-  password: Yup.string().required('A senha é obrigatória'),
+    .required(fieldRequired),
+  password: Yup.string().required(fieldRequired),
 });
 
 export default function SignIn() {

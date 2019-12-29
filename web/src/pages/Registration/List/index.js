@@ -67,7 +67,7 @@ function RegistrationList() {
       setLastPage(response.data.lastPage);
       setLoading(false);
     } catch (err) {
-      toast.error('Erro na requisição, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 
@@ -88,7 +88,7 @@ function RegistrationList() {
         loadRegistrations();
       }
     } catch (err) {
-      toast.error('Houve um erro, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 

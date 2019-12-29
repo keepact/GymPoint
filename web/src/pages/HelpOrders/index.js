@@ -41,7 +41,7 @@ function HelpOrders() {
       setLastPage(response.data.lastPage);
       setLoading(false);
     } catch (err) {
-      toast.error('Houve um erro, tente novamente em alguns minutos');
+      toast.error(err.response.data.error);
     }
   }
 
@@ -71,9 +71,7 @@ function HelpOrders() {
       openPopup();
       loadHelpOrders();
     } catch (err) {
-      toast.error(
-        'Falha na requisição, por favor tente novamente em alguns minutos'
-      );
+      toast.error(err.response.data.error);
     }
   }
 
