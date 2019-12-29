@@ -53,7 +53,7 @@ function PlansList() {
     try {
       if (window.confirm('Você tem certeza que deseja apagar esse plano?')) {
         await api.delete(`plans/${planId}`);
-        toast.error('Plano deletado com sucesso');
+        toast.success('Plano deletado com sucesso');
         loadPlans();
       }
     } catch (err) {

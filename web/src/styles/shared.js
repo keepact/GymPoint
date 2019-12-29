@@ -166,7 +166,8 @@ export const MyForm = styled(Form)`
   }
 
   span {
-    color: red;
+    color: #fb6f91;
+    font-weight: bold;
   }
 `;
 

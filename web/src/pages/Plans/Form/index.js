@@ -8,11 +8,9 @@ import { FiUpload } from 'react-icons/fi';
 
 import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
-
-import history from '~/services/history';
-
 import loadingAnimation from '~/assets/animations/loader.json';
 
+import history from '~/services/history';
 import api from '~/services/api';
 
 import {
@@ -26,11 +24,24 @@ import {
 const fieldRequired = 'Esse campo é obrigatório';
 
 const schema = Yup.object().shape({
-  title: Yup.string().required(fieldRequired),
+  title: Yup.string()
+    .min(3, 'Mínimo de 3 letras')
+    .max(30, 'Máximo de 30 letras')
+    .matches(/^([^0-9]*)$/, {
+      message: 'Números não são permitidos',
+      excludeEmptyString: true,
+    })
+    .required(fieldRequired),
   duration: Yup.number()
+    .min(1, 'mínimo de 1 digito')
+    .max(2, 'máximo de 2 digitos')
     .typeError(fieldRequired)
     .required(fieldRequired),
-  price: Yup.number().required(fieldRequired),
+  price: Yup.number()
+    .min(1, 'mínimo de 1 digito')
+    .max(2, 'máximo de 2 digitos')
+    .typeError(fieldRequired)
+    .required(fieldRequired),
 });
 
 function PlansForm({ match }) {
