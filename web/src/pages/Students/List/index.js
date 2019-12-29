@@ -70,7 +70,7 @@ function StudentsList() {
   return (
     <Container>
       {loading ? (
-        <Animation animation={loadingAnimation} width height loop />
+        <Animation animation={loadingAnimation} />
       ) : (
         <>
           <TitleWrapper homepage>

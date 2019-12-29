@@ -133,7 +133,7 @@ function RegistrationList() {
   return (
     <Container large>
       {loading ? (
-        <Animation animation={loadingAnimation} loop height width />
+        <Animation animation={loadingAnimation} />
       ) : (
         <>
           <TitleWrapper>

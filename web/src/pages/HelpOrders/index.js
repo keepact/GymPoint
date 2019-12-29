@@ -78,7 +78,7 @@ function HelpOrders() {
   return (
     <Container small>
       {loading ? (
-        <Animation animation={loadingAnimation} loop height width />
+        <Animation animation={loadingAnimation} />
       ) : (
         <>
           <TitleWrapper>
@@ -131,8 +131,8 @@ function HelpOrders() {
                 <Animation
                   animation={clearAnimation}
                   loop={false}
-                  height="100"
-                  width="100"
+                  height="100px"
+                  width="100px"
                 />
               </AnimationContainer>
             </EmptyContainer>

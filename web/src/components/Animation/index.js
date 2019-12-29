@@ -19,24 +19,24 @@ function LottieControl({ animation, width, height, loop, autoplay }) {
       <Lottie
         options={defaultOptions}
         isClickToPauseDisabled
-        height={`${height}`}
-        width={`${width}`}
+        height={height}
+        width={width}
       />
     </AnimationContainer>
   );
 }
 
 LottieControl.defaultProps = {
-  width: 300,
-  height: 300,
+  width: '300px',
+  height: '300px',
   loop: true,
   autoplay: true,
 };
 
 LottieControl.propTypes = {
   animation: PropTypes.oneOfType([PropTypes.object]).isRequired,
-  width: PropTypes.bool,
-  height: PropTypes.bool,
+  width: PropTypes.string,
+  height: PropTypes.string,
   loop: PropTypes.bool,
   autoplay: PropTypes.bool,
 };
