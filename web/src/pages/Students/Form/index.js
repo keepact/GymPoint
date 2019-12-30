@@ -7,7 +7,7 @@ import { FiUpload } from 'react-icons/fi';
 
 import history from '~/services/history';
 import { parseDecimal, parseInteger } from '~/util/format';
-import { validateStudents } from '~/util/validation';
+import { validateStudents, requestFailMessage } from '~/util/validation';
 
 import InputNumber from '~/components/NumberInput';
 import Animation from '~/components/Animation';
@@ -42,7 +42,7 @@ function StudentForm({ match }) {
       });
       setLoading(false);
     } catch (err) {
-      toast.error(err.response.data.error);
+      toast.error(requestFailMessage);
     }
   }
 

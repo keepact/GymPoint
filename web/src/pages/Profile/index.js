@@ -5,6 +5,8 @@ import { Form, Input } from '@rocketseat/unform';
 import { signOut } from '~/store/modules/auth/actions';
 import { updateProfileRequest } from '~/store/modules/user/actions';
 
+import { validateProfile } from '~/util/validation';
+
 import AvatarInput from './AvatarInput';
 
 import { Container } from './styles';
@@ -24,7 +26,11 @@ function Profile() {
 
   return (
     <Container>
-      <Form initialData={profile} onSubmit={handleSubmit}>
+      <Form
+        schema={validateProfile}
+        initialData={profile}
+        onSubmit={handleSubmit}
+      >
         <AvatarInput name="avatar_id" />
 
         <Input name="name" placeholder="Nome completo" />

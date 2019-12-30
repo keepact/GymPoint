@@ -5,7 +5,7 @@ import { parseISO, addMonths } from 'date-fns';
 import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
-import { validateRegistrations } from '~/util/validation';
+import { validateRegistrations, requestFailMessage } from '~/util/validation';
 
 import history from '~/services/history';
 
@@ -34,7 +34,6 @@ function RegistrationForm({ match }) {
   const [registrations, setRegistrations] = useState({});
   const [plans, setPlans] = useState([]);
   const [disableDate, setDisableDate] = useState(!id);
-  const [filter, setFilter] = useState('');
 
   async function loadData() {
     try {
@@ -55,7 +54,7 @@ function RegistrationForm({ match }) {
         setLoading(false);
       }
     } catch (err) {
-      toast.error(err.response.data.error);
+      toast.error(requestFailMessage);
     }
   }
 
@@ -65,13 +64,7 @@ function RegistrationForm({ match }) {
   }, []);
 
   function loadPromises(type) {
-    if (type === 'students')
-      return api.get('students', {
-        params: {
-          q: filter,
-        },
-      });
-
+    if (type === 'students') return api.get('students');
     if (type === 'plans') return api.get('plans');
 
     return api.get('registrations', {
@@ -90,7 +83,7 @@ function RegistrationForm({ match }) {
     async function getStudents() {
       try {
         const { data } = await loadPromises('students');
-        return data.content;
+        return data;
       } catch (err) {
         toast.error(err.response.data.error);
       }
@@ -98,7 +91,6 @@ function RegistrationForm({ match }) {
     const data = await getStudents();
 
     return new Promise(resolve => {
-      setFilter(inputValue);
       resolve(filterStudent(data, inputValue));
     });
   };

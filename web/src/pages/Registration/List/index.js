@@ -7,6 +7,8 @@ import { FiPlusCircle } from 'react-icons/fi';
 
 import { format, parseISO, isBefore, startOfDay } from 'date-fns';
 import { longDate, language } from '~/util/format';
+import { requestFailMessage } from '~/util/validation';
+
 import history from '~/services/history';
 
 import PageActions from '~/components/Pagination';
@@ -26,12 +28,12 @@ import {
 function RegistrationList() {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState('');
   const [pendingPage, setPendingPage] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
 
-  async function loadRegistrations(pending, currentPage = 1) {
+  async function loadRegistrations(currentPage, pending) {
     try {
       const response = !pending
         ? await api.get('/registrations', {
@@ -63,16 +65,16 @@ function RegistrationList() {
 
       setRegistrations(data);
       setPendingCount(response.data.pending);
-      setCurrentPage(currentPage);
+      setPage(currentPage);
       setLastPage(response.data.lastPage);
       setLoading(false);
     } catch (err) {
-      toast.error(err.response.data.error);
+      toast.error(requestFailMessage);
     }
   }
 
   useEffect(() => {
-    loadRegistrations();
+    loadRegistrations(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -122,8 +124,8 @@ function RegistrationList() {
   async function handlePendingPage(action) {
     const linkToPage =
       action === 'back'
-        ? await loadRegistrations()
-        : await loadRegistrations('pending');
+        ? await loadRegistrations(1)
+        : await loadRegistrations('', 'pending');
 
     setPendingPage(!pendingPage);
 
@@ -206,15 +208,10 @@ function RegistrationList() {
               </Content>
               <PageActions
                 disableNext={lastPage}
-                disableBack={currentPage < 2}
-                pageLabel={currentPage}
-                refresh={() =>
-                  loadRegistrations(
-                    '',
-                    !lastPage ? currentPage + 1 : currentPage - 1
-                  )
-                }
-                currentPage={currentPage}
+                disableBack={page < 2}
+                pageLabel={page}
+                refresh={loadRegistrations}
+                currentPage={page}
               />
             </>
           ) : (

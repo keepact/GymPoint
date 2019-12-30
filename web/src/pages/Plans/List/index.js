@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { FiPlusCircle } from 'react-icons/fi';
 
 import { formatPrice } from '~/util/format';
+import { requestFailMessage } from '~/util/validation';
 
 import history from '~/services/history';
 
@@ -38,7 +39,7 @@ function PlansList() {
       setPlans(data);
       setLoading(false);
     } catch (err) {
-      toast.error(err.response.data.error);
+      toast.error(requestFailMessage);
     }
   }
 

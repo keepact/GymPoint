@@ -9,7 +9,7 @@ import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
-import { validatePlans } from '~/util/validation';
+import { validatePlans, requestFailMessage } from '~/util/validation';
 
 import history from '~/services/history';
 import api from '~/services/api';
@@ -40,7 +40,7 @@ function PlansForm({ match }) {
       });
       setLoading(false);
     } catch (err) {
-      toast.error(err.response.data.error);
+      toast.error(requestFailMessage);
     }
   }
 
