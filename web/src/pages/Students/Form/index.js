@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 
 import { Input } from '@rocketseat/unform';
@@ -7,7 +6,7 @@ import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
 import history from '~/services/history';
-import { parseDecimal, parseInteger } from '~/utils';
+import { validateStudents, parseDecimal, parseInteger } from '~/utils';
 
 import InputNumber from '~/components/NumberInput';
 import Animation from '~/components/Animation';
@@ -22,35 +21,6 @@ import {
   NumberInputs,
   TitleWrapper,
 } from '~/styles/shared';
-
-const fieldRequired = 'Esse campo é obrigatório';
-
-const schema = Yup.object().shape({
-  name: Yup.string()
-    .min(10, 'Mínimo de 10 letras')
-    .max(80, 'Máximo de 80 letras')
-    .matches(/^([^0-9]*)$/, {
-      message: 'Números não são permitidos',
-      excludeEmptyString: true,
-    })
-    .required(fieldRequired),
-  email: Yup.string()
-    .email('O formato precisa ser "example@email.com"')
-    .required(fieldRequired),
-  age: Yup.number()
-    .min(1, 'mínimo de 1 digito')
-    .max(3, 'máximo de 3 digitos')
-    .typeError(fieldRequired)
-    .required(fieldRequired),
-  weight_formatted: Yup.number()
-    .min(2, 'Mínimo de 10 quilos')
-    .max(350, 'Máximo de 350 quilos')
-    .required(fieldRequired),
-  height_formatted: Yup.number()
-    .min(1, 'Mínimo de 1 digitos')
-    .max(3, 'Máximo de 3 digitos')
-    .required(fieldRequired),
-});
 
 function StudentForm({ match }) {
   const [loading, setLoading] = useState(true);
@@ -130,7 +100,7 @@ function StudentForm({ match }) {
           <Content>
             <MyForm
               id="Form"
-              schema={schema}
+              schema={validateStudents}
               initialData={student}
               onSubmit={handleSubmit}
             >

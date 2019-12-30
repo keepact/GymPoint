@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 
 import { Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
@@ -9,6 +8,8 @@ import { FiUpload } from 'react-icons/fi';
 import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
+
+import { validatePlans } from '~/utils';
 
 import history from '~/services/history';
 import api from '~/services/api';
@@ -20,29 +21,6 @@ import {
   NumberInputs,
   TitleWrapper,
 } from '~/styles/shared';
-
-const fieldRequired = 'Esse campo é obrigatório';
-
-const schema = Yup.object().shape({
-  title: Yup.string()
-    .min(3, 'Mínimo de 3 letras')
-    .max(30, 'Máximo de 30 letras')
-    .matches(/^([^0-9]*)$/, {
-      message: 'Números não são permitidos',
-      excludeEmptyString: true,
-    })
-    .required(fieldRequired),
-  duration: Yup.number()
-    .min(1, 'mínimo de 1 digito')
-    .max(2, 'máximo de 2 digitos')
-    .typeError(fieldRequired)
-    .required(fieldRequired),
-  price: Yup.number()
-    .min(1, 'mínimo de 1 digito')
-    .max(2, 'máximo de 2 digitos')
-    .typeError(fieldRequired)
-    .required(fieldRequired),
-});
 
 function PlansForm({ match }) {
   const [plan, setPlan] = useState({});
@@ -128,7 +106,7 @@ function PlansForm({ match }) {
           <Content>
             <MyForm
               id="Form"
-              schema={schema}
+              schema={validatePlans}
               initialData={plan}
               onSubmit={handleSubmit}
             >

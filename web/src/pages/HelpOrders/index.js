@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 
 import PageActions from '~/components/Pagination';
@@ -11,6 +10,8 @@ import clearAnimation from '~/assets/animations/clear.json';
 
 import api from '~/services/api';
 
+import { validateHelpOrders } from '~/utils';
+
 import {
   Container,
   Content,
@@ -19,10 +20,6 @@ import {
 } from '~/styles/shared';
 
 import { Wrapper, AnimationContainer } from './styles';
-
-const schema = Yup.object().shape({
-  answer: Yup.string().required('Digite uma resposta.'),
-});
 
 function HelpOrders() {
   const [help, setHelp] = useState([]);
@@ -113,7 +110,7 @@ function HelpOrders() {
               />
               {showPopUp ? (
                 <PopUp
-                  schema={schema}
+                  schema={validateHelpOrders}
                   name="answer"
                   title="Pergunta do Aluno"
                   label="Sua Resposta aqui"

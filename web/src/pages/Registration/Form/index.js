@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 
 import { parseISO, addMonths } from 'date-fns';
 import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
-import { formatPrice } from '~/utils';
+import { formatPrice, validateRegistrations } from '~/utils';
 import history from '~/services/history';
 
 import Animation from '~/components/Animation';
@@ -25,18 +24,6 @@ import {
   NumberInputs,
   TitleWrapper,
 } from '~/styles/shared';
-
-const fieldRequired = 'Esse campo é obrigatório';
-
-const schema = Yup.object().shape({
-  student: Yup.mixed().required(fieldRequired),
-  plan: Yup.mixed().required(fieldRequired),
-  start_date: Yup.date()
-    .min(new Date(), 'Datas passadas não são permitidas')
-    .max(addMonths(new Date(), 3), 'Agendamento até 3 meses')
-    .typeError(fieldRequired)
-    .required(fieldRequired),
-});
 
 function RegistrationForm({ match }) {
   const { id } = match.params;
@@ -193,7 +180,7 @@ function RegistrationForm({ match }) {
           <Content>
             <MyForm
               id="Form"
-              schema={schema}
+              schema={validateRegistrations}
               initialData={registrations}
               onSubmit={handleSubmit}
             >
