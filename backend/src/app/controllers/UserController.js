@@ -4,30 +4,56 @@ import File from '../models/File';
 
 class UserController {
   async index(req, res) {
-    const { page = 1, id, limit = 10 } = req.query;
+    const { page, id } = req.query;
 
-    const users = await User.findAll({
-      limit,
-      offset: (page - 1) * limit,
-      attributes: ['id', 'name', 'email'],
-      include: [
-        {
-          model: File,
-          as: 'avatar',
-          attributes: ['id', 'path', 'url'],
-        },
-      ],
-    });
+    let limit = {};
+    const order = ['name'];
+    const attributes = ['id', 'name', 'email'];
+    const include = [
+      {
+        model: File,
+        as: 'avatar',
+        attributes: ['id', 'path', 'url'],
+      },
+    ];
+
+    if (page) {
+      limit = {
+        limit: 10,
+        offset: (page - 1) * 10,
+      };
+
+      const users = await User.findAndCountAll({
+        order,
+        ...limit,
+        attributes,
+        include,
+      });
+
+      const lastPage = page * limit.limit >= users.count;
+
+      return res.json({ content: users, lastPage });
+    }
 
     if (id) {
-      const user = await User.findByPk(req.userId);
+      const user = await User.findByPk(req.userId, {
+        include,
+      });
+
+      if (!user) {
+        return res.status(400).json({ error: 'Usuário não encontrado' });
+      }
       return res.json(user);
     }
 
-    const usersCount = await User.count();
-    const lastPage = page * limit >= usersCount;
+    const users = await User.findAll({
+      order,
+      ...limit,
+      attributes,
+      include,
+    });
 
-    return res.json({ content: users, lastPage });
+    return res.json(users);
   }
 
   async store(req, res) {
