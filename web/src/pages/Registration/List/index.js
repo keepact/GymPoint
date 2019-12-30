@@ -119,7 +119,7 @@ function RegistrationList() {
     };
   }
 
-  async function handleRemovedPage(action) {
+  async function handlePendingPage(action) {
     const linkToPage =
       action === 'back'
         ? await loadRegistrations()
@@ -142,7 +142,7 @@ function RegistrationList() {
               <button
                 type="button"
                 disabled={!pendingPage && pendingCount <= 0}
-                onClick={() => handleRemovedPage(pendingPage ? 'back' : 'go')}
+                onClick={() => handlePendingPage(pendingPage ? 'back' : 'go')}
               >
                 {pendingPage ? 'Voltar' : 'Pendentes'} {pendingCount}
               </button>
