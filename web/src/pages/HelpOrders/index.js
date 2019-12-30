@@ -10,7 +10,7 @@ import clearAnimation from '~/assets/animations/clear.json';
 
 import api from '~/services/api';
 
-import { validateHelpOrders } from '~/util/validation';
+import { validateHelpOrders, requestFailMessage } from '~/util/validation';
 
 import {
   Container,
@@ -25,25 +25,27 @@ function HelpOrders() {
   const [help, setHelp] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState('');
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState('');
   const [showPopUp, setShowPopUp] = useState(false);
 
-  async function loadHelpOrders(currentPage = 1) {
+  async function loadHelpOrders(currentPage) {
     try {
-      const response = await api.get('students/help-orders/answers');
+      const response = await api.get('students/help-orders/answers', {
+        params: { page: currentPage },
+      });
 
       setHelp(response.data.content.rows);
-      setCurrentPage(currentPage);
+      setPage(currentPage);
       setLastPage(response.data.lastPage);
       setLoading(false);
     } catch (err) {
-      toast.error(err.response.data.error);
+      toast.error(requestFailMessage);
     }
   }
 
   useEffect(() => {
-    loadHelpOrders();
+    loadHelpOrders(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -103,10 +105,10 @@ function HelpOrders() {
               </Content>
               <PageActions
                 disableNext={lastPage}
-                disableBack={currentPage < 2}
-                pageLabel={currentPage}
+                disableBack={page < 2}
+                pageLabel={page}
                 refresh={loadHelpOrders}
-                currentPage={currentPage}
+                currentPage={page}
               />
               {showPopUp ? (
                 <PopUp

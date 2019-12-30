@@ -3,11 +3,30 @@ import { addMonths } from 'date-fns';
 
 const fieldRequired = 'Esse campo é obrigatório';
 
+export const requestFailMessage =
+  'Houve um erro, tente novamente em alguns minutos';
+
 export const validateSignIn = Yup.object().shape({
   email: Yup.string()
     .email('Insira um e-mail válido')
     .required(fieldRequired),
   password: Yup.string().required(fieldRequired),
+});
+
+export const validateProfile = Yup.object().shape({
+  name: Yup.string().min(3, 'Mínimo de 3 letras'),
+  email: Yup.string().email('Insira um e-mail válido'),
+  oldPassword: Yup.string().min(6, 'Mínimo de 6 letras/números'),
+  password: Yup.string()
+    .min(6, 'Mínimo de 6 letras/números')
+    .when('oldPassword', (oldPassword, field) =>
+      oldPassword ? field.required(fieldRequired) : field
+    ),
+  confirmPassword: Yup.string().when('password', (password, field) =>
+    password
+      ? field.required(fieldRequired).oneOf([Yup.ref('password')])
+      : field
+  ),
 });
 
 export const validatePlans = Yup.object().shape({
@@ -36,7 +55,7 @@ export const validateRegistrations = Yup.object().shape({
   plan: Yup.mixed().required(fieldRequired),
   start_date: Yup.date()
     .min(new Date(), 'Datas passadas não são permitidas')
-    .max(addMonths(new Date(), 3), 'Agendamento até 3 meses')
+    .max(addMonths(new Date(), 3), 'Agendamentos podem ocorrer em até 3 meses')
     .typeError(fieldRequired)
     .required(fieldRequired),
 });
@@ -69,5 +88,7 @@ export const validateStudents = Yup.object().shape({
 });
 
 export const validateHelpOrders = Yup.object().shape({
-  answer: Yup.string().required('Digite uma resposta'),
+  answer: Yup.string()
+    .min(10, 'Mínimo de 10 letras')
+    .required('Digite uma resposta'),
 });

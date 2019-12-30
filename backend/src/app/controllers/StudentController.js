@@ -6,28 +6,43 @@ import File from '../models/File';
 
 class StudentController {
   async index(req, res) {
-    const { page = 1, id, limit = 10, q: query } = req.query;
+    const { page, id, q } = req.query;
 
-    const students = await Student.findAll({
-      order: ['name'],
-      limit,
-      offset: (page - 1) * limit,
-      attributes: ['id', 'name', 'email', 'age', 'height', 'weight'],
-      include: [
-        {
+    let limit = {};
+    const order = ['name'];
+    const attributes = ['id', 'name', 'email', 'age', 'height', 'weight'];
+
+    if (page) {
+      limit = {
+        limit: 10,
+        offset: (page - 1) * 10,
+      };
+      const where = q ? { name: { [Op.iLike]: `%${q}%` } } : {};
+
+      const students = await Student.findAndCountAll({
+        order,
+        ...limit,
+        attributes,
+        include: {
           model: File,
           as: 'avatar',
           attributes: ['id', 'path', 'url'],
         },
-      ],
-      where: query ? { name: { [Op.iLike]: `%${query}%` } } : {},
-    });
+        where,
+      });
 
-    const studentsCount = await Student.count();
-    const lastPage = page * limit >= studentsCount;
+      const lastPage = page * limit.limit >= students.count;
+
+      return res.json({
+        content: students,
+        lastPage,
+      });
+    }
 
     if (id) {
-      const student = await Student.findByPk(id);
+      const student = await Student.findByPk(id, {
+        attributes,
+      });
 
       if (!student) {
         return res.status(400).json({ error: 'Aluno não encontrado' });
@@ -35,10 +50,12 @@ class StudentController {
       return res.json(student);
     }
 
-    return res.json({
-      content: students,
-      lastPage,
+    const students = await Student.findAll({
+      order,
+      attributes,
     });
+
+    return res.json(students);
   }
 
   async store(req, res) {

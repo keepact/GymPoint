@@ -3,26 +3,44 @@ import Student from '../models/Student';
 
 class HelpOrderController {
   async index(req, res) {
-    const { page = 1, limit = 10 } = req.query;
+    const { page } = req.query;
     const { id } = req.params;
+
+    let limit = {};
+    const include = [
+      {
+        model: Student,
+        as: 'student',
+        attributes: ['name', 'email'],
+      },
+    ];
+
+    if (page) {
+      limit = {
+        limit: 10,
+        offset: (page - 1) * 10,
+      };
+
+      const supportOrder = await HelpOrder.findAndCountAll({
+        where: { student_id: id },
+        ...limit,
+        include,
+      });
+
+      const lastPage = page * limit.limit >= supportOrder.count;
+
+      return res.json({ content: supportOrder, lastPage });
+    }
 
     const supportOrder = await HelpOrder.findAll({
       where: { student_id: id },
-      limit,
-      offset: (page - 1) * limit,
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['name', 'email'],
-        },
-      ],
+      include,
     });
 
     if (!supportOrder) {
-      return res
-        .status(400)
-        .json({ error: 'Sem pedidos de auxílio cadastrado' });
+      return res.status(400).json({
+        error: 'Sem pedidos de auxílio para esse estudante cadastrado',
+      });
     }
 
     return res.json(supportOrder);

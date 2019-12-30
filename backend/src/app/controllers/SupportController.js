@@ -9,29 +9,43 @@ import Queue from '../../lib/Queue';
 
 class SupportController {
   async index(req, res) {
-    const { page = 1, limit = 10 } = req.query;
+    const { page } = req.query;
 
-    const supportOrder = await HelpOrder.findAndCountAll({
-      where: {
-        answer: null,
-      },
-      limit,
-      offset: (page - 1) * limit,
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['name', 'email'],
-          where: {
-            id: {
-              [Op.ne]: null,
-            },
+    let limit = {};
+    const include = [
+      {
+        model: Student,
+        as: 'student',
+        attributes: ['name', 'email'],
+        where: {
+          id: {
+            [Op.ne]: null,
           },
         },
-      ],
-    });
+      },
+    ];
 
-    const lastPage = page * limit >= supportOrder.count;
+    if (page) {
+      limit = {
+        limit: 10,
+        offset: (page - 1) * 10,
+      };
+
+      const supportOrder = await HelpOrder.findAndCountAll({
+        where: { answer: null },
+        ...limit,
+        include,
+      });
+
+      const lastPage = page * limit.limit >= supportOrder.count;
+
+      return res.json({ content: supportOrder, lastPage });
+    }
+
+    const supportOrder = await HelpOrder.findAll({
+      where: { answer: null },
+      include,
+    });
 
     if (!supportOrder) {
       return res
@@ -39,10 +53,7 @@ class SupportController {
         .json({ error: 'Sem pedidos de auxílio cadastrados' });
     }
 
-    return res.json({
-      content: supportOrder,
-      lastPage,
-    });
+    return res.json(supportOrder);
   }
 
   async store(req, res) {

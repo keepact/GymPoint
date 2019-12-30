@@ -11,36 +11,34 @@ import Queue from '../../lib/Queue';
 
 class RegistrationController {
   async index(req, res) {
-    const { page = 1, id, limit = 10 } = req.query;
+    const { page, id } = req.query;
 
-    const registrations = await Registration.findAndCountAll({
-      order: ['created_at'],
-      limit,
-      offset: (page - 1) * limit,
-      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['id', 'name'],
-          where: {
-            id: {
-              [Op.ne]: null,
-            },
+    let limit = {};
+    const order = ['created_at'];
+    const attributes = ['id', 'start_date', 'end_date', 'price', 'active'];
+
+    const include = [
+      {
+        model: Student,
+        as: 'student',
+        attributes: ['id', 'name'],
+        where: {
+          id: {
+            [Op.ne]: null,
           },
         },
-        {
-          model: Plan,
-          as: 'plan',
-          attributes: ['id', 'title'],
-          where: {
-            id: {
-              [Op.ne]: null,
-            },
+      },
+      {
+        model: Plan,
+        as: 'plan',
+        attributes: ['id', 'title'],
+        where: {
+          id: {
+            [Op.ne]: null,
           },
         },
-      ],
-    });
+      },
+    ];
 
     const pending = await Registration.count({
       where: {
@@ -59,10 +57,27 @@ class RegistrationController {
       },
     });
 
-    const lastPage = page * limit >= registrations.count;
+    if (page) {
+      limit = {
+        limit: 10,
+        offset: (page - 1) * 10,
+      };
+
+      const registrations = await Registration.findAndCountAll({
+        order,
+        ...limit,
+        attributes,
+        include,
+      });
+
+      const lastPage = page * limit.limit >= registrations.count;
+
+      return res.json({ lastPage, pending, content: registrations });
+    }
 
     if (id) {
       const registration = await Registration.findByPk(id, {
+        attributes,
         include: [
           {
             model: Student,
@@ -80,14 +95,17 @@ class RegistrationController {
       if (!registration) {
         return res.status(400).json({ error: 'Não há matrículas cadastradas' });
       }
-
       return res.json(registration);
     }
+
+    const registrations = await Registration.findAll({
+      order,
+      attributes,
+    });
 
     return res.json({
       content: registrations,
       pending,
-      lastPage,
     });
   }
 
@@ -192,6 +210,14 @@ class RegistrationController {
 
     if (!registration) {
       return res.status(400).json({ error: 'Matrícula inexistente' });
+    }
+
+    const checkRegistration = await Registration.findOne({
+      where: { student_id },
+    });
+
+    if (checkRegistration) {
+      return res.status(400).json({ error: 'O aluno já tem um plano' });
     }
 
     const dateStart = startOfDay(parseISO(start_date));

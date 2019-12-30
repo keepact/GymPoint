@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 import { FiPlusCircle } from 'react-icons/fi';
+import { requestFailMessage } from '~/util/validation';
+
 import api from '~/services/api';
 import history from '~/services/history';
-import PageActions from '~/components/Pagination';
 
+import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -21,12 +23,12 @@ import { Table } from './styles';
 function StudentsList() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState('');
   const [students, setStudents] = useState([]);
 
   // eslint-disable-next-line no-shadow
-  async function loadStudents(currentPage = 1) {
+  async function loadStudents(currentPage) {
     try {
       const response = await api.get('/students', {
         params: {
@@ -35,17 +37,17 @@ function StudentsList() {
         },
       });
 
-      setStudents(response.data.content);
-      setCurrentPage(currentPage);
+      setStudents(response.data.content.rows);
+      setPage(currentPage);
       setLastPage(response.data.lastPage);
       setLoading(false);
     } catch (err) {
-      toast.error(err.response.data.error);
+      toast.error(requestFailMessage);
     }
   }
 
   useEffect(() => {
-    loadStudents();
+    loadStudents(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
@@ -145,10 +147,10 @@ function StudentsList() {
               </Content>
               <PageActions
                 disableNext={lastPage}
-                disableBack={currentPage < 2}
-                pageLabel={currentPage}
+                disableBack={page < 2}
+                pageLabel={page}
                 refresh={loadStudents}
-                currentPage={currentPage}
+                currentPage={page}
               />
             </>
           ) : (
