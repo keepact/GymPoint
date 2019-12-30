@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { FiPlusCircle } from 'react-icons/fi';
 
-import { formatPrice } from '~/utils';
+import { formatPrice } from '~/util/format';
 
 import history from '~/services/history';
 
@@ -31,7 +31,7 @@ function PlansList() {
 
       const data = response.data.content.map(r => ({
         ...r,
-        priceFormatted: formatPrice(r.price),
+        price: formatPrice(r.price),
         labelTitle: `${r.duration} ${r.duration >= 2 ? 'meses' : 'mês'}`,
       }));
 
@@ -95,7 +95,7 @@ function PlansList() {
                       <tr key={plan.id}>
                         <td>{plan.title}</td>
                         <td>{plan.labelTitle}</td>
-                        <td>{plan.priceFormatted}</td>
+                        <td>{plan.price}</td>
                         <td>
                           <div>
                             <button

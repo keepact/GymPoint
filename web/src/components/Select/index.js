@@ -39,6 +39,7 @@ export default function Selector({ name, options, onChange, ...rest }) {
         getOptionLabel={option => option.title}
         className="react-select-container"
         classNamePrefix="react-select"
+        placeholder="Selecione"
         isSearchable={false}
         {...rest}
       />

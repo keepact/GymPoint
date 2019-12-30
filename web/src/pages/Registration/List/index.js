@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { format, parseISO, isBefore, startOfDay } from 'date-fns';
 import { toast } from 'react-toastify';
 
 import { FaCircle } from 'react-icons/fa';
 import { FiPlusCircle } from 'react-icons/fi';
 
+import { format, parseISO, isBefore, startOfDay } from 'date-fns';
+import { longDate, language } from '~/util/format';
 import history from '~/services/history';
 
 import PageActions from '~/components/Pagination';
@@ -27,7 +28,7 @@ function RegistrationList() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState('');
-  const [removedPage, setRemovedPage] = useState(false);
+  const [pendingPage, setPendingPage] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
 
   async function loadRegistrations(pending, currentPage = 1) {
@@ -42,17 +43,16 @@ function RegistrationList() {
 
       const data = response.data.content.rows.map(registration => ({
         ...registration,
-        student_name: registration.student
+        student: registration.student
           ? registration.student.name
           : 'Aluno Removido',
-        plan_title: registration.plan
-          ? registration.plan.title
-          : 'Plano Removido',
-        startDateFormatted: format(
+        plan: registration.plan ? registration.plan.title : 'Plano Removido',
+        startDate: format(
           parseISO(registration.start_date),
-          "dd'/'M/Y"
+          longDate,
+          language
         ),
-        endDateFormatted: format(parseISO(registration.end_date), "dd'/'M/Y"),
+        endDate: format(parseISO(registration.end_date), longDate, language),
         activePlan: handleActive(
           registration.student && registration.plan
             ? registration.active
@@ -125,7 +125,7 @@ function RegistrationList() {
         ? await loadRegistrations()
         : await loadRegistrations('pending');
 
-    setRemovedPage(!removedPage);
+    setPendingPage(!pendingPage);
 
     return linkToPage;
   }
@@ -141,10 +141,10 @@ function RegistrationList() {
             <div>
               <button
                 type="button"
-                disabled={pendingCount <= 0 && !removedPage}
-                onClick={() => handleRemovedPage(!removedPage ? 'go' : 'back')}
+                disabled={!pendingPage && pendingCount <= 0}
+                onClick={() => handleRemovedPage(pendingPage ? 'back' : 'go')}
               >
-                {!removedPage ? 'Pendentes' : 'Voltar'} {pendingCount}
+                {pendingPage ? 'Voltar' : 'Pendentes'} {pendingCount}
               </button>
               <button
                 type="button"
@@ -171,10 +171,10 @@ function RegistrationList() {
                   <tbody>
                     {registrations.map(registration => (
                       <tr key={registration.id}>
-                        <td>{registration.student_name}</td>
-                        <td>{registration.plan_title}</td>
-                        <td>{registration.startDateFormatted}</td>
-                        <td>{registration.endDateFormatted}</td>
+                        <td>{registration.student}</td>
+                        <td>{registration.plan}</td>
+                        <td>{registration.startDate}</td>
+                        <td>{registration.endDate}</td>
                         <td>
                           <FaCircle color={registration.activePlan.color} />
                           <span>{registration.activePlan.title}</span>

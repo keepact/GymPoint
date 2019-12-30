@@ -3,6 +3,8 @@ import NumberFormat from 'react-number-format';
 import { useField } from '@rocketseat/unform';
 import PropTypes from 'prop-types';
 
+import { pricePlaceHolder } from '~/util/format';
+
 function InputNumber({
   name,
   disabled,
@@ -44,6 +46,7 @@ function InputNumber({
         isNumericString
         fixedDecimalScale
         decimalScale={decimalScale}
+        placeholder={pricePlaceHolder}
         prefix={prefix}
         ref={ref}
         name={fieldName}

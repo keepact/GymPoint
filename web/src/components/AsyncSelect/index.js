@@ -41,7 +41,7 @@ export default function AsyncSelector({
         getOptionLabel={option => option.name}
         className="react-asyncselect-container"
         classNamePrefix="react-asyncselect"
-        placeholder="Selecione um estudante..."
+        placeholder="Digite para buscar um estudante..."
         loadingMessage={() => 'Carregando...'}
         noOptionsMessage={() =>
           noOptionsMessage || 'Nenhum registro encontrado'

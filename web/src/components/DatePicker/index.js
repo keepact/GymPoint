@@ -4,6 +4,7 @@ import ReactDatePicker from 'react-datepicker';
 import MaskedTextInput from 'react-text-mask';
 
 import { useField } from '@rocketseat/unform';
+import { datePlaceHolder } from '~/util/format';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -43,7 +44,7 @@ function DatePicker({ name, placeholder, disabled, ...rest }) {
         selected={selected}
         onChange={date => setSelected(date)}
         dateFormat="dd/MM/yyyy"
-        placeholderText={placeholder}
+        placeholderText={datePlaceHolder}
         disabled={!!disabled}
         ref={ref}
         customInput={
