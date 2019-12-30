@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { addMonths } from 'date-fns';
 
-export const fieldRequired = 'Esse campo é obrigatório';
+const fieldRequired = 'Esse campo é obrigatório';
 
 export const validateSignIn = Yup.object().shape({
   email: Yup.string()
@@ -20,13 +20,13 @@ export const validatePlans = Yup.object().shape({
     })
     .required(fieldRequired),
   duration: Yup.number()
-    .min(1, 'mínimo de 1 digito')
-    .max(2, 'máximo de 2 digitos')
+    .min(1, 'mínimo de 1 mês')
+    .max(12, 'máximo de 1 ano')
     .typeError(fieldRequired)
     .required(fieldRequired),
   price: Yup.number()
-    .min(1, 'mínimo de 1 digito')
-    .max(2, 'máximo de 2 digitos')
+    .min(5, 'mínimo de R$ 5,00')
+    .max(1000, 'máximo de R$ 1000,00')
     .typeError(fieldRequired)
     .required(fieldRequired),
 });
@@ -54,12 +54,12 @@ export const validateStudents = Yup.object().shape({
     .email('O formato precisa ser "example@email.com"')
     .required(fieldRequired),
   age: Yup.number()
-    .min(1, 'mínimo de 1 digito')
-    .max(3, 'máximo de 3 digitos')
+    .min(6, 'mínimo de 6 anos')
+    .max(100, 'máximo de 100 anos')
     .typeError(fieldRequired)
     .required(fieldRequired),
   weight_formatted: Yup.number()
-    .min(2, 'Mínimo de 10 quilos')
+    .min(10, 'Mínimo de 10 quilos')
     .max(350, 'Máximo de 350 quilos')
     .required(fieldRequired),
   height_formatted: Yup.number()

@@ -204,18 +204,12 @@ function RegistrationForm({ match }) {
                   <DatePicker
                     name="start_date"
                     onChange={handleDate}
-                    placeholder="dd/mm/yyyy"
                     disabled={disableDate}
                   />
                 </div>
                 <div>
                   <label htmlFor="end_date">Data de término</label>
-                  <DatePicker
-                    className="gray"
-                    name="end_date"
-                    placeholder="dd/mm/yyyy"
-                    disabled
-                  />
+                  <DatePicker className="gray" name="end_date" disabled />
                 </div>
                 <div>
                   <label htmlFor="price">Valor Final</label>
