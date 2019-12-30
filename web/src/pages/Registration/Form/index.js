@@ -5,7 +5,8 @@ import { parseISO, addMonths } from 'date-fns';
 import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
-import { formatPrice, validateRegistrations } from '~/utils';
+import { validateRegistrations } from '~/util/validation';
+
 import history from '~/services/history';
 
 import Animation from '~/components/Animation';
@@ -13,6 +14,7 @@ import loadingAnimation from '~/assets/animations/loader.json';
 
 import StudentSelector from '~/components/AsyncSelect';
 import PlanSelector from '~/components/Select';
+import NumberInput from '~/components/NumberInput';
 import DatePicker from '~/components/DatePicker';
 
 import api from '~/services/api';
@@ -43,7 +45,6 @@ function RegistrationForm({ match }) {
         setPlans(dataPlan.content);
         setRegistrations({
           ...data,
-          priceFormatted: formatPrice(data.price),
           start_date: parseISO(data.start_date),
           end_date: parseISO(data.end_date),
         });
@@ -109,7 +110,7 @@ function RegistrationForm({ match }) {
       end_date: registrations.start_date
         ? addMonths(registrations.start_date, newPlan.duration)
         : null,
-      priceFormatted: formatPrice(newPlan.price * newPlan.duration),
+      price: newPlan.price * newPlan.duration,
     });
     if (!id) {
       setDisableDate(false);
@@ -218,13 +219,13 @@ function RegistrationForm({ match }) {
                 </div>
                 <div>
                   <label htmlFor="price">Valor Final</label>
-                  <input
+                  <NumberInput
                     name="price"
                     className="gray"
-                    type="text"
-                    placeholder="R$ 0,00"
-                    readOnly
-                    value={registrations.priceFormatted}
+                    decimalScale={2}
+                    prefix="R$ "
+                    disabled
+                    value={registrations.price}
                   />
                 </div>
               </NumberInputs>

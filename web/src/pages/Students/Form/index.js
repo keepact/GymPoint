@@ -6,7 +6,8 @@ import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
 import history from '~/services/history';
-import { validateStudents, parseDecimal, parseInteger } from '~/utils';
+import { parseDecimal, parseInteger } from '~/util/format';
+import { validateStudents } from '~/util/validation';
 
 import InputNumber from '~/components/NumberInput';
 import Animation from '~/components/Animation';

@@ -10,7 +10,7 @@ import clearAnimation from '~/assets/animations/clear.json';
 
 import api from '~/services/api';
 
-import { validateHelpOrders } from '~/utils';
+import { validateHelpOrders } from '~/util/validation';
 
 import {
   Container,

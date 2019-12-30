@@ -105,7 +105,7 @@ export const Table = styled.table`
   div {
     display: flex;
     align-items: center;
-    width: 80px;
+    width: 100px;
     padding: 10px;
   }
 
