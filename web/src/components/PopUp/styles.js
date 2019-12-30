@@ -65,7 +65,7 @@ export const FormPopUp = styled(Form)`
   }
 
   span {
-    color: red;
+    color: #fb6f91;
     font-weight: bold;
     padding-left: 10px;
     padding-bottom: 10px;
