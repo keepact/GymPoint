@@ -9,7 +9,7 @@ import { FiUpload } from 'react-icons/fi';
 import history from '~/services/history';
 import { validateStudents } from '~/util/validation';
 
-import { listStudentRequest } from '~/store/modules/student/list/student';
+import { listStudentRequestId } from '~/store/modules/student/list/student';
 import { createStudentRequest } from '~/store/modules/student/create/student';
 import { updateStudentRequest } from '~/store/modules/student/update/student';
 
@@ -27,17 +27,16 @@ import {
 
 function StudentForm({ match }) {
   const { id } = match.params;
-
   const dispatch = useDispatch();
-  const loading = useSelector(state =>
+
+  const { loading } = useSelector(state =>
     id ? state.studentUpdate.loading : state.studentCreate.loading
   );
-
-  const student = useSelector(state => state.studentList.student);
+  const { student } = useSelector(state => state.studentList);
 
   useEffect(() => {
     if (id) {
-      dispatch(listStudentRequest(id));
+      dispatch(listStudentRequestId(id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
