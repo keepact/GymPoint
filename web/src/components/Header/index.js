@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { signOut } from '~/store/modules/auth/actions';
+import { signOut } from '~/store/modules/auth';
 
 import logo from '~/assets/images/header-logo.svg';
 

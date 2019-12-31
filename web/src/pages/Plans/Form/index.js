@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import PropTypes from 'prop-types';
 
 import { Input } from '@rocketseat/unform';
@@ -8,6 +10,9 @@ import { FiUpload } from 'react-icons/fi';
 import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
+
+import { createPlanRequest } from '~/store/modules/plan/create/plan';
+import { updatePlanRequest } from '~/store/modules/plan/update/plan';
 
 import { validatePlans, requestFailMessage } from '~/util/validation';
 
@@ -24,9 +29,13 @@ import {
 
 function PlansForm({ match }) {
   const [plan, setPlan] = useState({});
-  const [loading, setLoading] = useState(true);
 
   const { id } = match.params;
+
+  const dispatch = useDispatch();
+  const loading = useSelector(state =>
+    id ? state.planUpdate.loading : state.planCreate.loading
+  );
 
   async function loadData() {
     try {
@@ -38,7 +47,6 @@ function PlansForm({ match }) {
         ...response.data,
         finalPrice: response.data.price * response.data.duration,
       });
-      setLoading(false);
     } catch (err) {
       toast.error(requestFailMessage);
     }
@@ -47,25 +55,15 @@ function PlansForm({ match }) {
   useEffect(() => {
     if (id) {
       loadData();
-    } else {
-      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function handleSubmit(data) {
-    try {
-      if (id) {
-        await api.put(`/plans/${plan.id}`, data);
-      } else {
-        await api.post('/plans', data);
-      }
-      toast.success(
-        id ? 'Plano editado com sucesso' : 'Plano cadastrado com sucesso'
-      );
-      history.push('/plans');
-    } catch (err) {
-      toast.error(err.response.data.error);
+  function handleSubmit(data) {
+    if (id) {
+      dispatch(updatePlanRequest(data, id));
+    } else {
+      dispatch(createPlanRequest(data));
     }
   }
 

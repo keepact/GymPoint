@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 
 import PageActions from '~/components/Pagination';
 import PopUp from '~/components/PopUp';
@@ -8,9 +8,10 @@ import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 import clearAnimation from '~/assets/animations/clear.json';
 
-import api from '~/services/api';
+import { createSupportRequest } from '~/store/modules/support/create/support';
+import { listSupportRequest } from '~/store/modules/support/list/support';
 
-import { validateHelpOrders, requestFailMessage } from '~/util/validation';
+import { validateHelpOrders } from '~/util/validation';
 
 import {
   Container,
@@ -22,30 +23,18 @@ import {
 import { Wrapper, AnimationContainer } from './styles';
 
 function HelpOrders() {
-  const [help, setHelp] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [lastPage, setLastPage] = useState('');
   const [showPopUp, setShowPopUp] = useState(false);
 
-  async function loadHelpOrders(currentPage) {
-    try {
-      const response = await api.get('students/help-orders/answers', {
-        params: { page: currentPage },
-      });
+  const dispatch = useDispatch();
 
-      setHelp(response.data.content.rows);
-      setPage(currentPage);
-      setLastPage(response.data.lastPage);
-      setLoading(false);
-    } catch (err) {
-      toast.error(requestFailMessage);
-    }
-  }
+  const { lastPage, page, questions, loading } = useSelector(
+    state => state.supportList
+  );
+  // const loading = useSelector(state => state.supportCreate.loading);
 
   useEffect(() => {
-    loadHelpOrders(1);
+    dispatch(listSupportRequest(1)); // loadHelpOrders(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -58,20 +47,26 @@ function HelpOrders() {
     openPopup();
   }
 
-  const helpQty = useMemo(() => help.length, [help]);
+  const questionsSize = useMemo(() => questions.length, [questions]);
 
-  async function handleSubmit(data) {
-    try {
-      await api.post(
-        `/students/help-orders/${selectedQuestion.student_id}/answer`,
-        data
-      );
-      toast.success('Resposta enviada com sucesso');
-      openPopup();
-      loadHelpOrders();
-    } catch (err) {
-      toast.error(err.response.data.error);
+  function handleSubmit(data) {
+    dispatch(createSupportRequest(data, selectedQuestion.id));
+
+    const currentQuestions = questions.filter(
+      helpOrder => helpOrder.id !== selectedQuestion.id
+    );
+
+    let newPage = currentQuestions.length ? page : page - 1;
+    if (newPage === 0) {
+      newPage = 1;
     }
+    const newList = {
+      currentQuestions,
+      lastPage,
+    };
+
+    dispatch(listSupportRequest(newPage, newList));
+    openPopup();
   }
 
   return (
@@ -83,31 +78,36 @@ function HelpOrders() {
           <TitleWrapper>
             <h1>Pedidos de Auxílio</h1>
           </TitleWrapper>
-          {helpQty > 0 ? (
+          {questionsSize && questionsSize > 0 ? (
             <>
               <Content small>
                 <Wrapper>
                   <header>
                     <strong>Aluno</strong>
                   </header>
-                  {help.map(question => (
-                    <div key={question.id}>
-                      <span>{question.student.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleQuestion(question)}
-                      >
-                        responder
-                      </button>
-                    </div>
-                  ))}
+                  {questions ? (
+                    <>
+                      {questions.map((question, index) => (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <div key={index}>
+                          <span>{question.name}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleQuestion(question)}
+                          >
+                            responder
+                          </button>
+                        </div>
+                      ))}
+                    </>
+                  ) : null}
                 </Wrapper>
               </Content>
               <PageActions
                 disableNext={lastPage}
                 disableBack={page < 2}
                 pageLabel={page}
-                refresh={loadHelpOrders}
+                refresh={() => dispatch(createSupportRequest())}
                 currentPage={page}
               />
               {showPopUp ? (

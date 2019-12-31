@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
-import { updateProfileSuccess, updateProfileFailure } from './actions';
+import { Types, updateProfileSuccess, updateProfileFailure } from './user';
 
 export function* updateProfile({ payload }) {
   try {
@@ -26,4 +26,4 @@ export function* updateProfile({ payload }) {
   }
 }
 
-export default all([takeLatest('@user/UPDATE_PROFILE_REQUEST', updateProfile)]);
+export default all([takeLatest(Types.REQUEST, updateProfile)]);

@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import PropTypes from 'prop-types';
 
 import { Input } from '@rocketseat/unform';
-import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
 import history from '~/services/history';
-import { parseDecimal, parseInteger } from '~/util/format';
-import { validateStudents, requestFailMessage } from '~/util/validation';
+import { validateStudents } from '~/util/validation';
+
+import { listStudentRequest } from '~/store/modules/student/list/student';
+import { createStudentRequest } from '~/store/modules/student/create/student';
+import { updateStudentRequest } from '~/store/modules/student/update/student';
 
 import InputNumber from '~/components/NumberInput';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
-
-import api from '~/services/api';
 
 import {
   Content,
@@ -24,59 +26,27 @@ import {
 } from '~/styles/shared';
 
 function StudentForm({ match }) {
-  const [loading, setLoading] = useState(true);
-  const [student, setStudent] = useState('');
-
   const { id } = match.params;
 
-  async function loadData() {
-    try {
-      const response = await api.get('/students', {
-        params: { id },
-      });
+  const dispatch = useDispatch();
+  const loading = useSelector(state =>
+    id ? state.studentUpdate.loading : state.studentCreate.loading
+  );
 
-      setStudent({
-        ...response.data,
-        height_formatted: parseDecimal(response.data.height, 'height'),
-        weight_formatted: parseDecimal(response.data.weight, 'weight'),
-      });
-      setLoading(false);
-    } catch (err) {
-      toast.error(requestFailMessage);
-    }
-  }
+  const student = useSelector(state => state.studentList.student);
 
   useEffect(() => {
     if (id) {
-      loadData();
-    } else {
-      setLoading(false);
+      dispatch(listStudentRequest(id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function handleSubmit(data) {
-    const formatedData = {
-      ...data,
-      name: data.name,
-      email: data.email,
-      age: data.age,
-      height: parseInteger(data.height_formatted, 'height'),
-      weight: parseInteger(data.weight_formatted),
-    };
-
-    try {
-      if (id) {
-        await api.put(`/students/${id}`, formatedData);
-      } else {
-        await api.post('students', formatedData);
-      }
-      toast.success(
-        id ? 'Cadastro atualizado com sucesso' : 'Aluno cadastrado com sucesso'
-      );
-      history.push('/students');
-    } catch (err) {
-      toast.error(err.response.data.error);
+  function handleSubmit(data) {
+    if (id) {
+      dispatch(updateStudentRequest(data, id));
+    } else {
+      dispatch(createStudentRequest(data));
     }
   }
 
@@ -102,7 +72,7 @@ function StudentForm({ match }) {
             <MyForm
               id="Form"
               schema={validateStudents}
-              initialData={student}
+              initialData={student.id === id && student}
               onSubmit={handleSubmit}
             >
               <>
