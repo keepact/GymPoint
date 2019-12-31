@@ -5,6 +5,7 @@ import user from './user/sagas';
 import studentList from './student/list/sagas';
 import studentCreate from './student/create/sagas';
 import studentUpdate from './student/update/sagas';
+import studentDelete from './student/delete/sagas';
 import planCreate from './plan/create/sagas';
 import planUpdate from './plan/update/sagas';
 import registratiomCreate from './registration/create/sagas';
@@ -19,6 +20,7 @@ export default function* rootSaga() {
     studentCreate,
     studentUpdate,
     studentList,
+    studentDelete,
     planCreate,
     planUpdate,
     registratiomCreate,

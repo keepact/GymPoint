@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 
 import { FiPlusCircle } from 'react-icons/fi';
-import { requestFailMessage } from '~/util/validation';
-
-import api from '~/services/api';
 import history from '~/services/history';
+
+import { listStudentRequest } from '~/store/modules/student/list/student';
+import { deleteStudentRequest } from '~/store/modules/student/delete/student';
 
 import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
@@ -21,52 +21,70 @@ import {
 import { Table } from './styles';
 
 function StudentsList() {
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('');
-  const [page, setPage] = useState(1);
-  const [lastPage, setLastPage] = useState('');
-  const [students, setStudents] = useState([]);
+  const [studentName, setStudendName] = useState();
+  // const [page, setPage] = useState(1);
+  // // const [lastPage, setLastPage] = useState('');
+  // const [students, setStudents] = useState([]);
 
   // eslint-disable-next-line no-shadow
-  async function loadStudents(currentPage) {
-    try {
-      const response = await api.get('/students', {
-        params: {
-          page: currentPage,
-          q: filter,
-        },
-      });
+  // async function loadStudents(currentPage) {
+  //   try {
+  //     const response = await api.get('/students', {
+  //       params: {
+  //         page: currentPage,
+  //         q: filter,
+  //       },
+  //     });
 
-      setStudents(response.data.content.rows);
-      setPage(currentPage);
-      setLastPage(response.data.lastPage);
-      setLoading(false);
-    } catch (err) {
-      toast.error(requestFailMessage);
-    }
-  }
+  //     setStudents(response.data.content.rows);
+  //     setPage(currentPage);
+  //     setLastPage(response.data.lastPage);
+  //     setLoading(false);
+  //   } catch (err) {
+  //     toast.error(requestFailMessage);
+  //   }
+  // }
+
+  const dispatch = useDispatch();
+
+  const { students, loading, page, lastPage } = useSelector(
+    state => state.studentList
+  );
 
   useEffect(() => {
-    loadStudents(1);
+    dispatch(listStudentRequest(1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter]);
+  }, []);
 
   const studentsSize = useMemo(() => students.length, [students]);
 
   function handleSearch(e) {
-    setFilter(e.target.value);
+    dispatch(listStudentRequest(undefined, e.target.value));
   }
 
   async function handleDelete(studentId) {
-    try {
-      if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
-        await api.delete(`students/${studentId}`);
-        toast.success('Aluno removido com sucesso');
-        loadStudents();
+    if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
+      dispatch(deleteStudentRequest(studentId));
+
+      const currentStudents = students.filter(
+        helpOrder => helpOrder.id !== studentId
+      );
+
+      let newPage = currentStudents.length ? page : page - 1;
+      if (newPage === 0) {
+        newPage = 1;
       }
-    } catch (err) {
-      toast.error(err.response.data.error);
+      const newList = {
+        currentStudents,
+        lastPage,
+      };
+
+      dispatch(listStudentRequest(newPage, newList));
     }
+  }
+
+  function handlePage(page) {
+    dispatch(listStudentRequest(page));
   }
 
   return (
@@ -111,37 +129,41 @@ function StudentsList() {
                     </tr>
                   </thead>
                   <tbody>
-                    {students.map(student => (
-                      <tr key={student.id}>
-                        <td>
-                          <span>{student.name}</span>
-                        </td>
-                        <td>
-                          <span>{student.email}</span>
-                        </td>
-                        <td>
-                          <span>{student.age}</span>
-                        </td>
-                        <td>
-                          <div>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                history.push(`/students/${student.id}/edit`)
-                              }
-                            >
-                              editar
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(student.id)}
-                            >
-                              apagar
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                    {students && (
+                      <>
+                        {students.map(student => (
+                          <tr key={student.id}>
+                            <td>
+                              <span>{student.name}</span>
+                            </td>
+                            <td>
+                              <span>{student.email}</span>
+                            </td>
+                            <td>
+                              <span>{student.age}</span>
+                            </td>
+                            <td>
+                              <div>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    history.push(`/students/${student.id}/edit`)
+                                  }
+                                >
+                                  editar
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(student.id)}
+                                >
+                                  apagar
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </>
+                    )}
                   </tbody>
                 </Table>
               </Content>
@@ -149,7 +171,7 @@ function StudentsList() {
                 disableNext={lastPage}
                 disableBack={page < 2}
                 pageLabel={page}
-                refresh={loadStudents}
+                refresh={handlePage}
                 currentPage={page}
               />
             </>
