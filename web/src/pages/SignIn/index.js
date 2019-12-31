@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Form, Input } from '@rocketseat/unform';
 
-import { signInRequest } from '~/store/modules/auth/actions';
+import { signInRequest } from '~/store/modules/auth';
 import { validateSignIn } from '~/util/validation';
 
 import logo from '~/assets/images/logo.svg';

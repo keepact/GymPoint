@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import PropTypes from 'prop-types';
 
 import { parseISO, addMonths } from 'date-fns';
@@ -17,6 +19,9 @@ import PlanSelector from '~/components/Select';
 import NumberInput from '~/components/NumberInput';
 import DatePicker from '~/components/DatePicker';
 
+import { createRegistrationRequest } from '~/store/modules/registration/create/registration';
+import { updateRegistrationRequest } from '~/store/modules/registration/update/registration';
+
 import api from '~/services/api';
 
 import {
@@ -30,10 +35,14 @@ import {
 function RegistrationForm({ match }) {
   const { id } = match.params;
 
-  const [loading, setLoading] = useState(true);
   const [registrations, setRegistrations] = useState({});
   const [plans, setPlans] = useState([]);
   const [disableDate, setDisableDate] = useState(!id);
+
+  const dispatch = useDispatch();
+  const loading = useSelector(state =>
+    id ? state.registrationUpdate.loading : state.registrationCreate.loading
+  );
 
   async function loadData() {
     try {
@@ -47,11 +56,11 @@ function RegistrationForm({ match }) {
           start_date: parseISO(data.start_date),
           end_date: parseISO(data.end_date),
         });
-        setLoading(false);
+        // setLoading(false);
       } else {
         const { data } = await loadPromises('plans');
         setPlans(data.content);
-        setLoading(false);
+        // setLoading(false);
       }
     } catch (err) {
       toast.error(requestFailMessage);
@@ -116,36 +125,15 @@ function RegistrationForm({ match }) {
       ...registrations,
       initialPlan: currentPlan[0],
       start_date: newDate,
-      end_date: id
-        ? addMonths(
-            newDate,
-            registrations.plan.title === currentPlan[0].title
-              ? currentPlan[0].duration
-              : registrations.plan.duration
-          )
-        : addMonths(newDate, registrations.plan.duration),
+      end_date: addMonths(newDate, registrations.plan.duration),
     });
   }
 
-  async function handleSubmit(data) {
-    const formatedData = {
-      student_id: data.student.id,
-      plan_id: data.plan.id,
-      start_date: data.start_date,
-    };
-
-    try {
-      if (id) {
-        await api.put(`registrations/${registrations.id}`, formatedData);
-      } else {
-        await api.post('registrations', formatedData);
-      }
-      toast.success(
-        id ? 'Matrícula alterada com sucesso' : 'Matrícula cadastrada'
-      );
-      history.push('/registrations');
-    } catch (err) {
-      toast.error(err.response.data.error);
+  function handleSubmit(data) {
+    if (id) {
+      dispatch(updateRegistrationRequest(data, id));
+    } else {
+      dispatch(createRegistrationRequest(data));
     }
   }
 
