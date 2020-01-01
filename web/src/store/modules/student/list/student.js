@@ -7,13 +7,14 @@ export const Types = {
   REQUEST_ID: '@student/ID_REQUEST',
   SUCCESS: '@student/LIST_SUCCESS',
   SUCCESS_ID: '@student/ID_SUCCESS',
+  CLEAR_VALUE: '@student/CLEAR_VALUE',
   FAIL: '@student/LIST_FAIL',
 };
 
 // Reducer
 
 const INITIAL_STATE = {
-  student: {},
+  student: undefined,
   students: [],
   studentId: null,
   loading: false,
@@ -43,6 +44,10 @@ export default function studentList(state = INITIAL_STATE, action) {
       case Types.SUCCESS_ID: {
         draft.loading = false;
         draft.student = action.payload.data;
+        break;
+      }
+      case Types.CLEAR_VALUE: {
+        draft.student = undefined;
         break;
       }
       case Types.FAIL: {
@@ -81,6 +86,12 @@ export function listStudentSuccessId(data) {
   return {
     type: Types.SUCCESS_ID,
     payload: { data },
+  };
+}
+
+export function listStudentClearValue() {
+  return {
+    type: Types.CLEAR_VALUE,
   };
 }
 

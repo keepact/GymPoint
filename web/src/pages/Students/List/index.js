@@ -21,7 +21,7 @@ import {
 import { Table } from './styles';
 
 function StudentsList() {
-  const [studentName, setStudendName] = useState();
+  const [studentName, setStudendName] = useState('');
   // const [page, setPage] = useState(1);
   // // const [lastPage, setLastPage] = useState('');
   // const [students, setStudents] = useState([]);
@@ -52,14 +52,19 @@ function StudentsList() {
   );
 
   useEffect(() => {
-    dispatch(listStudentRequest(1));
+    dispatch(listStudentRequest(1, ''));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const studentsSize = useMemo(() => students.length, [students]);
 
   function handleSearch(e) {
-    dispatch(listStudentRequest(undefined, e.target.value));
+    setStudendName(e.target.value);
+    let timeout = null;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      dispatch(listStudentRequest(page, studentName));
+    }, 2000);
   }
 
   async function handleDelete(studentId) {
