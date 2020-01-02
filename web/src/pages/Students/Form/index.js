@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -9,7 +9,10 @@ import { FiUpload } from 'react-icons/fi';
 import history from '~/services/history';
 import { validateStudents } from '~/util/validation';
 
-import { listStudentRequestId } from '~/store/modules/student/list/student';
+import {
+  listStudentRequestId,
+  listStudentClearValue,
+} from '~/store/modules/student/list/student';
 import { createStudentRequest } from '~/store/modules/student/create/student';
 import { updateStudentRequest } from '~/store/modules/student/update/student';
 
@@ -32,11 +35,15 @@ function StudentForm({ match }) {
   const { loading } = useSelector(state =>
     id ? state.studentUpdate.loading : state.studentCreate.loading
   );
-  const { student } = useSelector(state => state.studentList);
+  const { student: currentStudent } = useSelector(state => state.studentList);
+
+  const student = useMemo(() => currentStudent, [currentStudent]);
 
   useEffect(() => {
     if (id) {
       dispatch(listStudentRequestId(id));
+    } else if (student !== undefined && !id) {
+      dispatch(listStudentClearValue());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -71,7 +78,7 @@ function StudentForm({ match }) {
             <MyForm
               id="Form"
               schema={validateStudents}
-              initialData={student.id === id && student}
+              initialData={student && student.id === id && student}
               onSubmit={handleSubmit}
             >
               <>

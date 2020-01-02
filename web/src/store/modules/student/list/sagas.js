@@ -40,9 +40,9 @@ export function* listStudents({ payload }) {
   const { page, newList } = payload;
 
   try {
-    if (!newList) {
+    if (typeof newList !== 'object') {
       const response = yield call(api.get, 'students', {
-        params: { page },
+        params: { page, q: newList },
       });
 
       const students = response.data.content.rows.map(students => ({

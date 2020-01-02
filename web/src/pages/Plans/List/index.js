@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import PropTypes from 'prop-types';
 
-import { toast } from 'react-toastify';
 import { FiPlusCircle } from 'react-icons/fi';
-
-import { formatPrice } from '~/util/format';
-import { requestFailMessage } from '~/util/validation';
 
 import history from '~/services/history';
 
+import { deletePlanRequest } from '~/store/modules/plan/delete/plan';
+import { listPlanRequest } from '~/store/modules/plan/list/plan';
+
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
-
-import api from '~/services/api';
 
 import {
   Container,
@@ -23,42 +22,35 @@ import {
 import { Table } from './styles';
 
 function PlansList() {
-  const [loading, setLoading] = useState(true);
-  const [plans, setPlans] = useState([]);
+  const dispatch = useDispatch();
 
-  async function loadPlans() {
-    try {
-      const response = await api.get('/plans');
+  const { plans: currentPlans, loading, page, lastPage } = useSelector(
+    state => state.planList
+  );
 
-      const data = response.data.content.map(r => ({
-        ...r,
-        price: formatPrice(r.price),
-        labelTitle: `${r.duration} ${r.duration >= 2 ? 'meses' : 'mês'}`,
-      }));
-
-      setPlans(data);
-      setLoading(false);
-    } catch (err) {
-      toast.error(requestFailMessage);
-    }
-  }
-
+  const plans = useMemo(() => currentPlans, [currentPlans]);
   const plansQty = useMemo(() => plans.length, [plans]);
 
   useEffect(() => {
-    loadPlans();
+    dispatch(listPlanRequest(1, ''));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleDelete(planId) {
-    try {
-      if (window.confirm('Você tem certeza que deseja apagar esse plano?')) {
-        await api.delete(`plans/${planId}`);
-        toast.success('Plano deletado com sucesso');
-        loadPlans();
+    if (window.confirm('Você tem certeza que deseja apagar esse plano?')) {
+      dispatch(deletePlanRequest(planId));
+
+      const currentPlans = plans.filter(helpOrder => helpOrder.id !== planId);
+
+      let newPage = currentPlans.length ? page : page - 1;
+      if (newPage === 0) {
+        newPage = 1;
       }
-    } catch (err) {
-      toast.error(err.response.data.error);
+      const newList = {
+        currentPlans,
+        lastPage,
+      };
+      dispatch(listPlanRequest(newPage, newList));
     }
   }
 

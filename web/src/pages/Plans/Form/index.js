@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
 import { Input } from '@rocketseat/unform';
-import { toast } from 'react-toastify';
 import { FiUpload } from 'react-icons/fi';
 
 import NumberInput from '~/components/NumberInput';
@@ -12,12 +11,17 @@ import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
 import { createPlanRequest } from '~/store/modules/plan/create/plan';
+import {
+  listPlanRequestId,
+  listPlanUpdatePrice,
+  listPlanClearValue,
+  listPlanUpdateDuration,
+} from '~/store/modules/plan/list/plan';
 import { updatePlanRequest } from '~/store/modules/plan/update/plan';
 
-import { validatePlans, requestFailMessage } from '~/util/validation';
+import { validatePlans } from '~/util/validation';
 
 import history from '~/services/history';
-import api from '~/services/api';
 
 import {
   Content,
@@ -28,33 +32,21 @@ import {
 } from '~/styles/shared';
 
 function PlansForm({ match }) {
-  const [plan, setPlan] = useState({});
-
   const { id } = match.params;
+  const { plan: currentPlan } = useSelector(state => state.planList);
 
   const dispatch = useDispatch();
   const loading = useSelector(state =>
     id ? state.planUpdate.loading : state.planCreate.loading
   );
 
-  async function loadData() {
-    try {
-      const response = await api.get('/plans', {
-        params: { id },
-      });
-
-      setPlan({
-        ...response.data,
-        finalPrice: response.data.price * response.data.duration,
-      });
-    } catch (err) {
-      toast.error(requestFailMessage);
-    }
-  }
+  const plan = useMemo(() => currentPlan, [currentPlan]);
 
   useEffect(() => {
     if (id) {
-      loadData();
+      dispatch(listPlanRequestId(id));
+    } else if (plan !== undefined && !id) {
+      dispatch(listPlanClearValue());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -68,19 +60,11 @@ function PlansForm({ match }) {
   }
 
   function handlePrice(price) {
-    setPlan({
-      ...plan,
-      price,
-      finalPrice: plan.duration * price,
-    });
+    dispatch(listPlanUpdatePrice(price));
   }
 
   function handleDuration(duration) {
-    setPlan({
-      ...plan,
-      duration,
-      finalPrice: plan.price * duration,
-    });
+    dispatch(listPlanUpdateDuration(duration));
   }
 
   return (
@@ -105,7 +89,7 @@ function PlansForm({ match }) {
             <MyForm
               id="Form"
               schema={validatePlans}
-              initialData={plan}
+              initialData={plan && plan.id === id && plan}
               onSubmit={handleSubmit}
             >
               <label htmlFor="title">Título do Plano</label>
