@@ -32,7 +32,7 @@ function PlansList() {
   const plansQty = useMemo(() => plans.length, [plans]);
 
   useEffect(() => {
-    dispatch(listPlanRequest(1, ''));
+    dispatch(listPlanRequest(1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
