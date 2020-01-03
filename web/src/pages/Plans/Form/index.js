@@ -29,20 +29,18 @@ import {
 } from '~/styles/shared';
 
 function PlansForm() {
-  const { plan: currentPlan, registrationId } = useSelector(
-    state => state.planList
-  );
+  const { plan: currentPlan, planId } = useSelector(state => state.planList);
 
   const dispatch = useDispatch();
   const loading = useSelector(state =>
-    registrationId ? state.planUpdate.loading : state.planCreate.loading
+    planId ? state.planUpdate.loading : state.planCreate.loading
   );
 
   const plan = useMemo(() => currentPlan, [currentPlan]);
 
   function handleSubmit(data) {
-    if (registrationId) {
-      dispatch(updatePlanRequest(data, registrationId));
+    if (planId) {
+      dispatch(updatePlanRequest(data, planId));
     } else {
       dispatch(createPlanRequest(data));
     }
@@ -63,7 +61,7 @@ function PlansForm() {
       ) : (
         <>
           <TitleWrapper>
-            <h1>{registrationId ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
+            <h1>{planId ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
             <div>
               <button type="button" onClick={() => history.push('/plans')}>
                 Voltar
