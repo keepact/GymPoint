@@ -135,15 +135,12 @@ function RegistrationForm() {
               </button>
             </div>
           </TitleWrapper>
+          {console.log(registration, 'teste return')}
           <Content>
             <MyForm
               id="Form"
               schema={validateRegistrations}
-              initialData={
-                registration &&
-                registration.id === registrationId &&
-                registration
-              }
+              initialData={registration}
               onSubmit={handleSubmit}
             >
               <label htmlFor="student">Aluno</label>
@@ -180,7 +177,7 @@ function RegistrationForm() {
                     decimalScale={2}
                     prefix="R$ "
                     disabled
-                    value={registration && registration.price}
+                    value={registration.price}
                   />
                 </div>
               </NumberInputs>

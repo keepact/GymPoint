@@ -11,7 +11,7 @@ export const Types = {
   FAIL: '@registration/LIST_FAIL',
   UPDATE_DATE: '@registration/DATE_VALUE',
   UPDATE_PLAN: '@registration/PLAN_VALUE',
-  DELETE_ID: '@registration/ID_VALUE',
+  REQUEST_INITIAL_STATE: '@registration/INITIAL_STATE',
 };
 
 // Reducer
@@ -85,9 +85,8 @@ export default function registrationList(state = INITIAL_STATE, action) {
         draft.registration.price = newPrice;
         break;
       }
-      case Types.DELETE_ID: {
-        draft.registrationId = undefined;
-        draft.registration.price = undefined;
+      case Types.REQUEST_INITIAL_STATE: {
+        draft.registration = INITIAL_STATE.registration;
         break;
       }
       case Types.FAIL: {
@@ -143,9 +142,9 @@ export function listRegistrationUpdatePlan(data) {
   };
 }
 
-export function listRegistrationDeleteId() {
+export function listRegistrationCreatePlan() {
   return {
-    type: Types.DELETE_ID,
+    type: Types.REQUEST_INITIAL_STATE,
   };
 }
 

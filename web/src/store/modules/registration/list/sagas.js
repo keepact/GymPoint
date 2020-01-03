@@ -101,12 +101,12 @@ export function* listRegistrations({ payload }) {
   }
 }
 
-export function deleteId() {
+export function registrationInitialState() {
   history.push('/registrations/create');
 }
 
 export default all([
   takeLatest(Types.REQUEST, listRegistrations),
   takeLatest(Types.REQUEST_ID, listRegistrationId),
-  takeLatest(Types.DELETE_ID, deleteId),
+  takeLatest(Types.REQUEST_INITIAL_STATE, registrationInitialState),
 ]);
