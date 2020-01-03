@@ -46,6 +46,7 @@ export function* listPlans({ payload }) {
 
       const plans = response.data.content.map(plans => ({
         id: plans.id,
+        duration: plans.duration,
         title: plans.title,
         labelTitle: `${plans.duration} ${
           plans.duration >= 2 ? 'meses' : 'mês'

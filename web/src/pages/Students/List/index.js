@@ -52,7 +52,7 @@ function StudentsList() {
   );
 
   useEffect(() => {
-    dispatch(listStudentRequest(1, ''));
+    dispatch(listStudentRequest(1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

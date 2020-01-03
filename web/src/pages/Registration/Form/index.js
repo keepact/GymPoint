@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
-import { parseISO, addMonths } from 'date-fns';
-import { toast } from 'react-toastify';
+import { addMonths } from 'date-fns';
 import { FiUpload } from 'react-icons/fi';
 
-import { validateRegistrations, requestFailMessage } from '~/util/validation';
+import { validateRegistrations } from '~/util/validation';
 
 import history from '~/services/history';
 
@@ -19,10 +18,11 @@ import PlanSelector from '~/components/Select';
 import NumberInput from '~/components/NumberInput';
 import DatePicker from '~/components/DatePicker';
 
+import * as registratioListActions from '~/store/modules/registration/list/registration';
+import { listPlanRequest } from '~/store/modules/plan/list/plan';
+import { listStudentRequest } from '~/store/modules/student/list/student';
 import { createRegistrationRequest } from '~/store/modules/registration/create/registration';
 import { updateRegistrationRequest } from '~/store/modules/registration/update/registration';
-
-import api from '~/services/api';
 
 import {
   Content,
@@ -32,54 +32,26 @@ import {
   TitleWrapper,
 } from '~/styles/shared';
 
-function RegistrationForm({ match }) {
-  const { id } = match.params;
-
-  const [registrations, setRegistrations] = useState({});
-  const [plans, setPlans] = useState([]);
-  const [disableDate, setDisableDate] = useState(!id);
+function RegistrationForm() {
+  const { registration, registrationId } = useSelector(
+    state => state.registrationList
+  );
+  const [disableDate, setDisableDate] = useState(!registrationId);
 
   const dispatch = useDispatch();
   const loading = useSelector(state =>
-    id ? state.registrationUpdate.loading : state.registrationCreate.loading
+    registrationId
+      ? state.registrationUpdate.loading
+      : state.registrationCreate.loading
   );
 
-  async function loadData() {
-    try {
-      if (id) {
-        const { data } = await loadPromises();
-        const { data: dataPlan } = await loadPromises('plans');
-
-        setPlans(dataPlan.content);
-        setRegistrations({
-          ...data,
-          start_date: parseISO(data.start_date),
-          end_date: parseISO(data.end_date),
-        });
-        // setLoading(false);
-      } else {
-        const { data } = await loadPromises('plans');
-        setPlans(data.content);
-        // setLoading(false);
-      }
-    } catch (err) {
-      toast.error(requestFailMessage);
-    }
-  }
+  const plans = useSelector(state => state.planList.plans);
+  const students = useSelector(state => state.studentList.students);
 
   useEffect(() => {
-    loadData();
+    dispatch(listPlanRequest(1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function loadPromises(type) {
-    if (type === 'students') return api.get('students');
-    if (type === 'plans') return api.get('plans');
-
-    return api.get('registrations', {
-      params: { id },
-    });
-  }
 
   const filterStudent = (data, inputValue) => {
     return data.filter(i =>
@@ -88,50 +60,53 @@ function RegistrationForm({ match }) {
   };
 
   const loadStudentOptions = async inputValue => {
-    // eslint-disable-next-line consistent-return
-    async function getStudents() {
-      try {
-        const { data } = await loadPromises('students');
-        return data;
-      } catch (err) {
-        toast.error(err.response.data.error);
-      }
-    }
-    const data = await getStudents();
-
+    dispatch(listStudentRequest(1));
     return new Promise(resolve => {
-      resolve(filterStudent(data, inputValue));
+      resolve(filterStudent(students, inputValue));
     });
   };
 
+  function handleDate(newDate) {
+    const currentPlan = plans.filter(p => p.id === registration.plan.id);
+    const newEndDate = addMonths(
+      newDate,
+      registration.plan.id !== undefined
+        ? currentPlan[0].duration
+        : registration.plan.duration
+    );
+
+    const newDates = {
+      newStartDate: newDate,
+      newEndDate,
+    };
+
+    dispatch(registratioListActions.listRegistrationUpdateDate(newDates));
+  }
+
   function handlePlan(newPlan) {
-    setRegistrations({
-      ...registrations,
-      plan: newPlan,
-      end_date: registrations.start_date
-        ? addMonths(registrations.start_date, newPlan.duration)
-        : null,
-      price: newPlan.price * newPlan.duration,
-    });
-    if (!id) {
+    const newEndDate =
+      (registration.plan.id && registration.start_date) !== undefined
+        ? addMonths(registration.start_date, newPlan.duration)
+        : undefined;
+    const newPrice = newPlan.price * newPlan.duration;
+
+    const newRegistration = {
+      newPlan,
+      newEndDate,
+      newPrice,
+    };
+    dispatch(
+      registratioListActions.listRegistrationUpdatePlan(newRegistration)
+    );
+
+    if (!registrationId) {
       setDisableDate(false);
     }
   }
 
-  function handleDate(newDate) {
-    const currentPlan = plans.filter(p => p.id === registrations.plan_id);
-
-    setRegistrations({
-      ...registrations,
-      initialPlan: currentPlan[0],
-      start_date: newDate,
-      end_date: addMonths(newDate, registrations.plan.duration),
-    });
-  }
-
   function handleSubmit(data) {
-    if (id) {
-      dispatch(updateRegistrationRequest(data, id));
+    if (registrationId) {
+      dispatch(updateRegistrationRequest(data, registrationId));
     } else {
       dispatch(createRegistrationRequest(data));
     }
@@ -144,7 +119,9 @@ function RegistrationForm({ match }) {
       ) : (
         <>
           <TitleWrapper>
-            <h1>{id ? 'Edição de Matrícula' : 'Cadastro de Matrícula'}</h1>
+            <h1>
+              {registrationId ? 'Edição de Matrícula' : 'Cadastro de Matrícula'}
+            </h1>
             <div>
               <button
                 type="button"
@@ -162,7 +139,11 @@ function RegistrationForm({ match }) {
             <MyForm
               id="Form"
               schema={validateRegistrations}
-              initialData={registrations}
+              initialData={
+                registration &&
+                registration.id === registrationId &&
+                registration
+              }
               onSubmit={handleSubmit}
             >
               <label htmlFor="student">Aluno</label>
@@ -175,7 +156,7 @@ function RegistrationForm({ match }) {
                   <label htmlFor="plan">Plano</label>
                   <PlanSelector
                     name="plan"
-                    options={plans}
+                    options={plans && plans}
                     onChange={handlePlan}
                   />
                 </div>
@@ -199,7 +180,7 @@ function RegistrationForm({ match }) {
                     decimalScale={2}
                     prefix="R$ "
                     disabled
-                    value={registrations.price}
+                    value={registration && registration.price}
                   />
                 </div>
               </NumberInputs>
@@ -212,11 +193,6 @@ function RegistrationForm({ match }) {
 }
 
 RegistrationForm.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-  }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,

@@ -10,8 +10,10 @@ import planList from './plan/list/sagas';
 import planCreate from './plan/create/sagas';
 import planUpdate from './plan/update/sagas';
 import planDelete from './plan/delete/sagas';
-import registratiomCreate from './registration/create/sagas';
+import registrationList from './registration/list/sagas';
+import registrationCreate from './registration/create/sagas';
 import registrationUpdate from './registration/update/sagas';
+import registrationDelete from './registration/delete/sagas';
 import supportCreate from './support/create/sagas';
 import supportList from './support/list/sagas';
 
@@ -27,8 +29,10 @@ export default function* rootSaga() {
     planCreate,
     planUpdate,
     planDelete,
-    registratiomCreate,
+    registrationList,
+    registrationCreate,
     registrationUpdate,
+    registrationDelete,
     supportCreate,
     supportList,
   ]);

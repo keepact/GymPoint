@@ -12,14 +12,15 @@ import {
 
 export function* createRegistration({ payload }) {
   try {
-    const { student_id, plan_id, start_date } = payload.data;
+    const { student, plan, start_date } = payload.data;
 
     const registrations = {
-      student_id,
-      plan_id,
+      student_id: student.id,
+      plan_id: plan.id,
       start_date,
     };
-    const response = yield call(api.post('registrations', registrations));
+
+    const response = yield call(api.post, 'registrations', registrations);
 
     toast.success('Matrícula criado com sucesso');
 

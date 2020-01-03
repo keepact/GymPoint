@@ -26,7 +26,7 @@ export function* updateRegistration({ payload }) {
     toast.success('Matrícula alterada com sucesso');
 
     yield put(updateRegistrationSuccess(response.data));
-    history.push('/registratios');
+    history.push('/registrations');
   } catch (err) {
     toast.error('Error ao atualizar a matrícula, confira os dados');
     yield put(updateRegistrationFailure());

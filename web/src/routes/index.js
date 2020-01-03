@@ -37,7 +37,7 @@ export default function Routes() {
       <Route path="/registrations/:id" component={RegistrationForm} isPrivate />
       <Route path="/registrations" component={RegistrationList} isPrivate />
       <Route
-        path="/registrations/:id/edit"
+        path="/registrations/edit"
         component={RegistrationList}
         isPrivate
       />

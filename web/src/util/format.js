@@ -1,4 +1,5 @@
 import pt from 'date-fns/locale/pt';
+import { parseISO, isBefore, startOfDay } from 'date-fns';
 
 export const { format: formatPrice } = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -39,4 +40,32 @@ export function parseInteger(numberVal, type) {
     return decimalRegex((numberVal * 10).toFixed(1));
   }
   return numberVal * 1000;
+}
+
+export function activeColor(active, date) {
+  const startOfPlan = startOfDay(parseISO(date));
+
+  if (active === 'Pendente') {
+    return {
+      title: 'Pendente',
+      color: 'black',
+    };
+  }
+
+  if (active) {
+    return {
+      title: 'Ativo',
+      color: 'green',
+    };
+  }
+  if (isBefore(new Date(), startOfPlan)) {
+    return {
+      title: 'Agendado',
+      color: 'orange',
+    };
+  }
+  return {
+    title: 'Terminado',
+    color: 'red',
+  };
 }
