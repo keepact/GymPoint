@@ -5,10 +5,12 @@ import PropTypes from 'prop-types';
 
 import { FiPlusCircle } from 'react-icons/fi';
 
-import history from '~/services/history';
-
 import { deletePlanRequest } from '~/store/modules/plan/delete/plan';
-import { listPlanRequest } from '~/store/modules/plan/list/plan';
+import {
+  listPlanRequest,
+  listPlanCreate,
+  listPlanRequestId,
+} from '~/store/modules/plan/list/plan';
 
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
@@ -63,10 +65,7 @@ function PlansList() {
           <TitleWrapper>
             <h1>Gereciando Planos</h1>
             <div>
-              <button
-                type="button"
-                onClick={() => history.push('plans/create')}
-              >
+              <button type="button" onClick={() => dispatch(listPlanCreate())}>
                 <span>Cadastrar</span>
                 <FiPlusCircle size={20} />
               </button>
@@ -94,7 +93,7 @@ function PlansList() {
                             <button
                               type="button"
                               onClick={() =>
-                                history.push(`/plans/${plan.id}/edit`)
+                                dispatch(listPlanRequestId(plan.id))
                               }
                             >
                               editar

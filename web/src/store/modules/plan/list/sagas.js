@@ -2,6 +2,7 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import { requestFailMessage } from '~/util/validation';
 
+import history from '~/services/history';
 import api from '~/services/api';
 
 import {
@@ -29,6 +30,7 @@ export function* listPlanId({ payload }) {
     };
 
     yield put(listPlanSuccessId(plan));
+    history.push('/plans/edit');
   } catch (err) {
     toast.error(requestFailMessage);
     yield put(listPlanFailure());
@@ -82,7 +84,12 @@ export function* listPlans({ payload }) {
   }
 }
 
+export function planInitialState() {
+  history.push('/plans/create');
+}
+
 export default all([
   takeLatest(Types.REQUEST, listPlans),
   takeLatest(Types.REQUEST_ID, listPlanId),
+  takeLatest(Types.REQUEST_INITIAL_STATE, planInitialState),
 ]);

@@ -9,7 +9,7 @@ import { FiPlusCircle } from 'react-icons/fi';
 import {
   listRegistrationRequest,
   listRegistrationRequestId,
-  listRegistrationCreatePlan,
+  listRegistrationCreate,
 } from '~/store/modules/registration/list/registration';
 import { deleteRegistrationRequest } from '~/store/modules/registration/delete/registration';
 
@@ -102,7 +102,7 @@ function RegistrationList() {
               </button>
               <button
                 type="button"
-                onClick={() => dispatch(listRegistrationCreatePlan())}
+                onClick={() => dispatch(listRegistrationCreate())}
               >
                 <span>Cadastrar</span>
                 <FiPlusCircle size={20} />
