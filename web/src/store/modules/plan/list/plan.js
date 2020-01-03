@@ -9,14 +9,19 @@ export const Types = {
   SUCCESS_ID: '@plan/ID_SUCCESS',
   UPDATE_DURATION: '@plan/DURATION_SUCCESS',
   UPDATE_PRICE: '@plan/PRICE_SUCCESS',
-  CLEAR_VALUE: '@plan/CLEAR_VALUE',
+  REQUEST_INITIAL_STATE: '@plan/INITIAL_STATE',
   FAIL: '@plan/LIST_FAIL',
 };
 
 // Reducer
 
 const INITIAL_STATE = {
-  plan: undefined,
+  plan: {
+    id: undefined,
+    duration: undefined,
+    price: undefined,
+    finalPrice: undefined,
+  },
   plans: [],
   planId: null,
   loading: false,
@@ -58,8 +63,8 @@ export default function planList(state = INITIAL_STATE, action) {
         draft.plan.finalPrice = draft.plan.duration * draft.plan.price;
         break;
       }
-      case Types.CLEAR_VALUE: {
-        draft.plan = undefined;
+      case Types.REQUEST_INITIAL_STATE: {
+        draft.plan = INITIAL_STATE.plan;
         break;
       }
       case Types.FAIL: {
@@ -115,9 +120,9 @@ export function listPlanUpdateDuration(duration) {
   };
 }
 
-export function listPlanClearValue() {
+export function listPlanCreate() {
   return {
-    type: Types.CLEAR_VALUE,
+    type: Types.REQUEST_INITIAL_STATE,
   };
 }
 

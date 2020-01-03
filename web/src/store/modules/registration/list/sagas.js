@@ -29,6 +29,7 @@ export function* listRegistrationId({ payload }) {
       start_date: parseISO(response.data.start_date),
       end_date: parseISO(response.data.end_date),
     };
+    console.log(student, 'teste');
 
     yield put(listRegistrationSuccessId(student));
     history.push('/registrations/edit');

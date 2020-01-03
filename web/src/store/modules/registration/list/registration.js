@@ -142,15 +142,9 @@ export function listRegistrationUpdatePlan(data) {
   };
 }
 
-export function listRegistrationCreatePlan() {
+export function listRegistrationCreate() {
   return {
     type: Types.REQUEST_INITIAL_STATE,
-  };
-}
-
-export function listRegistrationClearValue() {
-  return {
-    type: Types.CLEAR_VALUE,
   };
 }
 
