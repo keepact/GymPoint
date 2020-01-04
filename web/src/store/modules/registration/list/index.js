@@ -17,11 +17,6 @@ export const Types = {
 
 const INITIAL_STATE = {
   registration: {
-    plan: {
-      id: undefined,
-      title: 'Selecione',
-      duration: undefined,
-    },
     start_date: undefined,
     end_date: undefined,
     price: undefined,
@@ -76,17 +71,16 @@ export default function registrationList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.UPDATE_PLAN: {
-        const { newPlan, newEndDate, newPrice } = action.payload.data;
+        const { price, end_date } = action.payload.data;
+        const { plan } = action.payload.plan;
 
-        draft.registration.plan.id = newPlan.id;
-        draft.registration.plan.duration = newPlan.duration;
-        draft.registration.plan.title = newPlan.title;
-        draft.registration.end_date = newEndDate;
-        draft.registration.price = newPrice;
+        draft.registration.plan = plan;
+        draft.registration.end_date = end_date;
+        draft.registration.price = price;
         break;
       }
       case Types.REQUEST_INITIAL_STATE: {
-        if (draft.registrationId && draft.registration !== undefined) {
+        if (state.registrationId || state.registration.plan) {
           draft.registration = INITIAL_STATE.registration;
           draft.registrationId = undefined;
         }
@@ -138,10 +132,10 @@ export function listRegistrationUpdateDate(data) {
   };
 }
 
-export function listRegistrationUpdatePlan(data) {
+export function listRegistrationUpdatePlan(plan, data) {
   return {
     type: Types.UPDATE_PLAN,
-    payload: { data },
+    payload: { plan, data },
   };
 }
 

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { FiPlusCircle } from 'react-icons/fi';
 
-import * as studentsListActions from '~/store/modules/student/list/student';
-import { deleteStudentRequest } from '~/store/modules/student/delete/student';
+import * as studentsListActions from '~/store/modules/student/list';
+import { deleteStudentRequest } from '~/store/modules/student/delete';
 
 import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
@@ -42,7 +42,6 @@ function StudentsList() {
   async function handleDelete(studentId) {
     if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
       dispatch(deleteStudentRequest(studentId));
-      dispatch(studentsListActions.listStudentRequest(1, 'delete'));
     }
   }
 

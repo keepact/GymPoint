@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import { FaCircle } from 'react-icons/fa';
 import { FiPlusCircle } from 'react-icons/fi';
 
-import * as registrationListActions from '~/store/modules/registration/list/registration';
-import { deleteRegistrationRequest } from '~/store/modules/registration/delete/registration';
+import * as registrationListActions from '~/store/modules/registration/list';
+import { deleteRegistrationRequest } from '~/store/modules/registration/delete';
 
 import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
@@ -47,7 +47,6 @@ function RegistrationList() {
   async function handleDelete(registrationId) {
     if (window.confirm('Você tem certeza que deseja apagar essa matrícula?')) {
       dispatch(deleteRegistrationRequest(registrationId));
-      dispatch(registrationListActions.listRegistrationRequest(page, 'delete'));
     }
   }
 
@@ -105,44 +104,40 @@ function RegistrationList() {
                     </tr>
                   </thead>
                   <tbody>
-                    {registrations && (
-                      <>
-                        {registrations.map(registration => (
-                          <tr key={registration.id}>
-                            <td>{registration.student}</td>
-                            <td>{registration.plan}</td>
-                            <td>{registration.startDate}</td>
-                            <td>{registration.endDate}</td>
-                            <td>
-                              <FaCircle color={registration.activePlan.color} />
-                              <span>{registration.activePlan.title}</span>
-                            </td>
-                            <td>
-                              <div>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    dispatch(
-                                      registrationListActions.listRegistrationRequestId(
-                                        registration.id
-                                      )
-                                    )
-                                  }
-                                >
-                                  editar
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleDelete(registration.id)}
-                                >
-                                  apagar
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </>
-                    )}
+                    {registrations.map(registration => (
+                      <tr key={registration.id}>
+                        <td>{registration.student}</td>
+                        <td>{registration.plan}</td>
+                        <td>{registration.startDate}</td>
+                        <td>{registration.endDate}</td>
+                        <td>
+                          <FaCircle color={registration.activePlan.color} />
+                          <span>{registration.activePlan.title}</span>
+                        </td>
+                        <td>
+                          <div>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                dispatch(
+                                  registrationListActions.listRegistrationRequestId(
+                                    registration.id
+                                  )
+                                )
+                              }
+                            >
+                              editar
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(registration.id)}
+                            >
+                              apagar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </Table>
               </Content>

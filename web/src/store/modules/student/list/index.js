@@ -26,10 +26,7 @@ export default function studentList(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.REQUEST: {
-        draft.loading =
-          action.payload.newList === 'delete' ||
-          typeof action.payload.newList !== 'string';
-
+        draft.loading = typeof action.payload.newList !== 'string';
         break;
       }
       case Types.REQUEST_ID: {

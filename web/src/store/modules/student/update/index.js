@@ -3,9 +3,9 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@student/CREATE_REQUEST',
-  SUCCESS: '@student/CREATE_SUCCESS',
-  FAIL: '@student/CREATE_FAIL',
+  REQUEST: '@student/CREATE_OR_EDIT_REQUEST',
+  SUCCESS: '@student/CREATE_OR_EDIT_SUCCESS',
+  FAIL: '@student/CREATE_OR_EDIT_FAIL',
 };
 
 // Reducer
@@ -14,7 +14,7 @@ const INITIAL_STATE = {
   loading: false,
 };
 
-export default function studentCreate(state = INITIAL_STATE, action) {
+export default function studentUpdate(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.REQUEST: {
@@ -36,21 +36,21 @@ export default function studentCreate(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function createStudentRequest(data) {
+export function updateOrCreateStudent(data, id) {
   return {
     type: Types.REQUEST,
-    payload: { data },
+    payload: { data, id },
   };
 }
 
-export function createStudentSuccess(student) {
+export function updateOrCreateStudentSuccess(student) {
   return {
     type: Types.SUCCESS,
     payload: { student },
   };
 }
 
-export function createStudentFailure() {
+export function updateOrCreateStudentFailure() {
   return {
     type: Types.FAIL,
   };

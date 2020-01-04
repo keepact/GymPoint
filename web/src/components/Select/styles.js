@@ -12,8 +12,4 @@ export const MySelector = styled(Select)`
   .react-select__value-container {
     height: 45px;
   }
-
-  .react-select__single-value {
-    opacity: 0.6;
-  }
 `;

@@ -18,11 +18,10 @@ import PlanSelector from '~/components/Select';
 import NumberInput from '~/components/NumberInput';
 import DatePicker from '~/components/DatePicker';
 
-import * as registratioListActions from '~/store/modules/registration/list/registration';
-import { listPlanRequest } from '~/store/modules/plan/list/plan';
-import { listStudentRequest } from '~/store/modules/student/list/student';
-import { createRegistrationRequest } from '~/store/modules/registration/create/registration';
-import { updateRegistrationRequest } from '~/store/modules/registration/update/registration';
+import * as registratioListActions from '~/store/modules/registration/list';
+import { listPlanRequest } from '~/store/modules/plan/list/index';
+import { listStudentRequest } from '~/store/modules/student/list';
+import { updateOrCreateRegistration } from '~/store/modules/registration/update';
 
 import {
   Content,
@@ -39,11 +38,7 @@ function RegistrationForm() {
   const [disableDate, setDisableDate] = useState(!registrationId);
 
   const dispatch = useDispatch();
-  const loading = useSelector(state =>
-    registrationId
-      ? state.registrationUpdate.loading
-      : state.registrationCreate.loading
-  );
+  const { loading } = useSelector(state => state.registrationUpdate.loading);
 
   const plans = useSelector(state => state.planList.plans);
   const students = useSelector(state => state.studentList.students);
@@ -84,19 +79,29 @@ function RegistrationForm() {
   }
 
   function handlePlan(newPlan) {
-    const newEndDate =
-      (registration.plan.id && registration.start_date) !== undefined
-        ? addMonths(registration.start_date, newPlan.duration)
-        : undefined;
+    const newEndDate = registration.start_date
+      ? addMonths(registration.start_date, newPlan.duration)
+      : undefined;
     const newPrice = newPlan.price * newPlan.duration;
 
-    const newRegistration = {
-      newPlan,
-      newEndDate,
-      newPrice,
+    const newRegistrationPlan = {
+      plan: {
+        id: newPlan.id,
+        duration: newPlan.duration,
+        title: newPlan.title,
+      },
     };
+
+    const newPriceAndDate = {
+      end_date: newEndDate,
+      price: newPrice,
+    };
+
     dispatch(
-      registratioListActions.listRegistrationUpdatePlan(newRegistration)
+      registratioListActions.listRegistrationUpdatePlan(
+        newRegistrationPlan,
+        newPriceAndDate
+      )
     );
 
     if (!registrationId) {
@@ -105,15 +110,12 @@ function RegistrationForm() {
   }
 
   function handleSubmit(data) {
-    if (registrationId) {
-      dispatch(updateRegistrationRequest(data, registrationId));
-    } else {
-      dispatch(createRegistrationRequest(data));
-    }
+    dispatch(updateOrCreateRegistration(data, registrationId || undefined));
   }
 
   return (
     <ContainerForm>
+      {console.log(registration, 'teste REGISTRATION RETURN')}
       {loading ? (
         <Animation animation={loadingAnimation} />
       ) : (
@@ -152,7 +154,7 @@ function RegistrationForm() {
                   <label htmlFor="plan">Plano</label>
                   <PlanSelector
                     name="plan"
-                    options={plans && plans}
+                    options={plans}
                     onChange={handlePlan}
                   />
                 </div>
@@ -161,7 +163,7 @@ function RegistrationForm() {
                   <DatePicker
                     name="start_date"
                     onChange={handleDate}
-                    disabled={disableDate}
+                    disabled={disableDate || registration.plan === null}
                   />
                 </div>
                 <div>

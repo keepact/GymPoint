@@ -8,12 +8,11 @@ import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
-import { createPlanRequest } from '~/store/modules/plan/create/plan';
 import {
   listPlanUpdatePrice,
   listPlanUpdateDuration,
-} from '~/store/modules/plan/list/plan';
-import { updatePlanRequest } from '~/store/modules/plan/update/plan';
+} from '~/store/modules/plan/list';
+import { updateOrCreatePlan } from '~/store/modules/plan/update';
 
 import { validatePlans } from '~/util/validation';
 
@@ -31,18 +30,12 @@ function PlansForm() {
   const { plan: currentPlan, planId } = useSelector(state => state.planList);
 
   const dispatch = useDispatch();
-  const loading = useSelector(state =>
-    planId ? state.planUpdate.loading : state.planCreate.loading
-  );
+  const loading = useSelector(state => state.planUpdate.loading);
 
   const plan = useMemo(() => currentPlan, [currentPlan]);
 
   function handleSubmit(data) {
-    if (planId) {
-      dispatch(updatePlanRequest(data, planId));
-    } else {
-      dispatch(createPlanRequest(data));
-    }
+    dispatch(updateOrCreatePlan(data, planId || undefined));
   }
 
   function handlePrice(price) {

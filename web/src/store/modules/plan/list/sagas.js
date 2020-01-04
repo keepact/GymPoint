@@ -11,7 +11,7 @@ import {
   listPlanSuccess,
   listPlanSuccessId,
   listPlanFailure,
-} from './plan';
+} from './index';
 
 export function* listPlanId({ payload }) {
   const { id } = payload;
@@ -42,9 +42,6 @@ export function* listPlans({ payload }) {
   const { page, newList } = payload;
 
   try {
-    if (newList === 'delete') {
-      yield delay(600);
-    }
     const response = yield call(api.get, 'plans', {
       params: { page },
     });

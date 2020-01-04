@@ -3,9 +3,9 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@plan/CREATE_REQUEST',
-  SUCCESS: '@plan/CREATE_SUCCESS',
-  FAIL: '@plan/CREATE_FAIL',
+  REQUEST: '@plan/CREATE_OR_EDIT_REQUEST',
+  SUCCESS: '@plan/CREATE_OR_EDIT_SUCCESS',
+  FAIL: '@plan/CREATE_OR_EDIT_FAIL',
 };
 
 // Reducer
@@ -14,7 +14,7 @@ const INITIAL_STATE = {
   loading: false,
 };
 
-export default function planCreate(state = INITIAL_STATE, action) {
+export default function planUpdate(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.REQUEST: {
@@ -36,21 +36,21 @@ export default function planCreate(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function createPlanRequest(data) {
+export function updateOrCreatePlan(data, id) {
   return {
     type: Types.REQUEST,
-    payload: { data },
+    payload: { data, id },
   };
 }
 
-export function createPlanSuccess(plan) {
+export function updateOrCreatePlanSuccess(plan) {
   return {
     type: Types.SUCCESS,
     payload: { plan },
   };
 }
 
-export function createPlanFailure() {
+export function updateOrCreatePlanFailure() {
   return {
     type: Types.FAIL,
   };

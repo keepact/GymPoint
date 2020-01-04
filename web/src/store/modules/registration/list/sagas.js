@@ -13,7 +13,7 @@ import {
   listRegistrationSuccess,
   listRegistrationSuccessId,
   listRegistrationFailure,
-} from './registration';
+} from './index';
 
 export function* listRegistrationId({ payload }) {
   const { id } = payload;
@@ -41,14 +41,9 @@ export function* listRegistrationId({ payload }) {
 export function* listRegistrations({ payload }) {
   const { page, newList } = payload;
   try {
-    if (newList === 'delete') {
-      yield delay(600);
-    }
     const response = yield call(
       api.get,
-      !newList || newList === 'delete'
-        ? 'registrations'
-        : 'registrations/pending/removed',
+      !newList ? 'registrations' : 'registrations/pending/removed',
       {
         params: { page },
       }
