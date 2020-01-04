@@ -10,7 +10,6 @@ import loadingAnimation from '~/assets/animations/loader.json';
 
 import { createPlanRequest } from '~/store/modules/plan/create/plan';
 import {
-  listPlanRequestId,
   listPlanUpdatePrice,
   listPlanUpdateDuration,
 } from '~/store/modules/plan/list/plan';

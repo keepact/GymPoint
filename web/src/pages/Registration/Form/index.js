@@ -49,7 +49,7 @@ function RegistrationForm() {
   const students = useSelector(state => state.studentList.students);
 
   useEffect(() => {
-    dispatch(listPlanRequest(1));
+    dispatch(listPlanRequest(1, 'registration'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -135,7 +135,6 @@ function RegistrationForm() {
               </button>
             </div>
           </TitleWrapper>
-          {console.log(registration, 'teste return')}
           <Content>
             <MyForm
               id="Form"

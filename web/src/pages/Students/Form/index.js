@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -9,10 +9,6 @@ import { FiUpload } from 'react-icons/fi';
 import history from '~/services/history';
 import { validateStudents } from '~/util/validation';
 
-import {
-  listStudentRequestId,
-  listStudentClearValue,
-} from '~/store/modules/student/list/student';
 import { createStudentRequest } from '~/store/modules/student/create/student';
 import { updateStudentRequest } from '~/store/modules/student/update/student';
 
@@ -28,29 +24,21 @@ import {
   TitleWrapper,
 } from '~/styles/shared';
 
-function StudentForm({ match }) {
-  const { id } = match.params;
+function StudentForm() {
+  const { student: currentStudent, studentId } = useSelector(
+    state => state.studentList
+  );
   const dispatch = useDispatch();
 
   const { loading } = useSelector(state =>
-    id ? state.studentUpdate.loading : state.studentCreate.loading
+    studentId ? state.studentUpdate.loading : state.studentCreate.loading
   );
-  const { student: currentStudent } = useSelector(state => state.studentList);
 
   const student = useMemo(() => currentStudent, [currentStudent]);
 
-  useEffect(() => {
-    if (id) {
-      dispatch(listStudentRequestId(id));
-    } else if (student !== undefined && !id) {
-      dispatch(listStudentClearValue());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   function handleSubmit(data) {
-    if (id) {
-      dispatch(updateStudentRequest(data, id));
+    if (studentId) {
+      dispatch(updateStudentRequest(data, studentId));
     } else {
       dispatch(createStudentRequest(data));
     }
@@ -63,7 +51,7 @@ function StudentForm({ match }) {
       ) : (
         <>
           <TitleWrapper>
-            <h1>{id ? 'Edição de aluno' : 'Cadastro de Aluno'}</h1>
+            <h1>{studentId ? 'Edição de aluno' : 'Cadastro de Aluno'}</h1>
             <div>
               <button type="button" onClick={() => history.push('/')}>
                 Voltar
@@ -78,7 +66,7 @@ function StudentForm({ match }) {
             <MyForm
               id="Form"
               schema={validateStudents}
-              initialData={student && student.id === id && student}
+              initialData={student}
               onSubmit={handleSubmit}
             >
               <>
@@ -121,11 +109,6 @@ function StudentForm({ match }) {
 }
 
 StudentForm.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-  }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,

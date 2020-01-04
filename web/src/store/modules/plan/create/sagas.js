@@ -22,7 +22,7 @@ export function* createPlan({ payload }) {
     yield put(createPlanSuccess(response.data));
     history.push('/plans');
   } catch (err) {
-    toast.error('Error ao criar o plano, confira os dados');
+    toast.error(err.response.data.error);
     yield put(createPlanFailure());
   }
 }

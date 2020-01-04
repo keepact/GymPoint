@@ -8,7 +8,7 @@ export const Types = {
   SUCCESS: '@student/LIST_SUCCESS',
   SUCCESS_ID: '@student/ID_SUCCESS',
   CLEAR_VALUE: '@student/CLEAR_VALUE',
-  FAIL: '@student/LIST_FAIL',
+  REQUEST_INITIAL_STATE: '@student/INITIAL_STATE',
 };
 
 // Reducer
@@ -26,7 +26,10 @@ export default function studentList(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.REQUEST: {
-        draft.loading = true;
+        draft.loading =
+          action.payload.newList === 'delete' ||
+          typeof action.payload.newList !== 'string';
+
         break;
       }
       case Types.REQUEST_ID: {
@@ -46,8 +49,11 @@ export default function studentList(state = INITIAL_STATE, action) {
         draft.student = action.payload.data;
         break;
       }
-      case Types.CLEAR_VALUE: {
-        draft.student = undefined;
+      case Types.REQUEST_INITIAL_STATE: {
+        if (draft.studentId && draft.student !== undefined) {
+          draft.student = undefined;
+          draft.studentId = undefined;
+        }
         break;
       }
       case Types.FAIL: {
@@ -89,9 +95,9 @@ export function listStudentSuccessId(data) {
   };
 }
 
-export function listStudentClearValue() {
+export function listStudentCreate() {
   return {
-    type: Types.CLEAR_VALUE,
+    type: Types.REQUEST_INITIAL_STATE,
   };
 }
 

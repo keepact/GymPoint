@@ -2,7 +2,6 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
 import api from '~/services/api';
-import history from '~/services/history';
 
 import { Types, createSupportSuccess, createSupportFailure } from './support';
 
@@ -25,7 +24,7 @@ export function* createAnswer({ payload }) {
 
     yield put(createSupportSuccess(response.data));
   } catch (err) {
-    toast.error('Error na hora de enviar a resposta, confira seus dados');
+    toast.error(err.response.data.error);
     yield put(createSupportFailure());
   }
 }

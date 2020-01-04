@@ -31,7 +31,7 @@ export function* createStudent({ payload }) {
     yield put(createStudentSuccess(response.data));
     history.push('/students');
   } catch (err) {
-    toast.error('Error ao criar o estudante, confira os dados');
+    toast.error(err.response.data.error);
     yield put(createStudentFailure());
   }
 }

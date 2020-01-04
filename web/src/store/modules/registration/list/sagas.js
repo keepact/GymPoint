@@ -1,4 +1,4 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, delay } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import { format, parseISO } from 'date-fns';
 import { longDate, language, activeColor } from '~/util/format';
@@ -29,7 +29,6 @@ export function* listRegistrationId({ payload }) {
       start_date: parseISO(response.data.start_date),
       end_date: parseISO(response.data.end_date),
     };
-    console.log(student, 'teste');
 
     yield put(listRegistrationSuccessId(student));
     history.push('/registrations/edit');
@@ -42,60 +41,46 @@ export function* listRegistrationId({ payload }) {
 export function* listRegistrations({ payload }) {
   const { page, newList } = payload;
   try {
-    if (!newList || newList === 'pending') {
-      const response = yield call(
-        api.get,
-        !newList ? 'registrations' : 'registrations/pending/removed',
-        {
-          params: { page },
-        }
-      );
-
-      const registrations = response.data.content.rows.map(registration => ({
-        id: registration.id,
-        student: registration.student
-          ? registration.student.name
-          : 'Aluno Removido',
-        plan: registration.plan ? registration.plan.title : 'Plano Removido',
-        startDate: format(
-          parseISO(registration.start_date),
-          longDate,
-          language
-        ),
-        endDate: format(parseISO(registration.end_date), longDate, language),
-        activePlan: activeColor(
-          registration.student && registration.plan
-            ? registration.active
-            : 'Pendente',
-          registration.start_date
-        ),
-      }));
-
-      const { lastPage, pending: pendingCount } = response.data;
-      const hasPending = pendingCount > 0;
-
-      const pages = {
-        currentPage: page,
-        lastPage,
-        pendingCount,
-        pending: hasPending,
-      };
-
-      yield put(listRegistrationSuccess(registrations, pages));
-    } else {
-      const registrations = newList.newRegistrations.map(registration => ({
-        ...registration,
-      }));
-
-      const pages = {
-        currentPage: page,
-        lastPage: newList.lastPage,
-        pending: newList.pending,
-        pendingCount: newList.pendingCount,
-      };
-
-      yield put(listRegistrationSuccess(registrations, pages));
+    if (newList === 'delete') {
+      yield delay(600);
     }
+    const response = yield call(
+      api.get,
+      !newList || newList === 'delete'
+        ? 'registrations'
+        : 'registrations/pending/removed',
+      {
+        params: { page },
+      }
+    );
+
+    const registrations = response.data.content.rows.map(registration => ({
+      id: registration.id,
+      student: registration.student
+        ? registration.student.name
+        : 'Aluno Removido',
+      plan: registration.plan ? registration.plan.title : 'Plano Removido',
+      startDate: format(parseISO(registration.start_date), longDate, language),
+      endDate: format(parseISO(registration.end_date), longDate, language),
+      activePlan: activeColor(
+        registration.student && registration.plan
+          ? registration.active
+          : 'Pendente',
+        registration.start_date
+      ),
+    }));
+
+    const { lastPage, pending: pendingCount } = response.data;
+    const hasPending = pendingCount > 0;
+
+    const pages = {
+      currentPage: page,
+      lastPage,
+      pendingCount,
+      pending: hasPending,
+    };
+
+    yield put(listRegistrationSuccess(registrations, pages));
   } catch (err) {
     toast.error(requestFailMessage);
     yield put(listRegistrationFailure());

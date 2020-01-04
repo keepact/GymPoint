@@ -15,7 +15,7 @@ export function* deletePlan({ payload }) {
 
     yield put(deletePlanSuccess(response.data));
   } catch (err) {
-    toast.error('Error ao deletar o plano, talves vocês não tenha permissão');
+    toast.error(err.response.data.error);
     yield put(deletePlanFailure());
   }
 }

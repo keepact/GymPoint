@@ -33,7 +33,7 @@ export function* updateStudent({ payload }) {
     yield put(updateStudentSuccess(response.data));
     history.push('/students');
   } catch (err) {
-    toast.error('Error ao atualizar o estudante, confira os dados');
+    toast.error(err.response.data.error);
     yield put(updateStudentFailure());
   }
 }

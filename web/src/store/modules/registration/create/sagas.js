@@ -27,7 +27,7 @@ export function* createRegistration({ payload }) {
     yield put(createRegistrationSuccess(response.data));
     history.push('/registrations');
   } catch (err) {
-    toast.error('Error ao criar a matrícula, confira os dados');
+    toast.error(err.response.data.error);
     yield put(createRegistrationFailure());
   }
 }
