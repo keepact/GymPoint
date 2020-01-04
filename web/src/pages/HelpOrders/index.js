@@ -24,14 +24,15 @@ import { Wrapper, AnimationContainer } from './styles';
 
 function HelpOrders() {
   const [selectedQuestion, setSelectedQuestion] = useState('');
-  const [showPopUp, setShowPopUp] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
 
   const { lastPage, page, questions, loading } = useSelector(
     state => state.supportList
   );
-  // const loading = useSelector(state => state.supportCreate.loading);
+
+  const questionsQty = useMemo(() => questions.length, [questions]);
 
   useEffect(() => {
     dispatch(listSupportRequest(1)); // loadHelpOrders(1);
@@ -39,7 +40,7 @@ function HelpOrders() {
   }, []);
 
   function openPopup() {
-    setShowPopUp(!showPopUp);
+    setOpen(!open);
   }
 
   function handleQuestion(question) {
@@ -47,25 +48,9 @@ function HelpOrders() {
     openPopup();
   }
 
-  const questionsSize = useMemo(() => questions.length, [questions]);
-
   function handleSubmit(data) {
     dispatch(createSupportRequest(data, selectedQuestion.id));
-
-    const currentQuestions = questions.filter(
-      helpOrder => helpOrder.id !== selectedQuestion.id
-    );
-
-    let newPage = currentQuestions.length ? page : page - 1;
-    if (newPage === 0) {
-      newPage = 1;
-    }
-    const newList = {
-      currentQuestions,
-      lastPage,
-    };
-
-    dispatch(listSupportRequest(newPage, newList));
+    dispatch(listSupportRequest(page, 'answer'));
     openPopup();
   }
 
@@ -78,29 +63,25 @@ function HelpOrders() {
           <TitleWrapper>
             <h1>Pedidos de Auxílio</h1>
           </TitleWrapper>
-          {questionsSize && questionsSize > 0 ? (
+          {questionsQty > 0 ? (
             <>
               <Content small>
                 <Wrapper>
                   <header>
                     <strong>Aluno</strong>
                   </header>
-                  {questions ? (
-                    <>
-                      {questions.map((question, index) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <div key={index}>
-                          <span>{question.name}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleQuestion(question)}
-                          >
-                            responder
-                          </button>
-                        </div>
-                      ))}
-                    </>
-                  ) : null}
+                  {questions.map((question, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <div key={index}>
+                      <span>{question.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleQuestion(question)}
+                      >
+                        responder
+                      </button>
+                    </div>
+                  ))}
                 </Wrapper>
               </Content>
               <PageActions
@@ -110,7 +91,7 @@ function HelpOrders() {
                 refresh={() => dispatch(createSupportRequest())}
                 currentPage={page}
               />
-              {showPopUp ? (
+              {open ? (
                 <PopUp
                   schema={validateHelpOrders}
                   name="answer"

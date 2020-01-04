@@ -33,9 +33,7 @@ export default function planList(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.REQUEST: {
-        draft.loading =
-          action.payload.newList === 'delete' ||
-          action.payload.newList === undefined;
+        draft.loading = true;
         break;
       }
       case Types.REQUEST_ID: {
