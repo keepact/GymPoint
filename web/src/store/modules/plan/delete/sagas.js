@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
-import { Types, deletePlanSuccess, deletePlanFailure } from './plan';
+import { Types, deletePlanSuccess, deletePlanFailure } from './index';
+import { listPlanRequest } from '../list';
 
 export function* deletePlan({ payload }) {
   try {
@@ -14,8 +15,12 @@ export function* deletePlan({ payload }) {
     toast.success('Plano removido com sucesso');
 
     yield put(deletePlanSuccess(response.data));
+
+    if (response.status === 200) {
+      yield put(listPlanRequest(1));
+    }
   } catch (err) {
-    toast.error(err.response.data.error);
+    toast.error('Houve erro, tente novamente em alguns minutos');
     yield put(deletePlanFailure());
   }
 }

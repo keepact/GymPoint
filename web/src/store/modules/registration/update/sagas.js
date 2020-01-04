@@ -6,11 +6,11 @@ import api from '~/services/api';
 
 import {
   Types,
-  updateRegistrationSuccess,
-  updateRegistrationFailure,
-} from './registration';
+  updateOrCreateRegistrationSuccess,
+  updateOrCreateRegistrationFailure,
+} from './index';
 
-export function* updateRegistration({ payload }) {
+export function* requestNewOrEditRegistration({ payload }) {
   try {
     const { id } = payload;
     const { student, plan, start_date } = payload.data;
@@ -21,16 +21,26 @@ export function* updateRegistration({ payload }) {
       start_date,
     };
 
-    const response = yield call(api.put, `registrations/${id}`, registrations);
+    if (id !== undefined) {
+      const response = yield call(
+        api.put,
+        `registrations/${id}`,
+        registrations
+      );
 
-    toast.success('Matrícula alterada com sucesso');
+      toast.success('Matrícula alterada com sucesso');
+      yield put(updateOrCreateRegistrationSuccess(response.data));
+    } else {
+      const response = yield call(api.post, 'registrations', registrations);
 
-    yield put(updateRegistrationSuccess(response.data));
+      toast.success('Matrícula criada com sucesso');
+      yield put(updateOrCreateRegistrationSuccess(response.data));
+    }
     history.push('/registrations');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(updateRegistrationFailure());
+    yield put(updateOrCreateRegistrationFailure());
   }
 }
 
-export default all([takeLatest(Types.REQUEST, updateRegistration)]);
+export default all([takeLatest(Types.REQUEST, requestNewOrEditRegistration)]);

@@ -8,8 +8,8 @@ import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 import clearAnimation from '~/assets/animations/clear.json';
 
-import { createSupportRequest } from '~/store/modules/support/create/support';
-import { listSupportRequest } from '~/store/modules/support/list/support';
+import { createSupportRequest } from '~/store/modules/support/create';
+import { listSupportRequest } from '~/store/modules/support/list';
 
 import { validateHelpOrders } from '~/util/validation';
 
@@ -35,23 +35,22 @@ function HelpOrders() {
   const questionsQty = useMemo(() => questions.length, [questions]);
 
   useEffect(() => {
-    dispatch(listSupportRequest(1)); // loadHelpOrders(1);
+    dispatch(listSupportRequest(1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function openPopup() {
+  function popUpAction() {
     setOpen(!open);
   }
 
   function handleQuestion(question) {
     setSelectedQuestion(question);
-    openPopup();
+    popUpAction();
   }
 
   function handleSubmit(data) {
     dispatch(createSupportRequest(data, selectedQuestion.id));
-    dispatch(listSupportRequest(page, 'answer'));
-    openPopup();
+    popUpAction();
   }
 
   return (
@@ -70,9 +69,8 @@ function HelpOrders() {
                   <header>
                     <strong>Aluno</strong>
                   </header>
-                  {questions.map((question, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <div key={index}>
+                  {questions.map(question => (
+                    <div key={question.id}>
                       <span>{question.name}</span>
                       <button
                         type="button"
@@ -98,7 +96,7 @@ function HelpOrders() {
                   title="Pergunta do Aluno"
                   label="Sua Resposta aqui"
                   buttonLabel="Enviar Resposta"
-                  modal={openPopup}
+                  modal={popUpAction}
                   question={selectedQuestion.question}
                   onSubmit={handleSubmit}
                 />

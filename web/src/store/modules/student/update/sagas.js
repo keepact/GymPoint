@@ -5,7 +5,11 @@ import { parseInteger } from '~/util/format';
 import history from '~/services/history';
 import api from '~/services/api';
 
-import { Types, updateStudentSuccess, updateStudentFailure } from './student';
+import {
+  Types,
+  updateOrCreateStudentSuccess,
+  updateOrCreateStudentFailure,
+} from './index';
 
 export function* updateStudent({ payload }) {
   try {
@@ -26,15 +30,22 @@ export function* updateStudent({ payload }) {
       height: parseInteger(height_formatted, 'height'),
       weight: parseInteger(weight_formatted),
     };
-    const response = yield call(api.put, `/students/${id}`, student);
 
-    toast.success('Estudante atualizado com sucesso');
+    if (id !== undefined) {
+      const response = yield call(api.put, `/students/${id}`, student);
 
-    yield put(updateStudentSuccess(response.data));
+      toast.success('Estudante atualizado com sucesso');
+      yield put(updateOrCreateStudentSuccess(response.data));
+    } else {
+      const response = yield call(api.post, 'students', student);
+
+      toast.success('Estudante criado com sucesso');
+      yield put(updateOrCreateStudentSuccess(response.data));
+    }
     history.push('/students');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(updateStudentFailure());
+    yield put(updateOrCreateStudentFailure());
   }
 }
 

@@ -3,7 +3,9 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
-import { Types, deleteStudentSuccess, deleteStudentFailure } from './student';
+import { listStudentRequest } from '../list';
+
+import { Types, deleteStudentSuccess, deleteStudentFailure } from './index';
 
 export function* deleteStudent({ payload }) {
   try {
@@ -14,8 +16,12 @@ export function* deleteStudent({ payload }) {
     toast.success('Aluno removido com sucesso');
 
     yield put(deleteStudentSuccess(response.data));
+
+    if (response.status === 200) {
+      yield put(listStudentRequest(1));
+    }
   } catch (err) {
-    toast.error(err.response.data.error);
+    toast.error('Houve um erro, tente novamente em alguns minutos');
     yield put(deleteStudentFailure());
   }
 }

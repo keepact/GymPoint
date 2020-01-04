@@ -3,9 +3,9 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@registration/CREATE_REQUEST',
-  SUCCESS: '@registration/CREATE_SUCCESS',
-  FAIL: '@registration/CREATE_FAIL',
+  REQUEST: '@registration/CREATE_OR_EDIT_REQUEST',
+  SUCCESS: '@registration/CREATE_OR_EDIT_SUCCESS',
+  FAIL: '@registration/CREATE_OR_EDIT_FAIL',
 };
 
 // Reducer
@@ -14,7 +14,7 @@ const INITIAL_STATE = {
   loading: false,
 };
 
-export default function registrationCreate(state = INITIAL_STATE, action) {
+export default function registrationUpdate(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.REQUEST: {
@@ -36,21 +36,21 @@ export default function registrationCreate(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function createRegistrationRequest(data) {
+export function updateOrCreateRegistration(data, id) {
   return {
     type: Types.REQUEST,
-    payload: { data },
+    payload: { data, id },
   };
 }
 
-export function createRegistrationSuccess(student) {
+export function updateOrCreateRegistrationSuccess(registration) {
   return {
     type: Types.SUCCESS,
-    payload: { student },
+    payload: { registration },
   };
 }
 
-export function createRegistrationFailure() {
+export function updateOrCreateRegistrationFailure() {
   return {
     type: Types.FAIL,
   };

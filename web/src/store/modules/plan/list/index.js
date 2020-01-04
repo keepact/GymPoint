@@ -64,7 +64,7 @@ export default function planList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.REQUEST_INITIAL_STATE: {
-        if (draft.planId && draft.plan !== undefined) {
+        if (state.planId || state.plan) {
           draft.plan = INITIAL_STATE.plan;
           draft.planId = undefined;
         }

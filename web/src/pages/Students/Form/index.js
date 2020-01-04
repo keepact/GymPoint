@@ -9,8 +9,7 @@ import { FiUpload } from 'react-icons/fi';
 import history from '~/services/history';
 import { validateStudents } from '~/util/validation';
 
-import { createStudentRequest } from '~/store/modules/student/create/student';
-import { updateStudentRequest } from '~/store/modules/student/update/student';
+import { updateOrCreateStudent } from '~/store/modules/student/update';
 
 import InputNumber from '~/components/NumberInput';
 import Animation from '~/components/Animation';
@@ -30,18 +29,12 @@ function StudentForm() {
   );
   const dispatch = useDispatch();
 
-  const { loading } = useSelector(state =>
-    studentId ? state.studentUpdate.loading : state.studentCreate.loading
-  );
+  const { loading } = useSelector(state => state.studentUpdate.loading);
 
   const student = useMemo(() => currentStudent, [currentStudent]);
 
   function handleSubmit(data) {
-    if (studentId) {
-      dispatch(updateStudentRequest(data, studentId));
-    } else {
-      dispatch(createStudentRequest(data));
-    }
+    dispatch(updateOrCreateStudent(data, studentId || undefined));
   }
 
   return (
@@ -69,37 +62,35 @@ function StudentForm() {
               initialData={student}
               onSubmit={handleSubmit}
             >
-              <>
-                <label htmlFor="name">Nome Completo</label>
-                <Input name="name" placeholder="John Doe" />
-                <label htmlFor="email">Endereço de Email</label>
-                <Input name="email" placeholder="example@email.com" />
+              <label htmlFor="name">Nome Completo</label>
+              <Input name="name" placeholder="John Doe" />
+              <label htmlFor="email">Endereço de Email</label>
+              <Input name="email" placeholder="example@email.com" />
 
-                <NumberInputs>
-                  <div>
-                    <label htmlFor="age">Idade</label>
-                    <Input name="age" type="number" placeholder="18" />
-                  </div>
-                  <div>
-                    <label htmlFor="weight_formatted">
-                      Peso <span className="label">(em kg)</span>
-                    </label>
-                    <InputNumber
-                      decimalScale={3}
-                      name="weight_formatted"
-                      placeholder="75.500"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="height_formatted">Altura</label>
-                    <InputNumber
-                      decimalScale={2}
-                      placeholder="1.70"
-                      name="height_formatted"
-                    />
-                  </div>
-                </NumberInputs>
-              </>
+              <NumberInputs>
+                <div>
+                  <label htmlFor="age">Idade</label>
+                  <Input name="age" type="number" placeholder="18" />
+                </div>
+                <div>
+                  <label htmlFor="weight_formatted">
+                    Peso <span className="label">(em kg)</span>
+                  </label>
+                  <InputNumber
+                    decimalScale={3}
+                    name="weight_formatted"
+                    placeholder="75.500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="height_formatted">Altura</label>
+                  <InputNumber
+                    decimalScale={2}
+                    placeholder="1.70"
+                    name="height_formatted"
+                  />
+                </div>
+              </NumberInputs>
             </MyForm>
           </Content>
         </>

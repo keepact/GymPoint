@@ -11,7 +11,7 @@ import {
   listStudentSuccess,
   listStudentSuccessId,
   listStudentFailure,
-} from './student';
+} from './index';
 
 export function* listStudentId({ payload }) {
   const { id } = payload;
@@ -47,7 +47,7 @@ export function* listStudents({ payload }) {
       yield delay(600);
     }
     const response = yield call(api.get, 'students', {
-      params: { page, q: newList !== 'delete' ? newList : '' },
+      params: { page, q: newList || '' },
     });
 
     const students = response.data.content.rows.map(students => ({

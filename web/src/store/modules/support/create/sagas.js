@@ -3,7 +3,9 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
-import { Types, createSupportSuccess, createSupportFailure } from './support';
+import { listSupportRequest } from '../list';
+
+import { Types, createSupportSuccess, createSupportFailure } from './index';
 
 export function* createAnswer({ payload }) {
   try {
@@ -22,6 +24,9 @@ export function* createAnswer({ payload }) {
 
     toast.success('Resposta enviada com sucesso');
 
+    if (response.status === 200) {
+      yield put(listSupportRequest(1));
+    }
     yield put(createSupportSuccess(response.data));
   } catch (err) {
     toast.error(err.response.data.error);
