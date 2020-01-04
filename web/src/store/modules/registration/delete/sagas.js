@@ -9,7 +9,7 @@ import {
   deleteRegistrationFailure,
 } from './registration';
 
-export function* deleteStudent({ payload }) {
+export function* deleteRegistration({ payload }) {
   try {
     const { id } = payload;
 
@@ -19,11 +19,9 @@ export function* deleteStudent({ payload }) {
 
     yield put(deleteRegistrationSuccess(response.data));
   } catch (err) {
-    toast.error(
-      'Error ao deletar a matrícula, talves vocês não tenha permissão'
-    );
+    toast.error(err.response.data.error);
     yield put(deleteRegistrationFailure());
   }
 }
 
-export default all([takeLatest(Types.REQUEST, deleteStudent)]);
+export default all([takeLatest(Types.REQUEST, deleteRegistration)]);

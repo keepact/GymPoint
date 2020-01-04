@@ -1,7 +1,8 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, delay } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import { requestFailMessage } from '~/util/validation';
 
+import { formatPrice } from '~/util/format';
 import history from '~/services/history';
 import api from '~/services/api';
 
@@ -41,43 +42,29 @@ export function* listPlans({ payload }) {
   const { page, newList } = payload;
 
   try {
-    if (!newList) {
-      const response = yield call(api.get, 'plans', {
-        params: { page },
-      });
-
-      const plans = response.data.content.map(plans => ({
-        id: plans.id,
-        duration: plans.duration,
-        title: plans.title,
-        labelTitle: `${plans.duration} ${
-          plans.duration >= 2 ? 'meses' : 'mês'
-        }`,
-        price: plans.price,
-      }));
-
-      const { lastPage } = response.data;
-
-      const pages = {
-        currentPage: page,
-        lastPage,
-      };
-
-      yield put(listPlanSuccess(plans, pages));
-    } else {
-      const plans = newList.currentPlans.map(plans => ({
-        title: plans.title,
-        duration: plans.duration,
-        price: plans.price,
-      }));
-
-      const pages = {
-        currentPage: page,
-        lastPage: newList.lastPage,
-      };
-
-      yield put(listPlanSuccess(plans, pages));
+    if (newList === 'delete') {
+      yield delay(600);
     }
+    const response = yield call(api.get, 'plans', {
+      params: { page },
+    });
+
+    const plans = response.data.content.map(plan => ({
+      id: plan.id,
+      duration: plan.duration,
+      title: plan.title,
+      labelTitle: `${plan.duration} ${plan.duration >= 2 ? 'meses' : 'mês'}`,
+      price: newList === 'registration' ? plan.price : formatPrice(plan.price),
+    }));
+
+    const { lastPage } = response.data;
+
+    const pages = {
+      currentPage: page,
+      lastPage,
+    };
+
+    yield put(listPlanSuccess(plans, pages));
   } catch (err) {
     toast.error(requestFailMessage);
     yield put(listPlanFailure());

@@ -15,9 +15,7 @@ export function* deleteStudent({ payload }) {
 
     yield put(deleteStudentSuccess(response.data));
   } catch (err) {
-    toast.error(
-      'Error ao deletar o estudante, talves vocês não tenha permissão'
-    );
+    toast.error(err.response.data.error);
     yield put(deleteStudentFailure());
   }
 }

@@ -6,11 +6,7 @@ import PropTypes from 'prop-types';
 import { FaCircle } from 'react-icons/fa';
 import { FiPlusCircle } from 'react-icons/fi';
 
-import {
-  listRegistrationRequest,
-  listRegistrationRequestId,
-  listRegistrationCreate,
-} from '~/store/modules/registration/list/registration';
+import * as registrationListActions from '~/store/modules/registration/list/registration';
 import { deleteRegistrationRequest } from '~/store/modules/registration/delete/registration';
 
 import PageActions from '~/components/Pagination';
@@ -44,42 +40,26 @@ function RegistrationList() {
   ]);
 
   useEffect(() => {
-    dispatch(listRegistrationRequest(1));
+    dispatch(registrationListActions.listRegistrationRequest(1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleDelete(registrationId) {
     if (window.confirm('Você tem certeza que deseja apagar essa matrícula?')) {
       dispatch(deleteRegistrationRequest(registrationId));
-
-      const newRegistrations = registrations.filter(
-        helpOrder => helpOrder.id !== registrationId
-      );
-
-      let newPage = newRegistrations.length ? page : page - 1;
-      if (newPage === 0) {
-        newPage = 1;
-      }
-      const newList = {
-        newRegistrations,
-        lastPage,
-        pending,
-        pendingCount,
-      };
-
-      dispatch(listRegistrationRequest(newPage, newList));
+      dispatch(registrationListActions.listRegistrationRequest(page, 'delete'));
     }
   }
 
   function handlePage(page) {
-    dispatch(listRegistrationRequest(page));
+    dispatch(registrationListActions.listRegistrationRequest(page));
   }
 
   function handlePendingPage() {
     if (pending) {
-      dispatch(listRegistrationRequest(1, 'pending'));
+      dispatch(registrationListActions.listRegistrationRequest(1, 'pending'));
     } else {
-      dispatch(listRegistrationRequest(1));
+      dispatch(registrationListActions.listRegistrationRequest(1));
     }
   }
 
@@ -102,7 +82,9 @@ function RegistrationList() {
               </button>
               <button
                 type="button"
-                onClick={() => dispatch(listRegistrationCreate())}
+                onClick={() =>
+                  dispatch(registrationListActions.listRegistrationCreate())
+                }
               >
                 <span>Cadastrar</span>
                 <FiPlusCircle size={20} />
@@ -141,7 +123,9 @@ function RegistrationList() {
                                   type="button"
                                   onClick={() =>
                                     dispatch(
-                                      listRegistrationRequestId(registration.id)
+                                      registrationListActions.listRegistrationRequestId(
+                                        registration.id
+                                      )
                                     )
                                   }
                                 >

@@ -7,7 +7,6 @@ export const Types = {
   REQUEST_ID: '@registration/ID_REQUEST',
   SUCCESS: '@registration/LIST_SUCCESS',
   SUCCESS_ID: '@registration/ID_SUCCESS',
-  CLEAR_VALUE: '@registration/CLEAR_VALUE',
   FAIL: '@registration/LIST_FAIL',
   UPDATE_DATE: '@registration/DATE_VALUE',
   UPDATE_PLAN: '@registration/PLAN_VALUE',
@@ -40,7 +39,9 @@ export default function registrationList(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.REQUEST: {
-        draft.loading = true;
+        draft.loading =
+          action.payload.newList === 'delete' ||
+          action.payload.newList === undefined;
         break;
       }
       case Types.REQUEST_ID: {
@@ -78,6 +79,7 @@ export default function registrationList(state = INITIAL_STATE, action) {
       }
       case Types.UPDATE_PLAN: {
         const { newPlan, newEndDate, newPrice } = action.payload.data;
+
         draft.registration.plan.id = newPlan.id;
         draft.registration.plan.duration = newPlan.duration;
         draft.registration.plan.title = newPlan.title;
@@ -86,7 +88,10 @@ export default function registrationList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.REQUEST_INITIAL_STATE: {
-        draft.registration = INITIAL_STATE.registration;
+        if (draft.registrationId && draft.registration !== undefined) {
+          draft.registration = INITIAL_STATE.registration;
+          draft.registrationId = undefined;
+        }
         break;
       }
       case Types.FAIL: {

@@ -24,7 +24,7 @@ export function* updatePlan({ payload }) {
     yield put(updatePlanSuccess(response.data));
     history.push('/plans');
   } catch (err) {
-    toast.error('Error ao alterar o plano, confira os dados');
+    toast.error(err.response.data.error);
     yield put(updatePlanFailure());
   }
 }
