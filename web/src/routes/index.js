@@ -3,7 +3,6 @@ import { Switch } from 'react-router-dom';
 import Route from './Route';
 
 import SignIn from '../pages/SignIn';
-
 import Profile from '../pages/Profile';
 
 import PlansForm from '../pages/Plans/Form';
@@ -21,34 +20,29 @@ export default function Routes() {
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
-
       <Route path="/profile" component={Profile} isPrivate />
-
-      <Route path="/plans/create" component={PlansForm} isPrivate />
-      <Route path="/plans/:id" component={PlansForm} isPrivate />
-      <Route path="/plans/edit" component={PlansList} isPrivate />
-      <Route path="/plans" component={PlansList} isPrivate />
 
       <Route
         path="/registrations/create"
         component={RegistrationForm}
         isPrivate
       />
-      <Route path="/registrations/:id" component={RegistrationForm} isPrivate />
-      <Route path="/registrations" component={RegistrationList} isPrivate />
       <Route
         path="/registrations/edit"
-        component={RegistrationList}
+        component={RegistrationForm}
         isPrivate
       />
+      <Route path="/registrations" component={RegistrationList} isPrivate />
+
+      <Route path="/plans/create" component={PlansForm} isPrivate />
+      <Route path="/plans/edit" component={PlansForm} isPrivate />
+      <Route path="/plans" component={PlansList} isPrivate />
 
       <Route path="/students/create" component={StudentsForm} isPrivate />
-      <Route path="/students/:id" component={StudentsForm} isPrivate />
+      <Route path="/students/edit" component={StudentsForm} isPrivate />
       <Route path="/students" component={StudentsList} isPrivate />
-      <Route path="/students/edit" component={StudentsList} isPrivate />
 
       <Route path="/help-orders" component={HelpOrders} isPrivate />
-
       <Route path="/" component={() => <h1>404</h1>} />
     </Switch>
   );

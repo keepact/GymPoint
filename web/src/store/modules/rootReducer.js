@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
 import auth from './auth';
-import user from './user/user';
+import user from './user';
 import studentList from './student/list';
 import studentUpdate from './student/update';
 import studentDelete from './student/delete';
