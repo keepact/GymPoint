@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
 
 import { signOut } from '~/store/modules/auth';
-import { updateProfileRequest } from '~/store/modules/user/user';
+import { updateProfileRequest } from '~/store/modules/user';
 
 import { validateProfile } from '~/util/validation';
 
