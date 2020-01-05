@@ -16,15 +16,20 @@ export const validateSignIn = Yup.object().shape({
 export const validateProfile = Yup.object().shape({
   name: Yup.string().min(3, 'Mínimo de 3 letras'),
   email: Yup.string().email('Insira um e-mail válido'),
-  oldPassword: Yup.string().min(6, 'Mínimo de 6 letras/números'),
+  oldPassword: Yup.mixed().nullable(),
   password: Yup.string()
-    .min(6, 'Mínimo de 6 letras/números')
+    .nullable()
     .when('oldPassword', (oldPassword, field) =>
       oldPassword ? field.required(fieldRequired) : field
     ),
   confirmPassword: Yup.string().when('password', (password, field) =>
     password
-      ? field.required(fieldRequired).oneOf([Yup.ref('password')])
+      ? field
+          .required(fieldRequired)
+          .oneOf(
+            [Yup.ref('password')],
+            'Suas senhas não conferem, tente novamente.'
+          )
       : field
   ),
 });

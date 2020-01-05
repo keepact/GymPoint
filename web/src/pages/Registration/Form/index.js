@@ -6,9 +6,9 @@ import { FiUpload } from 'react-icons/fi';
 
 import { validateRegistrations } from '~/util/validation';
 
-import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
+import Animation from '~/components/Animation';
 import StudentSelector from '~/components/AsyncSelect';
 import PlanSelector from '~/components/Select';
 import NumberInput from '~/components/NumberInput';
@@ -103,7 +103,6 @@ function RegistrationForm() {
 
   return (
     <ContainerForm>
-      {console.log(registration, 'teste return')}
       {loading ? (
         <Animation animation={loadingAnimation} />
       ) : (

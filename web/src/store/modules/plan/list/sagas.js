@@ -73,7 +73,7 @@ export function planInitialState() {
 }
 
 export function planRedirect() {
-  history.push('plans');
+  history.push('/plans');
 }
 
 export default all([

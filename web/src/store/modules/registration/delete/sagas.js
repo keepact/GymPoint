@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 import { listRegistrationRequest } from '../list';
+import { requestFailMessage } from '~/util/validation';
 
 import {
   Types,
@@ -24,7 +25,7 @@ export function* deleteRegistration({ payload }) {
       yield put(listRegistrationRequest(1));
     }
   } catch (err) {
-    toast.error('Houve um erro, tente novamente em alguns minutos');
+    toast.error(requestFailMessage);
     yield put(deleteRegistrationFailure());
   }
 }
