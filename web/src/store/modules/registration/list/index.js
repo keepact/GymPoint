@@ -120,7 +120,6 @@ export function listRegistrationRequestId(id) {
 }
 
 export function listRegistrationSuccessId(data) {
-  console.log(data, 'action creator registration success');
   return {
     type: Types.SUCCESS_ID,
     payload: { data },

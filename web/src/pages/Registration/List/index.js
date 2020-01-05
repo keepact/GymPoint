@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import PropTypes from 'prop-types';
-
 import { FaCircle } from 'react-icons/fa';
 import { FiPlusCircle } from 'react-icons/fi';
 
@@ -35,9 +33,7 @@ function RegistrationList() {
   const registrations = useMemo(() => currentRegistrations, [
     currentRegistrations,
   ]);
-  const registrationsQty = useMemo(() => currentRegistrations.length, [
-    currentRegistrations,
-  ]);
+  const registrationsQty = useMemo(() => registrations.length, [registrations]);
 
   useEffect(() => {
     dispatch(registrationListActions.listRegistrationRequest(1));
@@ -163,11 +159,5 @@ function RegistrationList() {
     </Container>
   );
 }
-
-RegistrationList.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }).isRequired,
-};
 
 export default RegistrationList;
