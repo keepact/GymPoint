@@ -11,6 +11,7 @@ export const Types = {
   UPDATE_DATE: '@registration/DATE_VALUE',
   UPDATE_PLAN: '@registration/PLAN_VALUE',
   REQUEST_INITIAL_STATE: '@registration/INITIAL_STATE',
+  REDIRECT: '@registration/LIST_REDIRECT',
 };
 
 // Reducer
@@ -50,13 +51,13 @@ export default function registrationList(state = INITIAL_STATE, action) {
           pendingCount,
         } = action.payload.pages;
 
-        draft.loading = false;
         draft.registrations = action.payload.data;
 
         draft.page = currentPage;
         draft.lastPage = lastPage;
         draft.pending = pending;
         draft.pendingCount = pendingCount;
+        draft.loading = false;
         break;
       }
       case Types.SUCCESS_ID: {
@@ -119,6 +120,7 @@ export function listRegistrationRequestId(id) {
 }
 
 export function listRegistrationSuccessId(data) {
+  console.log(data, 'action creator registration success');
   return {
     type: Types.SUCCESS_ID,
     payload: { data },
@@ -142,6 +144,12 @@ export function listRegistrationUpdatePlan(plan, data) {
 export function listRegistrationCreate() {
   return {
     type: Types.REQUEST_INITIAL_STATE,
+  };
+}
+
+export function listRegistrationRedirect() {
+  return {
+    type: Types.REDIRECT,
   };
 }
 

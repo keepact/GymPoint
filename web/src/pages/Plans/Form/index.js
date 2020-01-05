@@ -8,15 +8,10 @@ import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
-import {
-  listPlanUpdatePrice,
-  listPlanUpdateDuration,
-} from '~/store/modules/plan/list';
+import * as planListActions from '~/store/modules/plan/list';
 import { updateOrCreatePlan } from '~/store/modules/plan/update';
 
 import { validatePlans } from '~/util/validation';
-
-import history from '~/services/history';
 
 import {
   Content,
@@ -39,11 +34,11 @@ function PlansForm() {
   }
 
   function handlePrice(price) {
-    dispatch(listPlanUpdatePrice(price));
+    dispatch(planListActions.listPlanUpdatePrice(price));
   }
 
   function handleDuration(duration) {
-    dispatch(listPlanUpdateDuration(duration));
+    dispatch(planListActions.listPlanUpdateDuration(duration));
   }
 
   return (
@@ -55,7 +50,10 @@ function PlansForm() {
           <TitleWrapper>
             <h1>{planId ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
             <div>
-              <button type="button" onClick={() => history.push('/plans')}>
+              <button
+                type="button"
+                onClick={() => dispatch(planListActions.listPlanRedirect())}
+              >
                 Voltar
               </button>
               <button form="Form" type="submit">

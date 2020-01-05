@@ -9,6 +9,7 @@ export const Types = {
   SUCCESS_ID: '@student/ID_SUCCESS',
   CLEAR_VALUE: '@student/CLEAR_VALUE',
   REQUEST_INITIAL_STATE: '@student/INITIAL_STATE',
+  REDIRECT: '@student/LIST_REDIRECT',
 };
 
 // Reducer
@@ -35,10 +36,12 @@ export default function studentList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.SUCCESS: {
-        draft.loading = false;
+        const { currentPage, lastPage } = action.payload.pages;
+
         draft.students = action.payload.data;
-        draft.page = action.payload.pages.currentPage;
-        draft.lastPage = action.payload.pages.lastPage;
+        draft.page = currentPage;
+        draft.lastPage = lastPage;
+        draft.loading = false;
         break;
       }
       case Types.SUCCESS_ID: {
@@ -47,7 +50,7 @@ export default function studentList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.REQUEST_INITIAL_STATE: {
-        if (draft.studentId && draft.student !== undefined) {
+        if (state.studentId || state.student) {
           draft.student = undefined;
           draft.studentId = undefined;
         }
@@ -95,6 +98,12 @@ export function listStudentSuccessId(data) {
 export function listStudentCreate() {
   return {
     type: Types.REQUEST_INITIAL_STATE,
+  };
+}
+
+export function listStudentRedirect() {
+  return {
+    type: Types.REDIRECT,
   };
 }
 

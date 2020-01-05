@@ -10,6 +10,7 @@ export const Types = {
   UPDATE_DURATION: '@plan/DURATION_SUCCESS',
   UPDATE_PRICE: '@plan/PRICE_SUCCESS',
   REQUEST_INITIAL_STATE: '@plan/INITIAL_STATE',
+  REDIRECT: '@plan/LIST_REDIRECT',
   FAIL: '@plan/LIST_FAIL',
 };
 
@@ -42,10 +43,12 @@ export default function planList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.SUCCESS: {
-        draft.loading = false;
+        const { currentPage, lastPage } = action.payload.pages;
+
         draft.plans = action.payload.data;
-        draft.page = action.payload.pages.currentPage;
-        draft.lastPage = action.payload.pages.lastPage;
+        draft.page = currentPage;
+        draft.lastPage = lastPage;
+        draft.loading = false;
         break;
       }
       case Types.SUCCESS_ID: {
@@ -54,13 +57,17 @@ export default function planList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.UPDATE_DURATION: {
-        draft.plan.duration = action.payload.duration;
-        draft.plan.finalPrice = draft.plan.price * draft.plan.duration;
+        const { duration } = action.payload;
+
+        draft.plan.duration = duration;
+        draft.plan.finalPrice = draft.plan.price * duration;
         break;
       }
       case Types.UPDATE_PRICE: {
-        draft.plan.price = action.payload.price;
-        draft.plan.finalPrice = draft.plan.duration * draft.plan.price;
+        const { price } = action.payload;
+
+        draft.plan.price = price;
+        draft.plan.finalPrice = draft.plan.duration * price;
         break;
       }
       case Types.REQUEST_INITIAL_STATE: {
@@ -126,6 +133,12 @@ export function listPlanUpdateDuration(duration) {
 export function listPlanCreate() {
   return {
     type: Types.REQUEST_INITIAL_STATE,
+  };
+}
+
+export function listPlanRedirect() {
+  return {
+    type: Types.REDIRECT,
   };
 }
 

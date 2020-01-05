@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import PropTypes from 'prop-types';
 
 import { addMonths } from 'date-fns';
 import { FiUpload } from 'react-icons/fi';
 
 import { validateRegistrations } from '~/util/validation';
-
-import history from '~/services/history';
 
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
@@ -19,8 +15,6 @@ import NumberInput from '~/components/NumberInput';
 import DatePicker from '~/components/DatePicker';
 
 import * as registratioListActions from '~/store/modules/registration/list';
-import { listPlanRequest } from '~/store/modules/plan/list/index';
-import { listStudentRequest } from '~/store/modules/student/list';
 import { updateOrCreateRegistration } from '~/store/modules/registration/update';
 
 import {
@@ -43,11 +37,6 @@ function RegistrationForm() {
   const plans = useSelector(state => state.planList.plans);
   const students = useSelector(state => state.studentList.students);
 
-  useEffect(() => {
-    dispatch(listPlanRequest(1, 'registration'));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const filterStudent = (data, inputValue) => {
     return data.filter(i =>
       i.name.toLowerCase().includes(inputValue.toLowerCase())
@@ -55,7 +44,6 @@ function RegistrationForm() {
   };
 
   const loadStudentOptions = async inputValue => {
-    dispatch(listStudentRequest(1));
     return new Promise(resolve => {
       resolve(filterStudent(students, inputValue));
     });
@@ -115,7 +103,7 @@ function RegistrationForm() {
 
   return (
     <ContainerForm>
-      {console.log(registration, 'teste REGISTRATION RETURN')}
+      {console.log(registration, 'teste return')}
       {loading ? (
         <Animation animation={loadingAnimation} />
       ) : (
@@ -127,7 +115,9 @@ function RegistrationForm() {
             <div>
               <button
                 type="button"
-                onClick={() => history.push('/registrations')}
+                onClick={() =>
+                  dispatch(registratioListActions.listRegistrationRedirect())
+                }
               >
                 Voltar
               </button>
@@ -189,11 +179,5 @@ function RegistrationForm() {
     </ContainerForm>
   );
 }
-
-RegistrationForm.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }).isRequired,
-};
 
 export default RegistrationForm;

@@ -53,6 +53,10 @@ function HelpOrders() {
     popUpAction();
   }
 
+  function handlePage(page) {
+    dispatch(listSupportRequest(page));
+  }
+
   return (
     <Container small>
       {loading ? (
@@ -86,7 +90,7 @@ function HelpOrders() {
                 disableNext={lastPage}
                 disableBack={page < 2}
                 pageLabel={page}
-                refresh={() => dispatch(createSupportRequest())}
+                refresh={handlePage}
                 currentPage={page}
               />
               {open ? (

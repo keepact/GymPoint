@@ -1,4 +1,4 @@
-import { takeLatest, call, put, all, delay } from 'redux-saga/effects';
+import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import { format, parseISO } from 'date-fns';
 import { longDate, language, activeColor } from '~/util/format';
@@ -7,6 +7,9 @@ import { requestFailMessage } from '~/util/validation';
 
 import api from '~/services/api';
 import history from '~/services/history';
+
+import { listPlanRequest } from '../../plan/list';
+import { listStudentRequest } from '../../student/list';
 
 import {
   Types,
@@ -23,14 +26,20 @@ export function* listRegistrationId({ payload }) {
       params: { id },
     });
 
-    const student = {
+    const registration = {
       ...response.data,
       id,
       start_date: parseISO(response.data.start_date),
       end_date: parseISO(response.data.end_date),
     };
 
-    yield put(listRegistrationSuccessId(student));
+    yield put(listRegistrationSuccessId(registration));
+
+    if (response.status === 200) {
+      yield put(listPlanRequest(1, 'registration'));
+      yield put(listStudentRequest(1));
+    }
+
     history.push('/registrations/edit');
   } catch (err) {
     toast.error(requestFailMessage);
@@ -82,12 +91,19 @@ export function* listRegistrations({ payload }) {
   }
 }
 
-export function registrationInitialState() {
-  history.push('/registrations/create');
+export function* registrationInitialState() {
+  yield put(listPlanRequest(1, 'registration'));
+  yield put(listStudentRequest(1));
+  history.push('registrations/create');
+}
+
+export function registrationRedirect() {
+  history.push('/registrations');
 }
 
 export default all([
   takeLatest(Types.REQUEST, listRegistrations),
   takeLatest(Types.REQUEST_ID, listRegistrationId),
   takeLatest(Types.REQUEST_INITIAL_STATE, registrationInitialState),
+  takeLatest(Types.REDIRECT, registrationRedirect),
 ]);
