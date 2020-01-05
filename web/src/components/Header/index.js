@@ -10,7 +10,7 @@ import { Container, Content, Profile } from './styles';
 
 function Header() {
   const dispatch = useDispatch();
-  const profile = useSelector(state => state.user.profile);
+  const { profile } = useSelector(state => state.user);
 
   function handleSignOut() {
     dispatch(signOut());

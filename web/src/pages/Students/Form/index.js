@@ -27,7 +27,7 @@ function StudentForm() {
   );
   const dispatch = useDispatch();
 
-  const { loading } = useSelector(state => state.studentUpdate.loading);
+  const { loading } = useSelector(state => state.studentUpdate);
 
   const student = useMemo(() => currentStudent, [currentStudent]);
 

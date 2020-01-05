@@ -29,13 +29,12 @@ function RegistrationForm() {
   const { registration, registrationId } = useSelector(
     state => state.registrationList
   );
+  const dispatch = useDispatch();
   const [disableDate, setDisableDate] = useState(!registrationId);
 
-  const dispatch = useDispatch();
-  const { loading } = useSelector(state => state.registrationUpdate.loading);
-
-  const plans = useSelector(state => state.planList.plans);
-  const students = useSelector(state => state.studentList.students);
+  const { loading } = useSelector(state => state.registrationUpdate);
+  const { plans } = useSelector(state => state.planList);
+  const { students } = useSelector(state => state.studentList);
 
   const filterStudent = (data, inputValue) => {
     return data.filter(i =>

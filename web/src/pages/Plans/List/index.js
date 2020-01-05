@@ -6,8 +6,10 @@ import { FiPlusCircle } from 'react-icons/fi';
 import * as planActions from '~/store/modules/plan/list';
 import { deletePlanRequest } from '~/store/modules/plan/delete';
 
-import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
+
+import Animation from '~/components/Animation';
+import PageActions from '~/components/Pagination';
 
 import {
   Container,
@@ -20,7 +22,7 @@ import { Table } from './styles';
 function PlansList() {
   const dispatch = useDispatch();
 
-  const { plans: currentPlans, loading, page } = useSelector(
+  const { plans: currentPlans, loading, page, lastPage } = useSelector(
     state => state.planList
   );
 
@@ -36,6 +38,10 @@ function PlansList() {
     if (window.confirm('Você tem certeza que deseja apagar esse plano?')) {
       dispatch(deletePlanRequest(planId));
     }
+  }
+
+  function handlePage(page) {
+    dispatch(planActions.listPlanRequest(page));
   }
 
   return (
@@ -64,7 +70,9 @@ function PlansList() {
                     <tr>
                       <th>Título</th>
                       <th>Duração</th>
-                      <th>Valor p/ MÊS</th>
+                      <th>
+                        Valor <span>p/</span> MÊS
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -96,6 +104,13 @@ function PlansList() {
                   </tbody>
                 </Table>
               </Content>
+              <PageActions
+                disableNext={lastPage}
+                disableBack={page < 2}
+                pageLabel={page}
+                refresh={handlePage}
+                currentPage={page}
+              />
             </>
           ) : (
             <EmptyContainer>

@@ -44,7 +44,7 @@ function RegistrationList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function handleDelete(registrationId) {
+  function handleDelete(registrationId) {
     if (window.confirm('Você tem certeza que deseja apagar essa matrícula?')) {
       dispatch(deleteRegistrationRequest(registrationId));
     }
@@ -58,7 +58,7 @@ function RegistrationList() {
     if (pending) {
       dispatch(registrationListActions.listRegistrationRequest(1, 'pending'));
     } else {
-      dispatch(registrationListActions.listRegistrationRequest(1));
+      dispatch(registrationListActions.listRegistrationRequest(page));
     }
   }
 

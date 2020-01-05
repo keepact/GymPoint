@@ -25,8 +25,8 @@ function PlansForm() {
   const { plan: currentPlan, planId } = useSelector(state => state.planList);
 
   const dispatch = useDispatch();
-  const loading = useSelector(state => state.planUpdate.loading);
 
+  const { loading } = useSelector(state => state.planUpdate);
   const plan = useMemo(() => currentPlan, [currentPlan]);
 
   function handleSubmit(data) {
