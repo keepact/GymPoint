@@ -1,6 +1,8 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
+import { requestFailMessage } from '~/util/validation';
+
 import api from '~/services/api';
 
 import { Types, deletePlanSuccess, deletePlanFailure } from './index';
@@ -20,7 +22,7 @@ export function* deletePlan({ payload }) {
       yield put(listPlanRequest(1));
     }
   } catch (err) {
-    toast.error('Houve erro, tente novamente em alguns minutos');
+    toast.error(requestFailMessage);
     yield put(deletePlanFailure());
   }
 }

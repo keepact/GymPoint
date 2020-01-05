@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import api from '~/services/api';
 
 import { listStudentRequest } from '../list';
+import { requestFailMessage } from '~/util/validation';
 
 import { Types, deleteStudentSuccess, deleteStudentFailure } from './index';
 
@@ -21,7 +22,7 @@ export function* deleteStudent({ payload }) {
       yield put(listStudentRequest(1));
     }
   } catch (err) {
-    toast.error('Houve um erro, tente novamente em alguns minutos');
+    toast.error(requestFailMessage);
     yield put(deleteStudentFailure());
   }
 }
