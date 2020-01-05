@@ -72,11 +72,16 @@ export function* listStudents({ payload }) {
 }
 
 export function studentInitialState() {
-  history.push('/students/create');
+  history.push('students/create');
+}
+
+export function studentRedirect() {
+  history.push('/');
 }
 
 export default all([
   takeLatest(Types.REQUEST, listStudents),
   takeLatest(Types.REQUEST_ID, listStudentId),
   takeLatest(Types.REQUEST_INITIAL_STATE, studentInitialState),
+  takeLatest(Types.REDIRECT, studentRedirect),
 ]);

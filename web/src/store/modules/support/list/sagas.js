@@ -1,4 +1,4 @@
-import { takeLatest, call, put, all, delay } from 'redux-saga/effects';
+import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import { requestFailMessage } from '~/util/validation';
 

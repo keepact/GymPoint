@@ -25,9 +25,11 @@ export default function supportList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.SUCCESS: {
+        const { currentPage, lastPage } = action.payload.pages;
+
         draft.questions = action.payload.data;
-        draft.page = action.payload.pages.currentPage;
-        draft.lastPage = action.payload.pages.lastPage;
+        draft.page = currentPage;
+        draft.lastPage = lastPage;
         draft.loading = false;
         break;
       }

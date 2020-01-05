@@ -1,15 +1,13 @@
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import PropTypes from 'prop-types';
-
 import { Input } from '@rocketseat/unform';
 import { FiUpload } from 'react-icons/fi';
 
-import history from '~/services/history';
 import { validateStudents } from '~/util/validation';
 
 import { updateOrCreateStudent } from '~/store/modules/student/update';
+import { listStudentRedirect } from '~/store/modules/student/list';
 
 import InputNumber from '~/components/NumberInput';
 import Animation from '~/components/Animation';
@@ -46,7 +44,10 @@ function StudentForm() {
           <TitleWrapper>
             <h1>{studentId ? 'Edição de aluno' : 'Cadastro de Aluno'}</h1>
             <div>
-              <button type="button" onClick={() => history.push('/')}>
+              <button
+                type="button"
+                onClick={() => dispatch(listStudentRedirect())}
+              >
                 Voltar
               </button>
               <button form="Form" type="submit">
@@ -98,11 +99,5 @@ function StudentForm() {
     </ContainerForm>
   );
 }
-
-StudentForm.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }).isRequired,
-};
 
 export default StudentForm;
