@@ -24,10 +24,12 @@ export function* requestNewOrEdiPlan({ payload }) {
 
     if (id !== undefined) {
       const response = yield call(api.put, `/plans/${id}`, plan);
+
       toast.success('Plano alterado com sucesso');
       yield put(updateOrCreatePlanSuccess(response.data));
     } else {
       const response = yield call(api.post, 'plans', plan);
+
       toast.success('Plano criado com sucesso');
       yield put(updateOrCreatePlanSuccess(response.data));
     }

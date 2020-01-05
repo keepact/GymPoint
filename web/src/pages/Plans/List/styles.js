@@ -17,6 +17,10 @@ export const Table = styled.table`
     text-align: left;
     padding: 40px 40px 0 40px;
     text-transform: uppercase;
+
+    span {
+      text-transform: lowercase;
+    }
   }
 
   tbody td {

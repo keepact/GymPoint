@@ -23,23 +23,24 @@ function StudentsList() {
 
   const dispatch = useDispatch();
 
-  const { students, loading, page, lastPage } = useSelector(
+  const { students: currentStudetns, loading, page, lastPage } = useSelector(
     state => state.studentList
   );
+
+  const students = useMemo(() => currentStudetns, [currentStudetns]);
+  const studentsQty = useMemo(() => students.length, [students]);
 
   useEffect(() => {
     dispatch(studentsListActions.listStudentRequest(1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const studentsQty = useMemo(() => students.length, [students]);
-
   function handleSearch(e) {
     setStudendName(e.target.value);
     dispatch(studentsListActions.listStudentRequest(page, studentName));
   }
 
-  async function handleDelete(studentId) {
+  function handleDelete(studentId) {
     if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
       dispatch(deleteStudentRequest(studentId));
     }
