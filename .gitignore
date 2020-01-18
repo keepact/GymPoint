@@ -9,11 +9,30 @@
 /backend/tmp/uploads/*
 /backend/.env
 /backend/.DS_Store
+/backend/yarn-error.log
+/backend/npm-debug.log
 
 # Web
 /web/node_modules/
 /web/.env
 /web/.DS_Store
+
+# Mobile
+/mobile/node_modules/
+/mobile/.env
+/mobile/.DS_Store
+/mobile/build/
+/mobile/.idea
+/mobile/.gradle
+/mobile/local.properties
+/mobile/*.iml
+/mobile/ios/Pods/
+
+# Mobile BUCK
+/mobile/buck-out/
+/mobile/\.buckd/
+/mobile/*.keystore
+/mobile/!debug.keystore
 
 # testing
 /coverage
