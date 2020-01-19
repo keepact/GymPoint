@@ -24,7 +24,6 @@ export default function auth(state = INITIAL_STATE, action) {
         break;
       }
       case Types.SIGN_IN_SUCCESS: {
-        draft.token = action.payload.token;
         draft.signed = true;
         draft.loading = false;
         break;
@@ -34,7 +33,6 @@ export default function auth(state = INITIAL_STATE, action) {
         break;
       }
       case Types.SIGN_OUT: {
-        draft.token = null;
         draft.signed = false;
         break;
       }
@@ -45,17 +43,17 @@ export default function auth(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function signInRequest(email, password) {
+export function signInRequest(id) {
   return {
     type: Types.SIGN_IN_REQUEST,
-    payload: { email, password },
+    payload: { id },
   };
 }
 
-export function signInSuccess(token, user) {
+export function signInSuccess(student) {
   return {
     type: Types.SIGN_IN_SUCCESS,
-    payload: { token, user },
+    payload: { student },
   };
 }
 
