@@ -3,6 +3,6 @@ import { View } from 'react-native';
 
 // import { Container } from './styles';
 
-export default function SignUp() {
+export default function CheckIn() {
   return <View />;
 }
