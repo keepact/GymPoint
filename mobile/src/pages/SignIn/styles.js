@@ -33,7 +33,7 @@ export const FormInput = styled.TextInput`
   flex: 1;
   font-size: 15px;
   margin-left: 10px;
-  color: #fff;
+  color: #ddd;
 `;
 
 export const SubmitButton = styled(Button)`

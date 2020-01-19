@@ -17,7 +17,7 @@ import {
 } from './styles';
 
 function SignIn() {
-  const [identifaction, setIdentification] = useState('');
+  const [identification, setIdentification] = useState('');
 
   const { loading } = useSelector(state => state.auth);
   const dispatch = useDispatch();
@@ -34,15 +34,17 @@ function SignIn() {
         <InputContainer>
           <Icon name="perm-identity" size={20} color="#ddd" />
           <FormInput
-            keyboardType="number-pad"
+            keyboardType="numeric"
             autoCorrect={false}
             autoCapitalize="none"
             placeholder="Informe seu ID de cadastro"
-            value={identifaction}
-            onChange={setIdentification}
+            value={identification}
+            onChangeText={e => setIdentification(e)}
           />
         </InputContainer>
-        <SubmitButton loading={loading} onPress={handleSubmit}>
+        <SubmitButton
+          loading={loading}
+          onPress={() => handleSubmit(identification)}>
           Entrar no Sistema
         </SubmitButton>
       </Form>
