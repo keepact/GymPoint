@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
+import { signInRequest } from '~/store/modules/auth';
 
 import logo from '~/assets/images/group-2.png';
 
@@ -12,7 +16,16 @@ import {
   InputContainer,
 } from './styles';
 
-export default function SignIn() {
+function SignIn() {
+  const [identifaction, setIdentification] = useState('');
+
+  const { loading } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  const handleSubmit = id => {
+    dispatch(signInRequest(id));
+  };
+
   return (
     <Container>
       <Image source={logo} />
@@ -25,10 +38,16 @@ export default function SignIn() {
             autoCorrect={false}
             autoCapitalize="none"
             placeholder="Informe seu ID de cadastro"
+            value={identifaction}
+            onChange={setIdentification}
           />
         </InputContainer>
-        <SubmitButton onPress={() => {}}>Entrar</SubmitButton>
+        <SubmitButton loading={loading} onPress={handleSubmit}>
+          Entrar no Sistema
+        </SubmitButton>
       </Form>
     </Container>
   );
 }
+
+export default SignIn;
