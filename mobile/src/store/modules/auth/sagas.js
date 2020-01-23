@@ -11,9 +11,9 @@ export function* signIn({ payload }) {
 
     const response = yield call(api.get, `/students/${id}/checkins`);
 
-    const student = response.data;
+    const checkIns = response.data;
 
-    yield put(signInSuccess(student));
+    yield put(signInSuccess(checkIns));
   } catch (err) {
     Alert.alert(
       'Falha na autenticação',
