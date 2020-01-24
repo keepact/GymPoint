@@ -3,14 +3,15 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  CHECKIN_REQUEST: '@checkin/SIGN_IN_REQUEST',
-  CHECKIN_SUCCESS: '@checkin/SIGN_IN_SUCCESS',
-  CHECKIN_FAILURE: '@checkin/SIGN_FAILURE',
+  CHECKIN_REQUEST: '@checkin/CHECKIN_REQUEST',
+  CHECKIN_SUCCESS: '@checkin/CHECKIN_SUCCESS',
+  CHECKIN_FAILURE: '@checkin/CHECKIN_FAILURE',
 };
 
 // Reducer
 
 const INITIAL_STATE = {
+  studentId: '',
   checkIns: [],
   loading: false,
 };
@@ -18,16 +19,17 @@ const INITIAL_STATE = {
 export default function checkin(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.SIGN_IN_REQUEST: {
+      case Types.CHECKIN_REQUEST: {
         draft.loading = true;
+        draft.studentId = action.payload.id;
         break;
       }
-      case Types.SIGN_IN_SUCCESS: {
-        draft.checkIns = action.payload.data;
+      case Types.CHECKIN_SUCCESS: {
+        draft.checkIns = action.payload.checkIns;
         draft.loading = false;
         break;
       }
-      case Types.SIGN_IN_FAILURE: {
+      case Types.CHECKIN_FAILURE: {
         draft.loading = false;
         break;
       }
@@ -38,16 +40,17 @@ export default function checkin(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function checkInRequest() {
+export function checkInRequest(id, newList) {
   return {
     type: Types.CHECKIN_REQUEST,
+    payload: { id, newList },
   };
 }
 
-export function checkInSuccess(data) {
+export function checkInSuccess(checkIns) {
   return {
     type: Types.CHECKIN_SUCCESS,
-    payload: { data },
+    payload: { checkIns },
   };
 }
 

@@ -4,18 +4,19 @@ import PropTypes from 'prop-types';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CheckIns from '~/components/CheckIns';
-// import { Background } from '~/components/Background';
 
 import { Container, CheckInButton, ButtonContainer, List } from './styles';
+import { checkInRequest } from '~/store/modules/checkin';
 
 function CheckIn() {
-  const { checkIns } = useSelector(state => state.auth);
+  const { checkIns, studentId } = useSelector(state => state.checkin);
   const dispatch = useDispatch();
 
-  function handleAddCheckIn() {}
+  function handleAddCheckIn() {
+    dispatch(checkInRequest(studentId, 'New Checkin'));
+  }
 
   return (
-    // <Background>
     <Container>
       <ButtonContainer>
         <CheckInButton onPress={handleAddCheckIn}>Novo check-in</CheckInButton>
@@ -26,7 +27,6 @@ function CheckIn() {
         renderItem={({ item }) => <CheckIns data={item} />}
       />
     </Container>
-    // </Background>
   );
 }
 

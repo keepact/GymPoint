@@ -13,7 +13,6 @@ export const Types = {
 
 const INITIAL_STATE = {
   signed: false,
-  checkIns: [],
   loading: false,
 };
 
@@ -25,7 +24,6 @@ export default function auth(state = INITIAL_STATE, action) {
         break;
       }
       case Types.SIGN_IN_SUCCESS: {
-        draft.checkIns = action.payload.checkIns;
         draft.signed = true;
         draft.loading = false;
         break;
@@ -52,10 +50,9 @@ export function signInRequest(id) {
   };
 }
 
-export function signInSuccess(checkIns) {
+export function signInSuccess() {
   return {
     type: Types.SIGN_IN_SUCCESS,
-    payload: { checkIns },
   };
 }
 
