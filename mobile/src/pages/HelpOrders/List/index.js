@@ -1,8 +1,38 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-// import { Container } from './styles';
+import Questions from '~/components/Questions';
 
-export default function List() {
-  return <View />;
+import { questionRequest } from '~/store/modules/question';
+
+import { Container, ButtonContainer, CheckInButton, List } from './styles';
+
+function HelpOrderList() {
+  const { studentId } = useSelector(state => state.checkin);
+  const { questions } = useSelector(state => state.question);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(questionRequest(studentId));
+  }, [dispatch, studentId]);
+
+  const handleAddQuestion = () => {};
+
+  return (
+    <Container>
+      <ButtonContainer>
+        <CheckInButton onPress={handleAddQuestion}>
+          Novo pedido de auxílio
+        </CheckInButton>
+      </ButtonContainer>
+
+      <List
+        data={questions}
+        keyExtractor={item => String(item.id)}
+        renderItem={({ item }) => <Questions data={item} />}
+      />
+    </Container>
+  );
 }
+
+export default HelpOrderList;
