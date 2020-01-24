@@ -1,24 +1,32 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { Alert } from 'react-native';
 
-import api from '~/services/api';
+import * as service from '~/services/checkin';
 
-import { Types, checkInRequest, checkInFailure } from './index';
+import { Types, checkInSuccess, checkInFailure } from './index';
 
-export function* checkIn({ payload }) {
+export function* createOrListCheckIn({ payload }) {
+  const { id, newList } = payload;
+
   try {
-    const response = yield call(api.get, `/students/${id}/checkins`);
+    if (!newList) {
+      const response = yield call(service.checkinList, id);
 
-    const checkIns = response.data;
+      const checkIns = response.data;
 
-    yield put(checkInRequest(checkIns));
+      yield put(checkInSuccess(checkIns));
+    } else {
+      yield call(service.checkinCreate, id);
+      const response = yield call(service.checkinList, id);
+
+      const checkIns = response.data;
+
+      yield put(checkInSuccess(checkIns));
+    }
   } catch (err) {
-    Alert.alert(
-      'Falha na requisição',
-      'Houve um erro na hora da listagem, tente novamente em alguns minutos',
-    );
+    Alert.alert('Falha na requisição', err.response.data.error);
     yield put(checkInFailure());
   }
 }
 
-export default all([takeLatest(Types.CHECKIN_REQUEST, checkIn)]);
+export default all([takeLatest(Types.CHECKIN_REQUEST, createOrListCheckIn)]);
