@@ -1,6 +1,8 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+import { RectButton } from 'react-native-gesture-handler';
+
+export const Container = styled(RectButton)`
   width: 280px;
   height: 150px;
 
