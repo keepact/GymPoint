@@ -6,6 +6,7 @@ export const Types = {
   QUESTION_REQUEST: '@question/QUESTION_REQUEST',
   QUESTION_SUCCESS: '@question/QUESTION_SUCCESS',
   QUESTION_FAILURE: '@question/QUESTION_FAILURE',
+  REDIRECT: '@question/REDIRECT',
 };
 
 // Reducer
@@ -38,10 +39,10 @@ export default function question(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function questionRequest(id, newList) {
+export function questionRequest(id, data) {
   return {
     type: Types.QUESTION_REQUEST,
-    payload: { id, newList },
+    payload: { id, data },
   };
 }
 
@@ -55,5 +56,11 @@ export function questionSuccess(questions) {
 export function questionFailure() {
   return {
     type: Types.QUESTION_FAILURE,
+  };
+}
+
+export function redirectToCreate() {
+  return {
+    type: Types.REDIRECT,
   };
 }

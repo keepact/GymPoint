@@ -11,7 +11,7 @@ export const ButtonContainer = styled.View`
   width: 280px;
 `;
 
-export const CheckInButton = styled(Button)`
+export const NewQuetionButton = styled(Button)`
   margin-top: 15px;
   width: 100%;
 `;
