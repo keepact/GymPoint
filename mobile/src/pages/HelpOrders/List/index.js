@@ -3,21 +3,25 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Questions from '~/components/Questions';
 
-import { questionRequest, redirectToCreate } from '~/store/modules/question';
+import { helpOrderRequest, helpOrderRedirect } from '~/store/modules/helporder';
 
 import { Container, ButtonContainer, NewQuetionButton, List } from './styles';
 
 function HelpOrderList() {
   const { studentId } = useSelector(state => state.checkin);
-  const { questions } = useSelector(state => state.question);
+  const { helporders } = useSelector(state => state.helporder);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(questionRequest(studentId));
+    dispatch(helpOrderRequest(studentId));
   }, [dispatch, studentId]);
 
   const handleAddQuestion = () => {
-    dispatch(redirectToCreate());
+    dispatch(helpOrderRedirect());
+  };
+
+  const handleGoToAnswer = item => {
+    dispatch(helpOrderRedirect(item));
   };
 
   return (
@@ -29,9 +33,11 @@ function HelpOrderList() {
       </ButtonContainer>
 
       <List
-        data={questions}
+        data={helporders}
         keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => <Questions data={item} />}
+        renderItem={({ item }) => (
+          <Questions data={item} onSubmit={() => handleGoToAnswer(item)} />
+        )}
       />
     </Container>
   );

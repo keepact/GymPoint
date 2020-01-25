@@ -1,12 +1,12 @@
 import api from './api';
 
-export const questionList = id =>
+export const helpOrderList = id =>
   api().request({
     url: `students/${id}/help-orders`,
     method: 'GET',
   });
 
-export const questionCreate = data =>
+export const helpOrderCreate = data =>
   api().request({
     url: `students/${data.id}/help-orders`,
     method: 'POST',

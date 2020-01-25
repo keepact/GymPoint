@@ -6,7 +6,7 @@ import { parseISO, formatDistanceStrict } from 'date-fns';
 
 import { Container, Header, Left, Right, Content, Question } from './styles';
 
-function Questions({ data }) {
+function Questions({ data, onSubmit }) {
   const dateParsed = useMemo(() => {
     return formatDistanceStrict(parseISO(data.createdAt), new Date(), {
       locale: pt,
@@ -15,7 +15,7 @@ function Questions({ data }) {
   }, [data.createdAt]);
 
   return (
-    <Container>
+    <Container onPress={onSubmit}>
       <Header>
         <Left answered={data.answer !== null}>
           {data.answer !== null ? 'Respondido' : 'Sem Resposta'}
@@ -37,6 +37,7 @@ Questions.propTypes = {
     question: PropTypes.string,
     createdAt: PropTypes.string,
   }).isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default Questions;

@@ -12,9 +12,9 @@ function CheckIn() {
   const { checkIns, studentId } = useSelector(state => state.checkin);
   const dispatch = useDispatch();
 
-  function handleAddCheckIn() {
+  const handleAddCheckIn = () => {
     dispatch(checkInRequest(studentId, 'New Checkin'));
-  }
+  };
 
   return (
     <Container>
