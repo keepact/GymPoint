@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Questions from '~/components/Questions';
 
-import { questionRequest } from '~/store/modules/question';
+import { questionRequest, redirectToCreate } from '~/store/modules/question';
 
-import { Container, ButtonContainer, CheckInButton, List } from './styles';
+import { Container, ButtonContainer, NewQuetionButton, List } from './styles';
 
 function HelpOrderList() {
   const { studentId } = useSelector(state => state.checkin);
@@ -16,14 +16,16 @@ function HelpOrderList() {
     dispatch(questionRequest(studentId));
   }, [dispatch, studentId]);
 
-  const handleAddQuestion = () => {};
+  const handleAddQuestion = () => {
+    dispatch(redirectToCreate());
+  };
 
   return (
     <Container>
       <ButtonContainer>
-        <CheckInButton onPress={handleAddQuestion}>
+        <NewQuetionButton onPress={handleAddQuestion}>
           Novo pedido de auxílio
-        </CheckInButton>
+        </NewQuetionButton>
       </ButtonContainer>
 
       <List

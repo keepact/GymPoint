@@ -6,8 +6,11 @@ export const questionList = id =>
     method: 'GET',
   });
 
-export const questionCreate = id =>
+export const questionCreate = data =>
   api().request({
-    url: `students/${id}/help-orders`,
+    url: `students/${data.id}/help-orders`,
     method: 'POST',
+    data: {
+      question: data.data,
+    },
   });
