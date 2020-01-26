@@ -71,7 +71,7 @@ class SupportController {
     const { answer } = req.body;
 
     const supportOrder = await HelpOrder.findOne({
-      where: { student_id: id },
+      where: { id },
       include: [
         {
           model: Student,
