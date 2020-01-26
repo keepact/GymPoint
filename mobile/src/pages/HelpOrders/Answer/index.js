@@ -29,7 +29,7 @@ function HelpOrderAnswer() {
         <Title>Resposta</Title>
       </Header>
       <TextContent>
-        {helporder.asnwer ? helporder.answer : 'Sem resposta'}
+        {helporder.answer ? helporder.answer : 'Sem resposta'}
       </TextContent>
     </Container>
   );
