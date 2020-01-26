@@ -12,6 +12,8 @@ export const Types = {
 
 const INITIAL_STATE = {
   checkIns: [],
+  page: 1,
+  lastPage: '',
   loading: false,
 };
 
@@ -23,7 +25,11 @@ export default function checkin(state = INITIAL_STATE, action) {
         break;
       }
       case Types.CHECKIN_SUCCESS: {
-        draft.checkIns = action.payload.checkIns;
+        const { currentPage, lastPage } = action.payload.pages;
+
+        draft.checkIns = action.payload.data;
+        draft.page = currentPage;
+        draft.lastPage = lastPage;
         draft.loading = false;
         break;
       }
@@ -38,17 +44,17 @@ export default function checkin(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function checkInRequest(id) {
+export function checkInRequest(page) {
   return {
     type: Types.CHECKIN_REQUEST,
-    payload: { id },
+    payload: { page },
   };
 }
 
-export function checkInSuccess(checkIns) {
+export function checkInSuccess(data, pages) {
   return {
     type: Types.CHECKIN_SUCCESS,
-    payload: { checkIns },
+    payload: { data, pages },
   };
 }
 

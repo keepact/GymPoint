@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { KeyboardAvoidingView } from 'react-native';
 
 import { helpOrderRequest } from '~/store/modules/helporder';
@@ -8,12 +8,10 @@ import { Container, TextArea, ButtonContainer, SubmitButton } from './styles';
 
 function HelpOrderAsk() {
   const [value, setValue] = useState('');
-
-  const { studentId } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    dispatch(helpOrderRequest(studentId, value));
+    dispatch(helpOrderRequest(value));
   };
 
   return (

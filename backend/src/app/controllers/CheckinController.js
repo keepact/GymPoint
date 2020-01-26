@@ -5,8 +5,17 @@ import Student from '../models/Student';
 
 class CheckinController {
   async index(req, res) {
+    const { page } = req.query;
     const { id } = req.params;
-    const { page = 1 } = req.query;
+
+    let limit = {};
+    const include = [
+      {
+        model: Student,
+        as: 'student',
+        attributes: ['name', 'email'],
+      },
+    ];
 
     const studentExist = await Student.findByPk(id);
 
@@ -16,18 +25,33 @@ class CheckinController {
       });
     }
 
+    if (page) {
+      limit = {
+        limit: 10,
+        offset: (page - 1) * 10,
+      };
+
+      const checkin = await Checkin.findAndCountAll({
+        where: { student_id: id },
+        ...limit,
+        include,
+      });
+
+      const lastPage = page * limit.limit >= checkin.count;
+
+      return res.json({ content: checkin, lastPage });
+    }
+
     const checkin = await Checkin.findAll({
       where: { student_id: id },
-      limit: 20,
-      offset: (page - 1) * 20,
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['name', 'email'],
-        },
-      ],
+      include,
     });
+
+    if (!checkin) {
+      return res.status(400).json({
+        error: 'Sem checkins realizados, comece hoje!',
+      });
+    }
 
     return res.json(checkin);
   }

@@ -1,4 +1,4 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, select } from 'redux-saga/effects';
 import { Alert } from 'react-native';
 
 import * as service from '~/services/checkin';
@@ -6,15 +6,23 @@ import * as service from '~/services/checkin';
 import { Types, checkInSuccess, checkInFailure } from './index';
 
 export function* createCheckIn({ payload }) {
-  const { id } = payload;
+  const { page } = payload;
+  const { studentId } = yield select(state => state.auth);
 
   try {
-    yield call(service.checkinCreate, id);
-    const response = yield call(service.checkinList, id);
+    const checkin = { studentId, page };
 
-    const checkIns = response.data;
+    yield call(service.checkinCreate, studentId);
+    const response = yield call(service.checkinList, checkin);
 
-    yield put(checkInSuccess(checkIns));
+    const { rows: checkInData } = response.data.content;
+
+    const pages = {
+      currentPage: page,
+      lastPage: response.data.lastPage,
+    };
+
+    yield put(checkInSuccess(checkInData, pages));
   } catch (err) {
     Alert.alert('Falha na requisição', err.response.data.error);
     yield put(checkInFailure());

@@ -8,7 +8,6 @@ import { helpOrderRequest, helpOrderRedirect } from '~/store/modules/helporder';
 import { Container, ButtonContainer, NewQuetionButton, List } from './styles';
 
 function HelpOrderList() {
-  const { studentId } = useSelector(state => state.auth);
   const { helporders } = useSelector(state => state.helporder);
 
   const dispatch = useDispatch();
@@ -16,9 +15,9 @@ function HelpOrderList() {
 
   useEffect(() => {
     if (firstRender) {
-      dispatch(helpOrderRequest(studentId));
+      dispatch(helpOrderRequest());
     }
-  }, [dispatch, studentId, firstRender]);
+  }, [dispatch, firstRender]);
 
   const handleAddQuestion = () => {
     dispatch(helpOrderRedirect());

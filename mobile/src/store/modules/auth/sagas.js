@@ -1,4 +1,4 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, select } from 'redux-saga/effects';
 import { Alert } from 'react-native';
 
 import { Types, signInSuccess, signFailure } from './index';
@@ -8,10 +8,20 @@ import * as service from '~/services/checkin';
 
 export function* signIn({ payload }) {
   const { id } = payload;
-  try {
-    const response = yield call(service.checkinList, id);
+  const { page } = yield select(state => state.checkin);
 
-    yield put(checkInSuccess(response.data));
+  try {
+    const checkin = { page, id };
+    const response = yield call(service.checkinList, checkin);
+
+    const { rows: checkinData } = response.data.content;
+
+    const pages = {
+      currentPage: page,
+      lastPage: response.data.lastPage,
+    };
+
+    yield put(checkInSuccess(checkinData, pages));
 
     yield put(signInSuccess(id));
   } catch (err) {
