@@ -16,6 +16,8 @@ export const Types = {
 const INITIAL_STATE = {
   helporders: [],
   helporder: {},
+  page: 1,
+  lastPage: '',
   loading: false,
 };
 
@@ -27,7 +29,11 @@ export default function helporder(state = INITIAL_STATE, action) {
         break;
       }
       case Types.HELP_ORDERS_SUCCESS: {
+        const { currentPage, lastPage } = action.payload.pages;
+
         draft.helporders = action.payload.data;
+        draft.page = currentPage;
+        draft.lastPage = lastPage;
         draft.loading = false;
         break;
       }
@@ -51,17 +57,17 @@ export default function helporder(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function helpOrderRequest(id, data) {
+export function helpOrderRequest(data) {
   return {
     type: Types.HELP_ORDERS_REQUEST,
-    payload: { id, data },
+    payload: { data },
   };
 }
 
-export function helpOrderSuccess(data) {
+export function helpOrderSuccess(data, pages) {
   return {
     type: Types.HELP_ORDERS_SUCCESS,
-    payload: { data },
+    payload: { data, pages },
   };
 }
 

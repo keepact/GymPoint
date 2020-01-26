@@ -1,4 +1,4 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, select } from 'redux-saga/effects';
 import { Alert } from 'react-native';
 
 import * as service from '~/services/helporder';
@@ -12,22 +12,36 @@ import {
 } from './index';
 
 export function* createOrList({ payload }) {
-  const { id, data } = payload;
+  const { data } = payload;
+  const { studentId } = yield select(state => state.auth);
+  const { page } = yield select(state => state.helporder);
 
   try {
     if (!data) {
-      const response = yield call(service.helpOrderList, id);
+      const helporder = { page, studentId };
 
-      const helpOrderData = response.data;
+      const response = yield call(service.helpOrderList, helporder);
 
-      yield put(helpOrderSuccess(helpOrderData));
+      const { rows: helpOrderData } = response.data.content;
+
+      const pages = {
+        currentPage: page,
+        lastPage: response.data.lastPage,
+      };
+
+      yield put(helpOrderSuccess(helpOrderData, pages));
     } else {
       yield call(service.helpOrderCreate, payload);
-      const response = yield call(service.helpOrderList, id);
+      const response = yield call(service.helpOrderList, studentId);
 
-      const helpOrderData = response.data;
+      const { rows: helpOrderData } = response.data.content;
 
-      yield put(helpOrderSuccess(helpOrderData));
+      const pages = {
+        currentPage: page,
+        lastPage: response.data.lastPage,
+      };
+
+      yield put(helpOrderSuccess(helpOrderData, pages));
 
       NavigationService.navigate('HelpOrderList');
       Alert.alert('Sucesso', 'Pergunta Enviada');

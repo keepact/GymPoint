@@ -1,9 +1,12 @@
 import api from './api';
 
-export const checkinList = id =>
+export const checkinList = data =>
   api().request({
-    url: `students/${id}/checkins`,
+    url: `students/${data.id}/checkins`,
     method: 'GET',
+    params: {
+      page: data.page,
+    },
   });
 
 export const checkinCreate = id =>
