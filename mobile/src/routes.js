@@ -27,45 +27,43 @@ export default (isSigned = false) =>
     createSwitchNavigator(
       {
         SignIn,
-        App: {
-          screen: createBottomTabNavigator(
-            {
-              CheckIn,
-              HelpOrders: {
-                screen: createStackNavigator(
-                  {
-                    HelpOrderList,
-                    HelpOrderAsk,
-                    HelpOrderAnswer,
-                  },
-                  {
-                    defaultNavigationOptions: {
-                      headerTransparent: true,
-                      headerTintColor: 'transparent',
-                    },
-                  },
-                ),
-                navigationOptions: {
-                  tabBarLabel: 'Pedir Ajuda',
-                  tabBarIcon,
+        App: createBottomTabNavigator(
+          {
+            CheckIn,
+            HelpOrders: {
+              screen: createStackNavigator(
+                {
+                  HelpOrderList,
+                  HelpOrderAsk,
+                  HelpOrderAnswer,
                 },
+                {
+                  defaultNavigationOptions: {
+                    headerTransparent: true,
+                    headerTintColor: 'transparent',
+                  },
+                },
+              ),
+              navigationOptions: {
+                tabBarLabel: 'Pedir Ajuda',
+                tabBarIcon,
               },
             },
-            {
-              resetOnBlur: true,
-              tabBarOptions: {
-                keyboardHidesTabBar: true,
-                activeTintColor: '#ee4e62',
-                inactiveTintColor: '#999',
-                style: {
-                  borderWidth: 1,
-                  borderColor: '#ddd',
-                  backgroundColor: '#fff',
-                },
+          },
+          {
+            resetOnBlur: true,
+            tabBarOptions: {
+              keyboardHidesTabBar: true,
+              activeTintColor: '#ee4e62',
+              inactiveTintColor: '#999',
+              style: {
+                borderWidth: 1,
+                borderColor: '#ddd',
+                backgroundColor: '#fff',
               },
             },
-          ),
-        },
+          },
+        ),
       },
       {
         initialRouteName: isSigned ? 'App' : 'SignIn',

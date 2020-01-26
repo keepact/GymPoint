@@ -9,7 +9,7 @@ import { Container, TextArea, ButtonContainer, SubmitButton } from './styles';
 function HelpOrderAsk() {
   const [value, setValue] = useState('');
 
-  const { studentId } = useSelector(state => state.checkin);
+  const { studentId } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   const handleSubmit = () => {

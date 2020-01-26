@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { Types as TypeAuth } from '../auth';
 
 // Action Types
 
@@ -36,6 +37,11 @@ export default function helporder(state = INITIAL_STATE, action) {
       }
       case Types.HELP_ORDERS_ANSWER: {
         draft.helporder = action.payload.item;
+        break;
+      }
+      case TypeAuth.SIGN_OUT: {
+        draft.helporders = INITIAL_STATE.helporders;
+        draft.helporder = INITIAL_STATE.helporder;
         break;
       }
       default:

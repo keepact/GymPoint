@@ -9,11 +9,12 @@ import { Container, CheckInButton, ButtonContainer, List } from './styles';
 import { checkInRequest } from '~/store/modules/checkin';
 
 function CheckIn() {
-  const { checkIns, studentId } = useSelector(state => state.checkin);
+  const { studentId } = useSelector(state => state.auth);
+  const { checkIns } = useSelector(state => state.checkin);
   const dispatch = useDispatch();
 
   const handleAddCheckIn = () => {
-    dispatch(checkInRequest(studentId, 'New Checkin'));
+    dispatch(checkInRequest(studentId));
   };
 
   return (

@@ -13,6 +13,7 @@ export const Types = {
 
 const INITIAL_STATE = {
   signed: false,
+  studentId: '',
   loading: false,
 };
 
@@ -25,6 +26,7 @@ export default function auth(state = INITIAL_STATE, action) {
       }
       case Types.SIGN_IN_SUCCESS: {
         draft.signed = true;
+        draft.studentId = action.payload.id;
         draft.loading = false;
         break;
       }
@@ -50,9 +52,10 @@ export function signInRequest(id) {
   };
 }
 
-export function signInSuccess() {
+export function signInSuccess(id) {
   return {
     type: Types.SIGN_IN_SUCCESS,
+    payload: { id },
   };
 }
 
