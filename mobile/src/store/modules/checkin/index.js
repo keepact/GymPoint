@@ -11,7 +11,6 @@ export const Types = {
 // Reducer
 
 const INITIAL_STATE = {
-  studentId: '',
   checkIns: [],
   loading: false,
 };
@@ -21,7 +20,6 @@ export default function checkin(state = INITIAL_STATE, action) {
     switch (action.type) {
       case Types.CHECKIN_REQUEST: {
         draft.loading = true;
-        draft.studentId = action.payload.id;
         break;
       }
       case Types.CHECKIN_SUCCESS: {
@@ -40,10 +38,10 @@ export default function checkin(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function checkInRequest(id, newList) {
+export function checkInRequest(id) {
   return {
     type: Types.CHECKIN_REQUEST,
-    payload: { id, newList },
+    payload: { id },
   };
 }
 

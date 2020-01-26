@@ -1,20 +1,21 @@
-import { takeLatest, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { Alert } from 'react-native';
 
 import { Types, signInSuccess, signFailure } from './index';
-import { checkInRequest } from '../checkin';
+import { checkInSuccess } from '../checkin';
+
+import * as service from '~/services/checkin';
 
 export function* signIn({ payload }) {
+  const { id } = payload;
   try {
-    const { id } = payload;
+    const response = yield call(service.checkinList, id);
 
-    yield put(signInSuccess());
-    yield put(checkInRequest(id));
+    yield put(checkInSuccess(response.data));
+
+    yield put(signInSuccess(id));
   } catch (err) {
-    Alert.alert(
-      'Falha na autenticação',
-      'Houve um erro no login, verifique se seu ID está correto',
-    );
+    Alert.alert('Falha na autenticação', err.response.data.error);
     yield put(signFailure());
   }
 }
