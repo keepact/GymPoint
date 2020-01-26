@@ -1,3 +1,5 @@
+import * as Yup from 'yup';
+
 import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Student';
 
@@ -47,6 +49,16 @@ class HelpOrderController {
   }
 
   async store(req, res) {
+    const schema = Yup.object().shape({
+      question: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({
+        error: 'A validação falhou, verifique seus dados e tente novamente',
+      });
+    }
+
     const { id } = req.params;
     const { question } = req.body;
 
@@ -56,9 +68,9 @@ class HelpOrderController {
     });
 
     if (!addSupportQuestion) {
-      return res
-        .status(400)
-        .json({ error: 'Pedido de auxílio não encontrado' });
+      return res.status(500).json({
+        error: 'Houve um erro no envio, tente novamente em alguns minutos',
+      });
     }
 
     return res.json(addSupportQuestion);

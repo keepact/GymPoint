@@ -212,13 +212,13 @@ class RegistrationController {
       return res.status(400).json({ error: 'Matrícula inexistente' });
     }
 
-    const checkRegistration = await Registration.findOne({
-      where: { student_id },
-    });
+    // const checkRegistration = await Registration.findOne({
+    //   where: { student_id },
+    // });
 
-    if (checkRegistration) {
-      return res.status(400).json({ error: 'O aluno já tem um plano' });
-    }
+    // if (checkRegistration) {
+    //   return res.status(400).json({ error: 'O aluno já tem um plano' });
+    // }
 
     const dateStart = startOfDay(parseISO(start_date));
 
