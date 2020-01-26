@@ -15,6 +15,7 @@ export function* listSupport({ payload }) {
     });
 
     const questions = response.data.content.rows.map(support => ({
+      questionId: support.id,
       id: support.student_id,
       name: support.student.name,
       question: support.question,

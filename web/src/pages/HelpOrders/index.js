@@ -23,7 +23,7 @@ import {
 import { Wrapper, AnimationContainer } from './styles';
 
 function HelpOrders() {
-  const [selectedQuestion, setSelectedQuestion] = useState('');
+  const [selectedQuestion, setSelectedQuestion] = useState({});
   const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ function HelpOrders() {
   }
 
   function handleSubmit(data) {
-    dispatch(createSupportRequest(data, selectedQuestion.id));
+    dispatch(createSupportRequest(data, selectedQuestion.questionId));
     popUpAction();
   }
 
