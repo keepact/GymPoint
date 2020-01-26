@@ -24,6 +24,7 @@ class HelpOrderController {
       };
 
       const supportOrder = await HelpOrder.findAndCountAll({
+        order: [['updated_at', 'DESC']],
         where: { student_id: id },
         ...limit,
         include,
@@ -35,6 +36,7 @@ class HelpOrderController {
     }
 
     const supportOrder = await HelpOrder.findAll({
+      order: [['updated_at', 'DESC']],
       where: { student_id: id },
       include,
     });

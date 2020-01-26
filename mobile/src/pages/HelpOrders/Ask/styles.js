@@ -20,7 +20,7 @@ export const SubmitButton = styled(Button)`
 
 export const TextArea = styled(TextInput).attrs({
   multiline: true,
-  numberOfLines: 9,
+  numberOfLines: 10,
 })`
   text-align-vertical: top;
   justify-content: flex-start;

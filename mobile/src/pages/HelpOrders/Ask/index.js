@@ -21,6 +21,9 @@ function HelpOrderAsk() {
       <KeyboardAvoidingView behavior="padding">
         <TextArea
           name="question"
+          keyboardType="visible-password"
+          autoCorrect={false}
+          spellCheck={false}
           underlineColorAndroid="transparent"
           placeholder="Insira seu pedido de auxílio"
           onChangeText={text => setValue(text)}
