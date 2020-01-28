@@ -14,7 +14,11 @@ import PlanSelector from '~/components/Select';
 import NumberInput from '~/components/NumberInput';
 import DatePicker from '~/components/DatePicker';
 
-import * as registratioListActions from '~/store/modules/registration/list';
+import {
+  listRegistrationUpdatePlan,
+  listRegistrationUpdateDate,
+  listRegistrationRedirect,
+} from '~/store/modules/registration/list';
 import { updateOrCreateRegistration } from '~/store/modules/registration/update';
 
 import {
@@ -48,7 +52,7 @@ function RegistrationForm() {
     });
   };
 
-  function handleDate(newDate) {
+  const handleDate = newDate => {
     const currentPlan = plans.filter(p => p.id === registration.plan.id);
     const newEndDate = addMonths(
       newDate,
@@ -62,10 +66,10 @@ function RegistrationForm() {
       newEndDate,
     };
 
-    dispatch(registratioListActions.listRegistrationUpdateDate(newDates));
-  }
+    dispatch(listRegistrationUpdateDate(newDates));
+  };
 
-  function handlePlan(newPlan) {
+  const handlePlan = newPlan => {
     const newEndDate = registration.start_date
       ? addMonths(registration.start_date, newPlan.duration)
       : undefined;
@@ -84,21 +88,16 @@ function RegistrationForm() {
       price: newPrice,
     };
 
-    dispatch(
-      registratioListActions.listRegistrationUpdatePlan(
-        newRegistrationPlan,
-        newPriceAndDate
-      )
-    );
+    dispatch(listRegistrationUpdatePlan(newRegistrationPlan, newPriceAndDate));
 
     if (!registrationId) {
       setDisableDate(false);
     }
-  }
+  };
 
-  function handleSubmit(data) {
+  const handleSubmit = data => {
     dispatch(updateOrCreateRegistration(data, registrationId || undefined));
-  }
+  };
 
   return (
     <ContainerForm>
@@ -113,9 +112,7 @@ function RegistrationForm() {
             <div>
               <button
                 type="button"
-                onClick={() =>
-                  dispatch(registratioListActions.listRegistrationRedirect())
-                }
+                onClick={() => dispatch(listRegistrationRedirect())}
               >
                 Voltar
               </button>

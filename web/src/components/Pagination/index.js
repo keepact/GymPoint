@@ -10,10 +10,10 @@ function Pagination({
   refresh,
   currentPage,
 }) {
-  function handleChange(action) {
+  const handleChange = action => {
     const pageNumber = action === 'back' ? currentPage - 1 : currentPage + 1;
     refresh(pageNumber);
-  }
+  };
 
   return (
     <PageActions>

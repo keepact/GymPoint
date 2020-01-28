@@ -8,14 +8,14 @@ import { validateSignIn } from '~/util/validation';
 
 import logo from '~/assets/images/logo.svg';
 
-export default function SignIn() {
+function SignIn() {
   const dispatch = useDispatch();
 
   const { loading } = useSelector(state => state.auth);
 
-  function handleSubmit({ email, password }) {
+  const handleSubmit = ({ email, password }) => {
     dispatch(signInRequest(email, password));
-  }
+  };
 
   return (
     <>
@@ -32,3 +32,5 @@ export default function SignIn() {
     </>
   );
 }
+
+export default SignIn;

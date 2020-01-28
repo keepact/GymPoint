@@ -22,18 +22,18 @@ import {
 } from '~/styles/shared';
 
 function StudentForm() {
+  const dispatch = useDispatch();
+
   const { student: currentStudent, studentId } = useSelector(
     state => state.studentList
   );
-  const dispatch = useDispatch();
-
   const { loading } = useSelector(state => state.studentUpdate);
 
   const student = useMemo(() => currentStudent, [currentStudent]);
 
-  function handleSubmit(data) {
+  const handleSubmit = data => {
     dispatch(updateOrCreateStudent(data, studentId || undefined));
-  }
+  };
 
   return (
     <ContainerForm>

@@ -5,12 +5,12 @@ import { useField } from '@rocketseat/unform';
 
 import { MySelector } from './styles';
 
-export default function Selector({ name, options, onChange, ...rest }) {
+function Selector({ name, options, onChange, ...rest }) {
   const ref = useRef();
   const { fieldName, registerField, defaultValue, error } = useField(name);
   const [value, setValue] = useState(defaultValue);
 
-  useMemo(() => setValue(defaultValue), [defaultValue]); //eslint-disable-line
+  useMemo(() => setValue(defaultValue), [defaultValue]);
 
   useEffect(() => {
     registerField({
@@ -20,9 +20,9 @@ export default function Selector({ name, options, onChange, ...rest }) {
     });
   }, [ref.current, fieldName]); // eslint-disable-line
 
-  function handleChange(newValue) {
+  const handleChange = newValue => {
     setValue(newValue);
-  }
+  };
 
   return (
     <>
@@ -58,3 +58,5 @@ Selector.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func,
 };
+
+export default Selector;
