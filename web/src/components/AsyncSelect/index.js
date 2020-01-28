@@ -5,12 +5,7 @@ import { useField } from '@rocketseat/unform';
 
 import { MyAsyncSelect } from './styles';
 
-export default function AsyncSelector({
-  name,
-  loadOptions,
-  noOptionsMessage,
-  ...rest
-}) {
+function AsyncSelector({ name, loadOptions, noOptionsMessage, ...rest }) {
   const ref = useRef();
   const { fieldName, registerField, defaultValue, error } = useField(name);
   const [value, setValue] = useState(defaultValue);
@@ -25,9 +20,9 @@ export default function AsyncSelector({
     });
   }, [ref.current, fieldName]); // eslint-disable-line
 
-  function handleChange(selectedValue) {
+  const handleChange = selectedValue => {
     setValue(selectedValue);
-  }
+  };
 
   return (
     <>
@@ -63,3 +58,5 @@ AsyncSelector.propTypes = {
   loadOptions: PropTypes.func.isRequired,
   noOptionsMessage: PropTypes.string,
 };
+
+export default AsyncSelector;

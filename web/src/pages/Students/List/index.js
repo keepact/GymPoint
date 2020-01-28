@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { FiPlusCircle } from 'react-icons/fi';
 
-import * as studentsListActions from '~/store/modules/student/list';
+import {
+  listStudentRequest,
+  listStudentRequestId,
+  listStudentCreate,
+} from '~/store/modules/student/list';
 import { deleteStudentRequest } from '~/store/modules/student/delete';
 
 import PageActions from '~/components/Pagination';
@@ -31,24 +35,23 @@ function StudentsList() {
   const studentsQty = useMemo(() => students.length, [students]);
 
   useEffect(() => {
-    dispatch(studentsListActions.listStudentRequest(1));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(listStudentRequest(1));
+  }, [dispatch]);
 
-  function handleSearch(e) {
+  const handleSearch = e => {
     setStudendName(e.target.value);
-    dispatch(studentsListActions.listStudentRequest(page, studentName));
-  }
+    dispatch(listStudentRequest(page, studentName));
+  };
 
-  function handleDelete(studentId) {
+  const handleDelete = studentId => {
     if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
       dispatch(deleteStudentRequest(studentId));
     }
-  }
+  };
 
-  function handlePage(page) {
-    dispatch(studentsListActions.listStudentRequest(page));
-  }
+  const handlePage = page => {
+    dispatch(listStudentRequest(page));
+  };
 
   return (
     <Container>
@@ -62,9 +65,7 @@ function StudentsList() {
             <div>
               <button
                 type="button"
-                onClick={() =>
-                  dispatch(studentsListActions.listStudentCreate())
-                }
+                onClick={() => dispatch(listStudentCreate())}
               >
                 <span>Cadastrar</span>
                 <FiPlusCircle size={20} />
@@ -110,11 +111,7 @@ function StudentsList() {
                             <button
                               type="button"
                               onClick={() =>
-                                dispatch(
-                                  studentsListActions.listStudentRequestId(
-                                    student.id
-                                  )
-                                )
+                                dispatch(listStudentRequestId(student.id))
                               }
                             >
                               editar

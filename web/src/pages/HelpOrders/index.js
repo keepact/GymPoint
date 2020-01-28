@@ -36,26 +36,25 @@ function HelpOrders() {
 
   useEffect(() => {
     dispatch(listSupportRequest(1));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
-  function popUpAction() {
+  const popUpAction = () => {
     setOpen(!open);
-  }
+  };
 
-  function handleQuestion(question) {
+  const handleQuestion = question => {
     setSelectedQuestion(question);
     popUpAction();
-  }
+  };
 
-  function handleSubmit(data) {
+  const handleSubmit = data => {
     dispatch(createSupportRequest(data, selectedQuestion.questionId));
     popUpAction();
-  }
+  };
 
-  function handlePage(page) {
+  const handlePage = page => {
     dispatch(listSupportRequest(page));
-  }
+  };
 
   return (
     <Container small>

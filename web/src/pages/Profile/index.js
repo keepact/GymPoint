@@ -16,13 +16,13 @@ function Profile() {
 
   const { profile, loading } = useSelector(state => state.user);
 
-  function handleSubmit(data) {
+  const handleSubmit = data => {
     dispatch(updateProfileRequest(data));
-  }
+  };
 
-  function handleSignOut() {
+  const handleSignOut = () => {
     dispatch(signOut());
-  }
+  };
 
   return (
     <Container>

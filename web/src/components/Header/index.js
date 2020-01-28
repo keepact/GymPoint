@@ -12,9 +12,9 @@ function Header() {
   const dispatch = useDispatch();
   const { profile } = useSelector(state => state.user);
 
-  function handleSignOut() {
+  const handleSignOut = () => {
     dispatch(signOut());
-  }
+  };
 
   return (
     <Container>

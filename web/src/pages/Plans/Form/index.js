@@ -8,7 +8,11 @@ import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
-import * as planListActions from '~/store/modules/plan/list';
+import {
+  listPlanUpdatePrice,
+  listPlanUpdateDuration,
+  listPlanRedirect,
+} from '~/store/modules/plan/list';
 import { updateOrCreatePlan } from '~/store/modules/plan/update';
 
 import { validatePlans } from '~/util/validation';
@@ -29,17 +33,17 @@ function PlansForm() {
   const { loading } = useSelector(state => state.planUpdate);
   const plan = useMemo(() => currentPlan, [currentPlan]);
 
-  function handleSubmit(data) {
+  const handleSubmit = data => {
     dispatch(updateOrCreatePlan(data, planId || undefined));
-  }
+  };
 
-  function handlePrice(price) {
-    dispatch(planListActions.listPlanUpdatePrice(price));
-  }
+  const handlePrice = price => {
+    dispatch(listPlanUpdatePrice(price));
+  };
 
-  function handleDuration(duration) {
-    dispatch(planListActions.listPlanUpdateDuration(duration));
-  }
+  const handleDuration = duration => {
+    dispatch(listPlanUpdateDuration(duration));
+  };
 
   return (
     <ContainerForm>
@@ -52,7 +56,7 @@ function PlansForm() {
             <div>
               <button
                 type="button"
-                onClick={() => dispatch(planListActions.listPlanRedirect())}
+                onClick={() => dispatch(listPlanRedirect())}
               >
                 Voltar
               </button>
