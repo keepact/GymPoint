@@ -1,7 +1,7 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
-import api from '~/services/api';
+import { helpOrderCreate } from '~/services/helporder';
 
 import { listSupportRequest } from '../list';
 
@@ -13,14 +13,11 @@ export function* createAnswer({ payload }) {
     const { answer } = payload.data;
 
     const supportAnswer = {
+      id,
       answer,
     };
 
-    const response = yield call(
-      api.post,
-      `/students/help-orders/${id}/answer`,
-      supportAnswer
-    );
+    const response = yield call(helpOrderCreate, supportAnswer);
 
     toast.success('Resposta enviada com sucesso');
 

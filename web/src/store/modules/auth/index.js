@@ -12,7 +12,6 @@ export const Types = {
 // Reducer
 
 const INITIAL_STATE = {
-  token: null,
   signed: false,
   loading: false,
 };
@@ -25,7 +24,6 @@ export default function auth(state = INITIAL_STATE, action) {
         break;
       }
       case Types.SUCCESS: {
-        draft.token = action.payload.token;
         draft.signed = true;
         draft.loading = false;
         break;
@@ -35,7 +33,6 @@ export default function auth(state = INITIAL_STATE, action) {
         break;
       }
       case Types.LOGOUT: {
-        draft.token = null;
         draft.signed = false;
         break;
       }
@@ -53,10 +50,10 @@ export function signInRequest(email, password) {
   };
 }
 
-export function signInSuccess(token, user) {
+export function signInSuccess(user) {
   return {
     type: Types.SUCCESS,
-    payload: { token, user },
+    payload: { user },
   };
 }
 

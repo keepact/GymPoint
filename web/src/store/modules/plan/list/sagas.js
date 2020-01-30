@@ -4,7 +4,7 @@ import { requestFailMessage } from '~/util/validation';
 
 import { formatPrice } from '~/util/format';
 import history from '~/services/history';
-import api from '~/services/api';
+import * as planService from '~/services/plan';
 
 import {
   Types,
@@ -17,9 +17,7 @@ export function* listPlanId({ payload }) {
   const { id } = payload;
 
   try {
-    const response = yield call(api.get, 'plans', {
-      params: { id },
-    });
+    const response = yield call(planService.planListId, id);
     const { title, duration, price } = response.data;
 
     const plan = {
@@ -42,9 +40,7 @@ export function* listPlans({ payload }) {
   const { page, newList } = payload;
 
   try {
-    const response = yield call(api.get, 'plans', {
-      params: { page },
-    });
+    const response = yield call(planService.planList, page);
 
     const plans = response.data.content.map(plan => ({
       id: plan.id,

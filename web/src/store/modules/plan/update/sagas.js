@@ -2,7 +2,7 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
 import history from '~/services/history';
-import api from '~/services/api';
+import * as planService from '~/services/plan';
 
 import {
   Types,
@@ -17,18 +17,19 @@ export function* requestNewOrEdiPlan({ payload }) {
     const { title, duration, price } = payload.data;
 
     const plan = {
+      id,
       title,
       duration,
       price,
     };
 
     if (id !== undefined) {
-      const response = yield call(api.put, `/plans/${id}`, plan);
+      const response = yield call(planService.planUpdate, plan);
 
       toast.success('Plano alterado com sucesso');
       yield put(updateOrCreatePlanSuccess(response.data));
     } else {
-      const response = yield call(api.post, 'plans', plan);
+      const response = yield call(planService.planCreate, plan);
 
       toast.success('Plano criado com sucesso');
       yield put(updateOrCreatePlanSuccess(response.data));

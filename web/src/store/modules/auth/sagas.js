@@ -1,25 +1,20 @@
 import { takeLatest, all, call, put } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
-
 import history from '~/services/history';
-import api from '~/services/api';
+
+import { authLogin } from '~/services/auth';
 
 import { Types, signInSuccess, signFailure } from './index';
 
 export function* signIn({ payload }) {
   try {
-    const { email, password } = payload;
-
-    const response = yield call(api.post, 'sessions', {
-      email,
-      password,
-    });
+    const response = yield call(authLogin, payload);
 
     const { token, user } = response.data;
 
-    api.defaults.headers.Authorization = `Bearer ${token}`;
+    localStorage.setItem('token', token);
 
-    yield put(signInSuccess(token, user));
+    yield put(signInSuccess(user));
 
     history.push('/students');
   } catch (err) {
@@ -30,22 +25,12 @@ export function* signIn({ payload }) {
   }
 }
 
-export function setToken({ payload }) {
-  if (!payload) return;
-
-  const { token } = payload.auth;
-
-  if (token) {
-    api.defaults.headers.Authorization = `Bearer ${token}`;
-  }
-}
-
 export function signOut() {
   history.push('/');
+  localStorage.removeItem('token');
 }
 
 export default all([
-  takeLatest('persist/REHYDRATE', setToken),
   takeLatest(Types.REQUEST, signIn),
   takeLatest(Types.LOGOUT, signOut),
 ]);

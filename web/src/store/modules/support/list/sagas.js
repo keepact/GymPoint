@@ -2,7 +2,7 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import { requestFailMessage } from '~/util/validation';
 
-import api from '~/services/api';
+import { helpOrderList } from '~/services/helporder';
 
 import { Types, listSupportSuccess, listSupportFailure } from './index';
 
@@ -10,9 +10,7 @@ export function* listSupport({ payload }) {
   try {
     const { page } = payload;
 
-    const response = yield call(api.get, '/students/help-orders/answers', {
-      params: { page },
-    });
+    const response = yield call(helpOrderList, page);
 
     const questions = response.data.content.rows.map(support => ({
       questionId: support.id,
