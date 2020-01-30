@@ -1,7 +1,7 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
-import api from '~/services/api';
+import { registrationDelete } from '~/services/registration';
 import { listRegistrationRequest } from '../list';
 import { requestFailMessage } from '~/util/validation';
 
@@ -15,15 +15,13 @@ export function* deleteRegistration({ payload }) {
   try {
     const { id } = payload;
 
-    const response = yield call(api.delete, `registrations/${id}`);
+    const response = yield call(registrationDelete, id);
 
     toast.success('Matrícula removida com sucesso');
 
     yield put(deleteRegistrationSuccess(response.data));
 
-    if (response.status === 200) {
-      yield put(listRegistrationRequest(1));
-    }
+    yield put(listRegistrationRequest(1));
   } catch (err) {
     toast.error(requestFailMessage);
     yield put(deleteRegistrationFailure());

@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { parseInteger } from '~/util/format';
 
 import history from '~/services/history';
-import api from '~/services/api';
+import { studentCreate, studentUpdate } from '~/services/student';
 
 import {
   Types,
@@ -24,6 +24,7 @@ export function* updateStudent({ payload }) {
     const { id } = payload;
 
     const student = {
+      id,
       name,
       email,
       age,
@@ -31,13 +32,13 @@ export function* updateStudent({ payload }) {
       weight: parseInteger(weight_formatted),
     };
 
-    if (id !== undefined) {
-      const response = yield call(api.put, `/students/${id}`, student);
+    if (id) {
+      const response = yield call(studentUpdate, student);
 
       toast.success('Estudante atualizado com sucesso');
       yield put(updateOrCreateStudentSuccess(response.data));
     } else {
-      const response = yield call(api.post, 'students', student);
+      const response = yield call(studentCreate, student);
 
       toast.success('Estudante criado com sucesso');
       yield put(updateOrCreateStudentSuccess(response.data));

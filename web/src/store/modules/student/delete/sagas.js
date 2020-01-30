@@ -1,7 +1,7 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
-import api from '~/services/api';
+import { studentDelete } from '~/services/student';
 
 import { listStudentRequest } from '../list';
 import { requestFailMessage } from '~/util/validation';
@@ -12,7 +12,7 @@ export function* deleteStudent({ payload }) {
   try {
     const { id } = payload;
 
-    const response = yield call(api.delete, `students/${id}`);
+    const response = yield call(studentDelete, id);
 
     toast.success('Aluno removido com sucesso');
 

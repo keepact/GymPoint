@@ -4,7 +4,7 @@ import { parseDecimal } from '~/util/format';
 import { requestFailMessage } from '~/util/validation';
 
 import history from '~/services/history';
-import api from '~/services/api';
+import { studentList, studentListId } from '~/services/student';
 
 import {
   Types,
@@ -17,9 +17,7 @@ export function* listStudentId({ payload }) {
   const { id } = payload;
 
   try {
-    const response = yield call(api.get, 'students', {
-      params: { id },
-    });
+    const response = yield call(studentListId, id);
     const { name, email, age, height, weight } = response.data;
 
     const student = {
@@ -46,9 +44,7 @@ export function* listStudents({ payload }) {
     if (newList !== undefined) {
       yield delay(600);
     }
-    const response = yield call(api.get, 'students', {
-      params: { page, q: newList || '' },
-    });
+    const response = yield call(studentList, payload);
 
     const students = response.data.content.rows.map(students => ({
       id: students.id,

@@ -1,7 +1,7 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
-import api from '~/services/api';
+import { profileUpdate } from '~/services/user';
 
 import { Types, updateProfileSuccess, updateProfileFailure } from './index';
 
@@ -15,7 +15,7 @@ export function* updateProfile({ payload }) {
       avatar_id,
       ...(rest.oldPassword ? rest : {}),
     };
-    const response = yield call(api.put, 'users', profile);
+    const response = yield call(profileUpdate, 'users', profile);
 
     toast.success('Perfil atualizado com sucesso');
 

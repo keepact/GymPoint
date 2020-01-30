@@ -5,7 +5,7 @@ import { longDate, language, activeColor } from '~/util/format';
 
 import { requestFailMessage } from '~/util/validation';
 
-import api from '~/services/api';
+import * as registrationService from '~/services/registration';
 import history from '~/services/history';
 
 import { listPlanRequest } from '../../plan/list';
@@ -22,9 +22,7 @@ export function* listRegistrationId({ payload }) {
   const { id } = payload;
 
   try {
-    const response = yield call(api.get, 'registrations', {
-      params: { id },
-    });
+    const response = yield call(registrationService.registrationListId, id);
 
     const registration = {
       ...response.data,
@@ -51,11 +49,10 @@ export function* listRegistrations({ payload }) {
   const { page, newList } = payload;
   try {
     const response = yield call(
-      api.get,
-      !newList ? 'registrations' : 'registrations/pending/removed',
-      {
-        params: { page },
-      }
+      !newList
+        ? registrationService.registrationList
+        : registrationService.registrationPending,
+      page
     );
 
     const registrations = response.data.content.rows.map(registration => ({
