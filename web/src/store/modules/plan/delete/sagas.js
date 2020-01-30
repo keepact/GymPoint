@@ -17,7 +17,6 @@ export function* deletePlan({ payload }) {
     toast.success('Plano removido com sucesso');
 
     yield put(deletePlanSuccess(response.data));
-
     yield put(listPlanRequest(1));
   } catch (err) {
     toast.error(requestFailMessage);

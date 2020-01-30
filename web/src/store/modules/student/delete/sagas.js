@@ -17,10 +17,7 @@ export function* deleteStudent({ payload }) {
     toast.success('Aluno removido com sucesso');
 
     yield put(deleteStudentSuccess(response.data));
-
-    if (response.status === 200) {
-      yield put(listStudentRequest(1));
-    }
+    yield put(listStudentRequest(1));
   } catch (err) {
     toast.error(requestFailMessage);
     yield put(deleteStudentFailure());

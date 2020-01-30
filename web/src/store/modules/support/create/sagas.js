@@ -21,9 +21,7 @@ export function* createAnswer({ payload }) {
 
     toast.success('Resposta enviada com sucesso');
 
-    if (response.status === 200) {
-      yield put(listSupportRequest(1));
-    }
+    yield put(listSupportRequest(1));
     yield put(createSupportSuccess(response.data));
   } catch (err) {
     toast.error(err.response.data.error);
