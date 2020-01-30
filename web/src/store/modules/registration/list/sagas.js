@@ -32,11 +32,8 @@ export function* listRegistrationId({ payload }) {
     };
 
     yield put(listRegistrationSuccessId(registration));
-
-    if (response.status === 200) {
-      yield put(listPlanRequest(1, 'registration'));
-      yield put(listStudentRequest(1));
-    }
+    yield put(listPlanRequest(1, 'registration'));
+    yield put(listStudentRequest(1));
 
     history.push('/registrations/edit');
   } catch (err) {

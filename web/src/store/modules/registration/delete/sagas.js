@@ -20,7 +20,6 @@ export function* deleteRegistration({ payload }) {
     toast.success('Matrícula removida com sucesso');
 
     yield put(deleteRegistrationSuccess(response.data));
-
     yield put(listRegistrationRequest(1));
   } catch (err) {
     toast.error(requestFailMessage);

@@ -23,7 +23,7 @@ export function* requestNewOrEdiPlan({ payload }) {
       price,
     };
 
-    if (id !== undefined) {
+    if (id) {
       const response = yield call(planService.planUpdate, plan);
 
       toast.success('Plano alterado com sucesso');
