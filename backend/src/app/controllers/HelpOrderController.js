@@ -8,46 +8,39 @@ class HelpOrderController {
     const { page } = req.query;
     const { id } = req.params;
 
+    const studentExist = await Student.findByPk(id);
+
+    if (!studentExist) {
+      return res.status(400).json({
+        error: 'ID inválido, verifique sua identificação e tente novamente',
+      });
+    }
+
     let limit = {};
-    const include = [
-      {
-        model: Student,
-        as: 'student',
-        attributes: ['name', 'email'],
-      },
-    ];
 
     if (page) {
       limit = {
         limit: 10,
         offset: (page - 1) * 10,
       };
-
-      const supportOrder = await HelpOrder.findAndCountAll({
-        order: [['updated_at', 'DESC']],
-        where: { student_id: id },
-        ...limit,
-        include,
-      });
-
-      const lastPage = page * limit.limit >= supportOrder.count;
-
-      return res.json({ content: supportOrder, lastPage });
     }
 
-    const supportOrder = await HelpOrder.findAll({
+    const supportOrder = await HelpOrder.findAndCountAll({
       order: [['updated_at', 'DESC']],
       where: { student_id: id },
-      include,
+      ...limit,
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email'],
+        },
+      ],
     });
 
-    if (!supportOrder) {
-      return res.status(400).json({
-        error: 'Sem pedidos de auxílio para esse estudante cadastrado',
-      });
-    }
+    const lastPage = page ? page * limit.limit >= supportOrder.count : true;
 
-    return res.json(supportOrder);
+    return res.json({ content: supportOrder, lastPage });
   }
 
   async store(req, res) {

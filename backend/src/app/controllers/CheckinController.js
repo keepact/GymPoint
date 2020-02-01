@@ -8,15 +8,6 @@ class CheckinController {
     const { page } = req.query;
     const { id } = req.params;
 
-    let limit = {};
-    const include = [
-      {
-        model: Student,
-        as: 'student',
-        attributes: ['name', 'email'],
-      },
-    ];
-
     const studentExist = await Student.findByPk(id);
 
     if (!studentExist) {
@@ -25,35 +16,31 @@ class CheckinController {
       });
     }
 
+    let limit = {};
+
     if (page) {
       limit = {
         limit: 10,
         offset: (page - 1) * 10,
       };
-
-      const checkin = await Checkin.findAndCountAll({
-        where: { student_id: id },
-        ...limit,
-        include,
-      });
-
-      const lastPage = page * limit.limit >= checkin.count;
-
-      return res.json({ content: checkin, lastPage });
     }
 
-    const checkin = await Checkin.findAll({
+    const checkins = await Checkin.findAndCountAll({
+      order: [['created_at', 'DESC']],
       where: { student_id: id },
-      include,
+      ...limit,
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email'],
+        },
+      ],
     });
 
-    if (!checkin) {
-      return res.status(400).json({
-        error: 'Sem checkins realizados, comece hoje!',
-      });
-    }
+    const lastPage = page ? page * limit.limit >= checkins.count : true;
 
-    return res.json(checkin);
+    return res.json({ content: checkins, lastPage });
   }
 
   async store(req, res) {
