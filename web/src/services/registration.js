@@ -32,7 +32,6 @@ export const registrationCreate = data =>
     url: 'registrations',
     method: 'POST',
     data: {
-      id: data.id,
       student_id: data.student_id,
       plan_id: data.plan_id,
       start_date: data.start_date,
@@ -44,7 +43,6 @@ export const registrationUpdate = data =>
     url: `registrations/${data.id}`,
     method: 'PUT',
     data: {
-      id: data.id,
       student_id: data.student_id,
       plan_id: data.plan_id,
       start_date: data.start_date,

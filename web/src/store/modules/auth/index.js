@@ -3,10 +3,10 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@auth/SIGN_IN_REQUEST',
-  SUCCESS: '@auth/SIGN_IN_SUCCESS',
-  FAIL: '@auth/SIGN_FAILURE',
-  LOGOUT: '@auth/SIGN_OUT',
+  SIGN_IN_REQUEST: '@auth/SIGN_IN_REQUEST',
+  SIGN_IN_SUCCESS: '@auth/SIGN_IN_SUCCESS',
+  SIGN_FAILURE: '@auth/SIGN_FAILURE',
+  SIGN_OUT: '@auth/SIGN_OUT',
 };
 
 // Reducer
@@ -19,20 +19,20 @@ const INITIAL_STATE = {
 export default function auth(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case Types.SIGN_IN_REQUEST: {
         draft.loading = true;
         break;
       }
-      case Types.SUCCESS: {
+      case Types.SIGN_IN_SUCCESS: {
         draft.signed = true;
         draft.loading = false;
         break;
       }
-      case Types.FAIL: {
+      case Types.SIGN_FAILURE: {
         draft.loading = false;
         break;
       }
-      case Types.LOGOUT: {
+      case Types.SIGN_OUT: {
         draft.signed = false;
         break;
       }
@@ -45,26 +45,26 @@ export default function auth(state = INITIAL_STATE, action) {
 
 export function signInRequest(email, password) {
   return {
-    type: Types.REQUEST,
+    type: Types.SIGN_IN_REQUEST,
     payload: { email, password },
   };
 }
 
 export function signInSuccess(user) {
   return {
-    type: Types.SUCCESS,
+    type: Types.SIGN_IN_SUCCESS,
     payload: { user },
   };
 }
 
 export function signFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.SIGN_FAILURE,
   };
 }
 
 export function signOut() {
   return {
-    type: Types.LOGOUT,
+    type: Types.SIGN_OUT,
   };
 }

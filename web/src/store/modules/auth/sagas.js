@@ -31,6 +31,6 @@ export function signOut() {
 }
 
 export default all([
-  takeLatest(Types.REQUEST, signIn),
-  takeLatest(Types.LOGOUT, signOut),
+  takeLatest(Types.SIGN_IN_REQUEST, signIn),
+  takeLatest(Types.SIGN_OUT, signOut),
 ]);

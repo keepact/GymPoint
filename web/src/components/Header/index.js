@@ -38,7 +38,7 @@ function Header() {
             <Link to="/profile">
               <img
                 src={
-                  profile.avatar
+                  profile
                     ? profile.avatar.url
                     : 'https://api.adorable.io/avatars/50/abott@adorable.png'
                 }
