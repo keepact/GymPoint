@@ -9,8 +9,10 @@ class FileController {
       path,
     });
 
-    if (!file) {
-      return res.status(400).json({ error: 'Arquivo não encontrado' });
+    if (!file.name || !file.path) {
+      return res
+        .status(400)
+        .json({ error: 'Arquivo corrompido, tente novamente com outra foto' });
     }
 
     return res.json(file);
