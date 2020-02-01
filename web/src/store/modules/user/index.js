@@ -1,13 +1,15 @@
 import produce from 'immer';
+import { Types as TypeAuth } from '../auth';
 
 // Action Types
 
 export const Types = {
-  REQUEST: '@user/UPDATE_PROFILE_REQUEST',
-  SUCCESS: '@user/UPDATE_PROFILE_SUCCESS',
-  FAIL: '@user/UPDATE_PROFILE_FAILURE',
-  AUTH_SIGN_IN: '@auth/SIGN_IN_SUCCESS',
-  AUTH_SIGN_OUT: '@auth/SIGN_OUT',
+  UPDATE_PROFILE_REQUEST: '@user/UPDATE_PROFILE_REQUEST',
+  UPDATE_PROFILE_SUCCESS: '@user/UPDATE_PROFILE_SUCCESS',
+  UPDATE_PROFILE_FAILURE: '@user/UPDATE_PROFILE_FAILURE',
+  UPDATE_AVATAR_REQUEST: '@user/UPDATE_AVATAR_REQUEST',
+  UPDATE_AVATAR_SUCCESS: '@user/UPDATE_AVATAR_SUCCESS',
+  UPDATE_AVATAR_FAILURE: '@user/UPDATE_AVATAR_FAILURE',
 };
 
 // Reducer
@@ -20,26 +22,29 @@ const INITIAL_STATE = {
 export default function user(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case TypeAuth.SIGN_IN_SUCCESS: {
+        draft.profile = action.payload.user;
+        break;
+      }
+      case TypeAuth.SIGN_OUT: {
+        draft.profile = null;
+        break;
+      }
+      case Types.UPDATE_PROFILE_REQUEST: {
         draft.loading = true;
         break;
       }
-      case Types.AUTH_SIGN_IN: {
-        draft.profile = action.payload.user;
-        draft.loading = false;
-        break;
-      }
-      case Types.SUCCESS: {
+      case Types.UPDATE_PROFILE_SUCCESS: {
         draft.profile = action.payload.profile;
         draft.loading = false;
         break;
       }
-      case Types.FAIL: {
+      case Types.UPDATE_PROFILE_FAILURE: {
         draft.loading = false;
         break;
       }
-      case Types.AUTH_SIGN_OUT: {
-        draft.profile = null;
+      case Types.UPDATE_AVATAR_SUCCESS: {
+        draft.profile.avatar = action.payload.newAvatar;
         break;
       }
       default:
@@ -51,20 +56,40 @@ export default function user(state = INITIAL_STATE, action) {
 
 export function updateProfileRequest(data) {
   return {
-    type: Types.REQUEST,
+    type: Types.UPDATE_PROFILE_REQUEST,
     payload: { data },
   };
 }
 
 export function updateProfileSuccess(profile) {
   return {
-    type: Types.SUCCESS,
+    type: Types.UPDATE_PROFILE_SUCCESS,
     payload: { profile },
   };
 }
 
 export function updateProfileFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.UPDATE_PROFILE_FAILURE,
+  };
+}
+
+export function updateAvatarRequest(data) {
+  return {
+    type: Types.UPDATE_AVATAR_REQUEST,
+    payload: { data },
+  };
+}
+
+export function updateAvatarSuccess(newAvatar) {
+  return {
+    type: Types.UPDATE_AVATAR_SUCCESS,
+    payload: { newAvatar },
+  };
+}
+
+export function updateAvatarFailure() {
+  return {
+    type: Types.UPDATE_AVATAR_FAILURE,
   };
 }

@@ -31,7 +31,7 @@ function Profile() {
         initialData={profile}
         onSubmit={handleSubmit}
       >
-        <AvatarInput name="avatar_id" />
+        <AvatarInput />
 
         <Input name="name" placeholder="Nome completo" />
         <Input name="email" placeholder="Seu endereço de e-mail" />
