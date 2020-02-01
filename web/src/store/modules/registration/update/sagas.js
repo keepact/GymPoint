@@ -43,4 +43,9 @@ export function* requestNewOrEditRegistration({ payload }) {
   }
 }
 
-export default all([takeLatest(Types.REQUEST, requestNewOrEditRegistration)]);
+export default all([
+  takeLatest(
+    Types.CREATE_OR_EDIT_REGISTRATION_REQUEST,
+    requestNewOrEditRegistration
+  ),
+]);

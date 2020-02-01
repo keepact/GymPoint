@@ -31,4 +31,4 @@ export function* listSupport({ payload }) {
   }
 }
 
-export default all([takeLatest(Types.REQUEST, listSupport)]);
+export default all([takeLatest(Types.LIST_QUESTIONS_REQUEST, listSupport)]);

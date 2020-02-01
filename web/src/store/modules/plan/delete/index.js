@@ -3,9 +3,9 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@plan/DELETE_REQUEST',
-  SUCCESS: '@plan/DELETE_SUCCESS',
-  FAIL: '@plan/DELETE_FAIL',
+  DELETE_PLAN_REQUEST: '@plan/DELETE_PLAN_REQUEST',
+  DELETE_PLAN_SUCCESS: '@plan/DELETE_PLAN_SUCCESS',
+  DELETE_PLAN_FAILURE: '@plan/DELETE_PLAN_FAILURE',
 };
 
 // Reducer
@@ -17,15 +17,15 @@ const INITIAL_STATE = {
 export default function planDelete(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case Types.DELETE_PLAN_REQUEST: {
         draft.loading = true;
         break;
       }
-      case Types.SUCCESS: {
+      case Types.DELETE_PLAN_SUCCESS: {
         draft.loading = false;
         break;
       }
-      case Types.FAIL: {
+      case Types.DELETE_PLAN_FAILURE: {
         draft.loading = false;
         break;
       }
@@ -38,19 +38,19 @@ export default function planDelete(state = INITIAL_STATE, action) {
 
 export function deletePlanRequest(id) {
   return {
-    type: Types.REQUEST,
+    type: Types.DELETE_PLAN_REQUEST,
     payload: { id },
   };
 }
 
 export function deletePlanSuccess() {
   return {
-    type: Types.SUCCESS,
+    type: Types.DELETE_PLAN_SUCCESS,
   };
 }
 
 export function deletePlanFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.DELETE_PLAN_FAILURE,
   };
 }

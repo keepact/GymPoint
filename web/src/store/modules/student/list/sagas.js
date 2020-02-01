@@ -13,7 +13,7 @@ import {
   listStudentFailure,
 } from './index';
 
-export function* listStudentId({ payload }) {
+export function* listStudentById({ payload }) {
   const { id } = payload;
 
   try {
@@ -67,17 +67,17 @@ export function* listStudents({ payload }) {
   }
 }
 
-export function studentInitialState() {
-  history.push('students/create');
-}
-
 export function studentRedirect() {
   history.push('/');
 }
 
+export function studentInitialState() {
+  history.push('students/create');
+}
+
 export default all([
-  takeLatest(Types.REQUEST, listStudents),
-  takeLatest(Types.REQUEST_ID, listStudentId),
-  takeLatest(Types.REQUEST_INITIAL_STATE, studentInitialState),
-  takeLatest(Types.REDIRECT, studentRedirect),
+  takeLatest(Types.LIST_STUDENTS_REQUEST, listStudents),
+  takeLatest(Types.LIST_STUDENT_ID_REQUEST, listStudentById),
+  takeLatest(Types.STUDENT_REDIRECT, studentRedirect),
+  takeLatest(Types.UPDATE_STUDENT_INITIAL_STATE, studentInitialState),
 ]);

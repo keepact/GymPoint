@@ -3,9 +3,9 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@registration/DELETE_REQUEST',
-  SUCCESS: '@registration/DELETE_SUCCESS',
-  FAIL: '@registration/DELETE_FAIL',
+  DELETE_REGISTRATION_REQUEST: '@registration/DELETE_REGISTRATION_REQUEST',
+  DELETE_REGISTRATION_SUCCESS: '@registration/DELETE_REGISTRATION_SUCCESS',
+  DELETE_REGISTRATION_FAILURE: '@registration/DELETE_REGISTRATION_FAILURE',
 };
 
 // Reducer
@@ -17,15 +17,15 @@ const INITIAL_STATE = {
 export default function registrationDelete(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case Types.DELETE_REGISTRATION_REQUEST: {
         draft.loading = true;
         break;
       }
-      case Types.SUCCESS: {
+      case Types.DELETE_REGISTRATION_SUCCESS: {
         draft.loading = false;
         break;
       }
-      case Types.FAIL: {
+      case Types.DELETE_REGISTRATION_FAILURE: {
         draft.loading = false;
         break;
       }
@@ -38,19 +38,19 @@ export default function registrationDelete(state = INITIAL_STATE, action) {
 
 export function deleteRegistrationRequest(id) {
   return {
-    type: Types.REQUEST,
+    type: Types.DELETE_REGISTRATION_REQUEST,
     payload: { id },
   };
 }
 
 export function deleteRegistrationSuccess() {
   return {
-    type: Types.SUCCESS,
+    type: Types.DELETE_REGISTRATION_SUCCESS,
   };
 }
 
 export function deleteRegistrationFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.DELETE_REGISTRATION_FAILURE,
   };
 }

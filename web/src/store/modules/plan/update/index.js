@@ -3,9 +3,9 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@plan/CREATE_OR_EDIT_REQUEST',
-  SUCCESS: '@plan/CREATE_OR_EDIT_SUCCESS',
-  FAIL: '@plan/CREATE_OR_EDIT_FAIL',
+  CREATE_OR_EDIT_PLAN_REQUEST: '@plan/CREATE_OR_EDIT_PLAN_REQUEST',
+  CREATE_OR_EDIT_PLAN_SUCCESS: '@plan/CREATE_OR_EDIT_PLAN_SUCCESS',
+  CREATE_OR_EDIT_PLAN_FAILURE: '@plan/CREATE_OR_EDIT_PLAN_FAILURE',
 };
 
 // Reducer
@@ -17,15 +17,15 @@ const INITIAL_STATE = {
 export default function planUpdate(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case Types.CREATE_OR_EDIT_PLAN_REQUEST: {
         draft.loading = true;
         break;
       }
-      case Types.SUCCESS: {
+      case Types.CREATE_OR_EDIT_PLAN_SUCCESS: {
         draft.loading = false;
         break;
       }
-      case Types.FAIL: {
+      case Types.CREATE_OR_EDIT_PLAN_FAILURE: {
         draft.loading = false;
         break;
       }
@@ -38,20 +38,20 @@ export default function planUpdate(state = INITIAL_STATE, action) {
 
 export function updateOrCreatePlan(data, id) {
   return {
-    type: Types.REQUEST,
+    type: Types.CREATE_OR_EDIT_PLAN_REQUEST,
     payload: { data, id },
   };
 }
 
 export function updateOrCreatePlanSuccess(plan) {
   return {
-    type: Types.SUCCESS,
+    type: Types.CREATE_OR_EDIT_PLAN_SUCCESS,
     payload: { plan },
   };
 }
 
 export function updateOrCreatePlanFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.CREATE_OR_EDIT_PLAN_FAILURE,
   };
 }

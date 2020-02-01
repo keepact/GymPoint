@@ -3,9 +3,9 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@support/CREATE_REQUEST',
-  SUCCESS: '@support/CREATE_SUCCESS',
-  FAIL: '@support/CREATE_FAILURE',
+  CREATE_ANSWER_REQUEST: '@support/CREATE_ANSWER_REQUEST',
+  CREATE_ANSWER_SUCCESS: '@support/CREATE_ANSWER_SUCCESS',
+  CREATE_ANSWER_FAILURE: '@support/CREATE_ANSWER_FAILURE',
 };
 
 // Reducer
@@ -17,15 +17,15 @@ const INITIAL_STATE = {
 export default function supportCreate(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case Types.CREATE_ANSWER_REQUEST: {
         draft.loading = true;
         break;
       }
-      case Types.SUCCESS: {
+      case Types.CREATE_ANSWER_SUCCESS: {
         draft.loading = false;
         break;
       }
-      case Types.FAIL: {
+      case Types.CREATE_ANSWER_FAILURE: {
         draft.loading = false;
         break;
       }
@@ -38,20 +38,20 @@ export default function supportCreate(state = INITIAL_STATE, action) {
 
 export function createSupportRequest(data, id) {
   return {
-    type: Types.REQUEST,
+    type: Types.CREATE_ANSWER_REQUEST,
     payload: { data, id },
   };
 }
 
 export function createSupportSuccess(helpOrders) {
   return {
-    type: Types.SUCCESS,
+    type: Types.CREATE_ANSWER_SUCCESS,
     payload: { helpOrders },
   };
 }
 
 export function createSupportFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.CREATE_ANSWER_FAILURE,
   };
 }

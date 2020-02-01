@@ -3,13 +3,14 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@student/LIST_REQUEST',
-  REQUEST_ID: '@student/ID_REQUEST',
-  SUCCESS: '@student/LIST_SUCCESS',
-  SUCCESS_ID: '@student/ID_SUCCESS',
-  CLEAR_VALUE: '@student/CLEAR_VALUE',
-  REQUEST_INITIAL_STATE: '@student/INITIAL_STATE',
-  REDIRECT: '@student/LIST_REDIRECT',
+  LIST_STUDENTS_REQUEST: '@student/LIST_STUDENTS_REQUEST',
+  LIST_STUDENTS_SUCCESS: '@student/LIST_STUDENTS_SUCCESS',
+  LIST_STUDENT_ID_REQUEST: '@student/LIST_STUDENT_ID_REQUEST',
+  LIST_STUDENT_ID_SUCCESS: '@student/LIST_STUDENT_ID_SUCCESS',
+  STUDENT_REDIRECT: '@student/STUDENT_REDIRECT',
+  UPDATE_STUDENT_CLEAR_VALUE: '@student/UPDATE_STUDENT_CLEAR_VALUE',
+  UPDATE_STUDENT_INITIAL_STATE: '@student/UPDATE_STUDENT_INITIAL_STATE',
+  LIST_STUDENTS_FAILURE: '@student/LIST_STUDENTS_FAILURE',
 };
 
 // Reducer
@@ -26,16 +27,11 @@ const INITIAL_STATE = {
 export default function studentList(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case Types.LIST_STUDENTS_REQUEST: {
         draft.loading = typeof action.payload.newList !== 'string';
         break;
       }
-      case Types.REQUEST_ID: {
-        draft.loading = true;
-        draft.studentId = action.payload.id;
-        break;
-      }
-      case Types.SUCCESS: {
+      case Types.LIST_STUDENTS_SUCCESS: {
         const { currentPage, lastPage } = action.payload.pages;
 
         draft.students = action.payload.data;
@@ -44,19 +40,24 @@ export default function studentList(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
-      case Types.SUCCESS_ID: {
+      case Types.LIST_STUDENT_ID_REQUEST: {
+        draft.loading = true;
+        draft.studentId = action.payload.id;
+        break;
+      }
+      case Types.LIST_STUDENT_ID_SUCCESS: {
         draft.loading = false;
         draft.student = action.payload.data;
         break;
       }
-      case Types.REQUEST_INITIAL_STATE: {
+      case Types.UPDATE_STUDENT_INITIAL_STATE: {
         if (state.studentId || state.student) {
           draft.student = undefined;
           draft.studentId = undefined;
         }
         break;
       }
-      case Types.FAIL: {
+      case Types.LIST_STUDENTS_FAILURE: {
         draft.loading = false;
         break;
       }
@@ -69,46 +70,46 @@ export default function studentList(state = INITIAL_STATE, action) {
 
 export function listStudentRequest(page, newList) {
   return {
-    type: Types.REQUEST,
+    type: Types.LIST_STUDENTS_REQUEST,
     payload: { page, newList },
   };
 }
 
 export function listStudentSuccess(data, pages) {
   return {
-    type: Types.SUCCESS,
+    type: Types.LIST_STUDENTS_SUCCESS,
     payload: { data, pages },
   };
 }
 
 export function listStudentRequestId(id) {
   return {
-    type: Types.REQUEST_ID,
+    type: Types.LIST_STUDENT_ID_REQUEST,
     payload: { id },
   };
 }
 
 export function listStudentSuccessId(data) {
   return {
-    type: Types.SUCCESS_ID,
+    type: Types.LIST_STUDENT_ID_SUCCESS,
     payload: { data },
   };
 }
 
 export function listStudentCreate() {
   return {
-    type: Types.REQUEST_INITIAL_STATE,
+    type: Types.UPDATE_STUDENT_INITIAL_STATE,
   };
 }
 
 export function listStudentRedirect() {
   return {
-    type: Types.REDIRECT,
+    type: Types.STUDENT_REDIRECT,
   };
 }
 
 export function listStudentFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.LIST_STUDENTS_FAILURE,
   };
 }

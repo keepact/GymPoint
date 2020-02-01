@@ -73,7 +73,7 @@ function HelpOrders() {
                     <strong>Aluno</strong>
                   </header>
                   {questions.map(question => (
-                    <div key={question.id}>
+                    <div key={question.questionId}>
                       <span>{question.name}</span>
                       <button
                         type="button"

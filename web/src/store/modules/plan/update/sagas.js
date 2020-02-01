@@ -41,4 +41,6 @@ export function* requestNewOrEdiPlan({ payload }) {
   }
 }
 
-export default all([takeLatest(Types.REQUEST, requestNewOrEdiPlan)]);
+export default all([
+  takeLatest(Types.CREATE_OR_EDIT_PLAN_REQUEST, requestNewOrEdiPlan),
+]);

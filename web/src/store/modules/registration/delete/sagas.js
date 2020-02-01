@@ -27,4 +27,6 @@ export function* deleteRegistration({ payload }) {
   }
 }
 
-export default all([takeLatest(Types.REQUEST, deleteRegistration)]);
+export default all([
+  takeLatest(Types.DELETE_REGISTRATION_REQUEST, deleteRegistration),
+]);

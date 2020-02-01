@@ -29,4 +29,4 @@ export function* createAnswer({ payload }) {
   }
 }
 
-export default all([takeLatest(Types.REQUEST, createAnswer)]);
+export default all([takeLatest(Types.CREATE_ANSWER_REQUEST, createAnswer)]);

@@ -96,8 +96,8 @@ export function registrationRedirect() {
 }
 
 export default all([
-  takeLatest(Types.REQUEST, listRegistrations),
-  takeLatest(Types.REQUEST_ID, listRegistrationId),
-  takeLatest(Types.REQUEST_INITIAL_STATE, registrationInitialState),
-  takeLatest(Types.REDIRECT, registrationRedirect),
+  takeLatest(Types.LIST_REGISTRATIONS_REQUEST, listRegistrations),
+  takeLatest(Types.LIST_REGISTRATION_ID_REQUEST, listRegistrationId),
+  takeLatest(Types.UPDATE_REGISTRATION_INITIAL_STATE, registrationInitialState),
+  takeLatest(Types.REGISTRATION_REDIRECT, registrationRedirect),
 ]);
