@@ -73,8 +73,8 @@ export function planRedirect() {
 }
 
 export default all([
-  takeLatest(Types.REQUEST, listPlans),
-  takeLatest(Types.REQUEST_ID, listPlanId),
-  takeLatest(Types.REQUEST_INITIAL_STATE, planInitialState),
-  takeLatest(Types.REDIRECT, planRedirect),
+  takeLatest(Types.LIST_PLANS_REQUEST, listPlans),
+  takeLatest(Types.LIST_PLAN_ID_REQUEST, listPlanId),
+  takeLatest(Types.UPDATE_PLAN_INITIAL_STATE, planInitialState),
+  takeLatest(Types.PLAN_REDIRECT, planRedirect),
 ]);

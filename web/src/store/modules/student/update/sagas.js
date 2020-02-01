@@ -50,4 +50,6 @@ export function* updateStudent({ payload }) {
   }
 }
 
-export default all([takeLatest(Types.REQUEST, updateStudent)]);
+export default all([
+  takeLatest(Types.CREATE_OR_EDIT_STUDENT_REQUEST, updateStudent),
+]);

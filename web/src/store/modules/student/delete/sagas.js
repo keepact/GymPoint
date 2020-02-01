@@ -24,4 +24,4 @@ export function* deleteStudent({ payload }) {
   }
 }
 
-export default all([takeLatest(Types.REQUEST, deleteStudent)]);
+export default all([takeLatest(Types.DELETE_STUDENT_REQUEST, deleteStudent)]);

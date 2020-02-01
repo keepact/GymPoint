@@ -3,9 +3,9 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@support/LIST_REQUEST',
-  SUCCESS: '@support/LIST_SUCCESS',
-  FAIL: '@support/LIST_FAIL',
+  LIST_QUESTIONS_REQUEST: '@support/LIST_QUESTIONS_REQUEST',
+  LIST_QUESTIONS_SUCCESS: '@support/LIST_QUESTIONS_SUCCESS',
+  LIST_QUESTIONS_FAILURE: '@support/LIST_QUESTIONS_FAILURE',
 };
 
 // Reducer
@@ -20,11 +20,11 @@ const INITIAL_STATE = {
 export default function supportList(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case Types.LIST_QUESTIONS_REQUEST: {
         draft.loading = true;
         break;
       }
-      case Types.SUCCESS: {
+      case Types.LIST_QUESTIONS_SUCCESS: {
         const { currentPage, lastPage } = action.payload.pages;
 
         draft.questions = action.payload.data;
@@ -33,7 +33,7 @@ export default function supportList(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
-      case Types.FAIL: {
+      case Types.LIST_QUESTIONS_FAILURE: {
         draft.loading = false;
         break;
       }
@@ -46,20 +46,20 @@ export default function supportList(state = INITIAL_STATE, action) {
 
 export function listSupportRequest(page, newList) {
   return {
-    type: Types.REQUEST,
+    type: Types.LIST_QUESTIONS_REQUEST,
     payload: { page, newList },
   };
 }
 
 export function listSupportSuccess(data, pages) {
   return {
-    type: Types.SUCCESS,
+    type: Types.LIST_QUESTIONS_SUCCESS,
     payload: { data, pages },
   };
 }
 
 export function listSupportFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.LIST_QUESTIONS_FAILURE,
   };
 }

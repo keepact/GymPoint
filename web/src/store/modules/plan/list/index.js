@@ -3,15 +3,15 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  REQUEST: '@plan/LIST_REQUEST',
-  REQUEST_ID: '@plan/ID_REQUEST',
-  SUCCESS: '@plan/LIST_SUCCESS',
-  SUCCESS_ID: '@plan/ID_SUCCESS',
-  UPDATE_DURATION: '@plan/DURATION_SUCCESS',
-  UPDATE_PRICE: '@plan/PRICE_SUCCESS',
-  REQUEST_INITIAL_STATE: '@plan/INITIAL_STATE',
-  REDIRECT: '@plan/LIST_REDIRECT',
-  FAIL: '@plan/LIST_FAIL',
+  LIST_PLANS_REQUEST: '@plan/LIST_PLANS_REQUEST',
+  LIST_PLANS_SUCCESS: '@plan/LIST_PLANS_SUCCESS',
+  LIST_PLAN_ID_REQUEST: '@plan/LIST_PLAN_ID_REQUEST',
+  LIST_PLAN_ID_SUCCESS: '@plan/LIST_PLAN_ID_SUCCESS',
+  UPDATE_PLAN_DURATION: '@plan/UPDATE_PLAN_DURATION',
+  UPDATE_PLAN_PRICE: '@plan/UPDATE_PLAN_PRICE',
+  UPDATE_PLAN_INITIAL_STATE: '@plan/UPDATE_PLAN_INITIAL_STATE',
+  PLAN_REDIRECT: '@plan/PLAN_REDIRECT',
+  LIST_PLANS_FAILURE: '@plan/LIST_PLANS_FAILURE',
 };
 
 // Reducer
@@ -33,16 +33,11 @@ const INITIAL_STATE = {
 export default function planList(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case Types.REQUEST: {
+      case Types.LIST_PLANS_REQUEST: {
         draft.loading = true;
         break;
       }
-      case Types.REQUEST_ID: {
-        draft.loading = true;
-        draft.planId = action.payload.id;
-        break;
-      }
-      case Types.SUCCESS: {
+      case Types.LIST_PLANS_SUCCESS: {
         const { currentPage, lastPage } = action.payload.pages;
 
         draft.plans = action.payload.data;
@@ -51,33 +46,38 @@ export default function planList(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
-      case Types.SUCCESS_ID: {
+      case Types.LIST_PLAN_ID_REQUEST: {
+        draft.loading = true;
+        draft.planId = action.payload.id;
+        break;
+      }
+      case Types.LIST_PLAN_ID_SUCCESS: {
         draft.loading = false;
         draft.plan = action.payload.data;
         break;
       }
-      case Types.UPDATE_DURATION: {
+      case Types.UPDATE_PLAN_DURATION: {
         const { duration } = action.payload;
 
         draft.plan.duration = duration;
         draft.plan.finalPrice = draft.plan.price * duration;
         break;
       }
-      case Types.UPDATE_PRICE: {
+      case Types.UPDATE_PLAN_PRICE: {
         const { price } = action.payload;
 
         draft.plan.price = price;
         draft.plan.finalPrice = draft.plan.duration * price;
         break;
       }
-      case Types.REQUEST_INITIAL_STATE: {
+      case Types.UPDATE_PLAN_INITIAL_STATE: {
         if (state.planId || state.plan) {
           draft.plan = INITIAL_STATE.plan;
           draft.planId = undefined;
         }
         break;
       }
-      case Types.FAIL: {
+      case Types.LIST_PLANS_FAILURE: {
         draft.loading = false;
         break;
       }
@@ -90,60 +90,60 @@ export default function planList(state = INITIAL_STATE, action) {
 
 export function listPlanRequest(page, newList) {
   return {
-    type: Types.REQUEST,
+    type: Types.LIST_PLANS_REQUEST,
     payload: { page, newList },
   };
 }
 
 export function listPlanSuccess(data, pages) {
   return {
-    type: Types.SUCCESS,
+    type: Types.LIST_PLANS_SUCCESS,
     payload: { data, pages },
   };
 }
 
 export function listPlanRequestId(id) {
   return {
-    type: Types.REQUEST_ID,
+    type: Types.LIST_PLAN_ID_REQUEST,
     payload: { id },
   };
 }
 
 export function listPlanSuccessId(data) {
   return {
-    type: Types.SUCCESS_ID,
+    type: Types.LIST_PLAN_ID_SUCCESS,
     payload: { data },
-  };
-}
-
-export function listPlanUpdatePrice(price) {
-  return {
-    type: Types.UPDATE_PRICE,
-    payload: { price },
   };
 }
 
 export function listPlanUpdateDuration(duration) {
   return {
-    type: Types.UPDATE_DURATION,
+    type: Types.UPDATE_PLAN_DURATION,
     payload: { duration },
+  };
+}
+
+export function listPlanUpdatePrice(price) {
+  return {
+    type: Types.UPDATE_PLAN_PRICE,
+    payload: { price },
   };
 }
 
 export function listPlanCreate() {
   return {
-    type: Types.REQUEST_INITIAL_STATE,
+    type: Types.UPDATE_PLAN_INITIAL_STATE,
   };
 }
 
 export function listPlanRedirect() {
   return {
-    type: Types.REDIRECT,
+    type: Types.PLAN_REDIRECT,
   };
 }
 
 export function listPlanFailure() {
   return {
-    type: Types.FAIL,
+    type: Types.LIST_PLANS_FAILURE,
   };
 }

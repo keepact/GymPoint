@@ -24,4 +24,4 @@ export function* deletePlan({ payload }) {
   }
 }
 
-export default all([takeLatest(Types.REQUEST, deletePlan)]);
+export default all([takeLatest(Types.DELETE_PLAN_REQUEST, deletePlan)]);
