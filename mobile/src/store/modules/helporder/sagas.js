@@ -16,11 +16,11 @@ export function* createOrList({ payload }) {
   const { studentId } = yield select(state => state.auth);
   const { page } = yield select(state => state.helporder);
 
+  const helpOrder = { page, studentId };
+
   try {
     if (!data) {
-      const helporder = { page, studentId };
-
-      const response = yield call(service.helpOrderList, helporder);
+      const response = yield call(service.helpOrderList, helpOrder);
 
       const { rows: helpOrderData } = response.data.content;
 
@@ -31,8 +31,11 @@ export function* createOrList({ payload }) {
 
       yield put(helpOrderSuccess(helpOrderData, pages));
     } else {
-      yield call(service.helpOrderCreate, payload);
-      const response = yield call(service.helpOrderList, studentId);
+      const newHelpOrder = { data, studentId };
+
+      yield call(service.helpOrderCreate, newHelpOrder);
+
+      const response = yield call(service.helpOrderList, helpOrder);
 
       const { rows: helpOrderData } = response.data.content;
 
