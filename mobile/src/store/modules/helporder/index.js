@@ -8,7 +8,8 @@ export const Types = {
   HELP_ORDERS_SUCCESS: '@helporders/HELP_ORDERS_SUCCESS',
   HELP_ORDERS_FAILURE: '@helporders/HELP_ORDERS_FAILURE',
   HELP_ORDERS_ANSWER: '@helporders/HELP_ORDERS_ANSWER',
-  HELP_ORDERS_REDIRECT: '@helporders/REDIRECT',
+  HELP_ORDERS_REDIRECT: '@helporders/HELP_ORDERS_REDIRECT',
+  CREATE_HELP_ORDERS_REQUEST: '@helporders/CREATE_HELP_ORDERS_REQUEST',
 };
 
 // Reducer
@@ -46,8 +47,8 @@ export default function helporder(state = INITIAL_STATE, action) {
         break;
       }
       case TypeAuth.SIGN_OUT: {
-        draft.helporders = INITIAL_STATE.helporders;
-        draft.helporder = INITIAL_STATE.helporder;
+        draft.helporders = [];
+        draft.helporder = {};
         break;
       }
       default:
@@ -57,10 +58,10 @@ export default function helporder(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function helpOrderRequest(data) {
+export function helpOrderRequest(page) {
   return {
     type: Types.HELP_ORDERS_REQUEST,
-    payload: { data },
+    payload: { page },
   };
 }
 
@@ -87,6 +88,13 @@ export function helpOrderAnswer(item) {
 export function helpOrderRedirect(data) {
   return {
     type: Types.HELP_ORDERS_REDIRECT,
+    payload: { data },
+  };
+}
+
+export function createHelpOrderRequest(data) {
+  return {
+    type: Types.CREATE_HELP_ORDERS_REQUEST,
     payload: { data },
   };
 }

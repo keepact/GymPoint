@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { KeyboardAvoidingView } from 'react-native';
 
-import { helpOrderRequest } from '~/store/modules/helporder';
+import { createHelpOrderRequest } from '~/store/modules/helporder';
 
 import { Container, TextArea, ButtonContainer, SubmitButton } from './styles';
 
@@ -11,7 +11,7 @@ function HelpOrderAsk() {
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    dispatch(helpOrderRequest(value));
+    dispatch(createHelpOrderRequest(value));
   };
 
   return (

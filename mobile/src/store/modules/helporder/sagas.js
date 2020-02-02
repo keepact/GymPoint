@@ -8,72 +8,70 @@ import NavigationService from '~/services/navigation';
 
 import {
   Types,
+  helpOrderRequest,
   helpOrderSuccess,
   helpOrderFailure,
   helpOrderAnswer,
 } from './index';
 
-export function* createOrList({ payload }) {
-  const { data } = payload;
+export function* createQuestion({ payload }) {
   const { studentId } = yield select(state => state.auth);
   const { page } = yield select(state => state.helporder);
+
+  const { data } = payload;
+  const newHelpOrder = { data, studentId };
+
+  try {
+    yield call(service.helpOrderCreate, newHelpOrder);
+
+    yield put(helpOrderRequest(page));
+
+    NavigationService.navigate('HelpOrderList');
+    Alert.alert('Sucesso', 'Pergunta Enviada');
+  } catch (err) {
+    Alert.alert(err.response.data.error);
+    yield put(helpOrderFailure());
+  }
+}
+
+export function* listQuestions({ payload }) {
+  const { studentId } = yield select(state => state.auth);
+  const { page } = payload;
 
   const helpOrder = { page, studentId };
 
   try {
-    if (!data || data.refresh === true) {
-      let response = {};
+    let response = {};
 
-      if (!data) {
-        response = yield call(service.helpOrderListNoPage, helpOrder);
-      } else {
-        response = yield call(service.helpOrderList, helpOrder);
-      }
-
-      const { rows: helpOrderData } = response.data.content;
-
-      const pages = {
-        currentPage: data ? data.newPage : page,
-        lastPage: response.data.lastPage,
-      };
-
-      if (page === 1) {
-        yield put(helpOrderSuccess(helpOrderData, pages));
-      } else {
-        const { helporders } = yield select(state => state.helporder);
-
-        const newHelpOrders = [...helporders, ...helpOrderData];
-
-        const currentQuestions = removeDuplicates(newHelpOrders, 'id');
-
-        yield put(helpOrderSuccess(currentQuestions, pages));
-      }
+    if (page === 1) {
+      response = yield call(service.helpOrderList, helpOrder);
     } else {
-      const newHelpOrder = { data, studentId };
-
-      yield call(service.helpOrderCreate, newHelpOrder);
-
-      const response = yield call(service.helpOrderList, helpOrder);
-
-      const { rows: helpOrderData } = response.data.content;
-
-      const pages = {
-        currentPage: page,
-        lastPage: response.data.lastPage,
-      };
-
-      yield put(helpOrderSuccess(helpOrderData, pages));
-
-      NavigationService.navigate('HelpOrderList');
-      Alert.alert('Sucesso', 'Pergunta Enviada');
+      response = yield call(service.helpOrderListNoPage, helpOrder);
     }
+
+    const { rows: helpOrderData } = response.data.content;
+
+    const pages = {
+      currentPage: page,
+      lastPage: response.data.lastPage,
+    };
+
+    const { helporders } = yield select(state => state.helporder);
+
+    const newHelpOrders = [...helporders, ...helpOrderData];
+
+    const currentQuestions = removeDuplicates(newHelpOrders, 'id');
+
+    yield put(
+      helpOrderSuccess(page !== 1 ? currentQuestions : helpOrderData, pages),
+    );
   } catch (err) {
     yield put(helpOrderFailure());
     Alert.alert('Falha na requisição', err.response.data.error);
   }
 }
 
-export function* redirect({ payload }) {
+export function* helpOrderRedirect({ payload }) {
   if (payload.data) {
     yield put(helpOrderAnswer(payload.data));
     NavigationService.navigate('HelpOrderAnswer');
@@ -83,6 +81,7 @@ export function* redirect({ payload }) {
 }
 
 export default all([
-  takeLatest(Types.HELP_ORDERS_REQUEST, createOrList),
-  takeLatest(Types.HELP_ORDERS_REDIRECT, redirect),
+  takeLatest(Types.CREATE_HELP_ORDERS_REQUEST, createQuestion),
+  takeLatest(Types.HELP_ORDERS_REQUEST, listQuestions),
+  takeLatest(Types.HELP_ORDERS_REDIRECT, helpOrderRedirect),
 ]);
