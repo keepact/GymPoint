@@ -24,9 +24,9 @@ function HelpOrderList() {
 
   useEffect(() => {
     if (firstRender) {
-      dispatch(helpOrderRequest());
+      dispatch(helpOrderRequest(page));
     }
-  }, [dispatch, firstRender]);
+  }, [dispatch, firstRender, page]);
 
   const handleAddQuestion = () => {
     dispatch(helpOrderRedirect());
@@ -38,11 +38,7 @@ function HelpOrderList() {
 
   const handleLoadMore = () => {
     const newPage = page + 1;
-    const dataForRefresh = {
-      newPage,
-      refresh: true,
-    };
-    dispatch(helpOrderRequest(dataForRefresh));
+    dispatch(helpOrderRequest(newPage));
   };
 
   const renderFooter = () => {
