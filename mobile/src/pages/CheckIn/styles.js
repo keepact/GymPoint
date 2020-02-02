@@ -16,6 +16,10 @@ export const CheckInButton = styled(Button)`
   width: 100%;
 `;
 
+export const Footer = styled.View`
+  margin-top: 30px;
+`;
+
 export const List = styled.FlatList.attrs({
   showVerticalScrollIndicator: false,
   contentContainerStyle: { padding: 20 },

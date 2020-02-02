@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import PropTypes from 'prop-types';
 
 import pt from 'date-fns/locale/pt';
@@ -40,4 +40,4 @@ Questions.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-export default Questions;
+export default memo(Questions);

@@ -44,10 +44,10 @@ export default function checkin(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function checkInRequest(page) {
+export function checkInRequest(page, refresh) {
   return {
     type: Types.CHECKIN_REQUEST,
-    payload: { page },
+    payload: { page, refresh },
   };
 }
 

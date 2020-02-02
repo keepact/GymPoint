@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import PropTypes from 'prop-types';
 
 import pt from 'date-fns/locale/pt';
@@ -29,4 +29,4 @@ CheckIns.propTypes = {
   }).isRequired,
 };
 
-export default CheckIns;
+export default memo(CheckIns);
