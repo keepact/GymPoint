@@ -6,6 +6,7 @@ export const Types = {
   CHECKIN_REQUEST: '@checkin/CHECKIN_REQUEST',
   CHECKIN_SUCCESS: '@checkin/CHECKIN_SUCCESS',
   CHECKIN_FAILURE: '@checkin/CHECKIN_FAILURE',
+  CREATE_CHECKIN_REQUEST: '@checkin/CREATE_CHECKIN_REQUEST',
 };
 
 // Reducer
@@ -44,10 +45,10 @@ export default function checkin(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function checkInRequest(page, refresh) {
+export function checkInRequest(page) {
   return {
     type: Types.CHECKIN_REQUEST,
-    payload: { page, refresh },
+    payload: { page },
   };
 }
 
@@ -61,5 +62,12 @@ export function checkInSuccess(data, pages) {
 export function checkInFailure() {
   return {
     type: Types.CHECKIN_FAILURE,
+  };
+}
+
+export function createCheckInRequest(page) {
+  return {
+    type: Types.CREATE_CHECKIN_REQUEST,
+    payload: { page },
   };
 }
