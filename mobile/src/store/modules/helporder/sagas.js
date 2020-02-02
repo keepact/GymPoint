@@ -1,6 +1,8 @@
 import { takeLatest, call, put, all, select } from 'redux-saga/effects';
 import { Alert } from 'react-native';
 
+import { removeDuplicates } from '~/util/functions';
+
 import * as service from '~/services/helporder';
 import NavigationService from '~/services/navigation';
 
@@ -19,17 +21,33 @@ export function* createOrList({ payload }) {
   const helpOrder = { page, studentId };
 
   try {
-    if (!data) {
-      const response = yield call(service.helpOrderList, helpOrder);
+    if (!data || data.refresh === true) {
+      let response = {};
+
+      if (!data) {
+        response = yield call(service.helpOrderListNoPage, helpOrder);
+      } else {
+        response = yield call(service.helpOrderList, helpOrder);
+      }
 
       const { rows: helpOrderData } = response.data.content;
 
       const pages = {
-        currentPage: page,
+        currentPage: data ? data.newPage : page,
         lastPage: response.data.lastPage,
       };
 
-      yield put(helpOrderSuccess(helpOrderData, pages));
+      if (page === 1) {
+        yield put(helpOrderSuccess(helpOrderData, pages));
+      } else {
+        const { helporders } = yield select(state => state.helporder);
+
+        const newHelpOrders = [...helporders, ...helpOrderData];
+
+        const currentQuestions = removeDuplicates(newHelpOrders, 'id');
+
+        yield put(helpOrderSuccess(currentQuestions, pages));
+      }
     } else {
       const newHelpOrder = { data, studentId };
 
@@ -56,7 +74,7 @@ export function* createOrList({ payload }) {
 }
 
 export function* redirect({ payload }) {
-  if (payload.data !== undefined) {
+  if (payload.data) {
     yield put(helpOrderAnswer(payload.data));
     NavigationService.navigate('HelpOrderAnswer');
   } else {

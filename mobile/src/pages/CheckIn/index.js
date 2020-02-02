@@ -1,13 +1,13 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { checkInRequest } from '~/store/modules/checkin';
 
+import Loading from '~/components/Loading';
 import CheckIns from '~/components/CheckIns';
 
 import {
@@ -34,11 +34,7 @@ function CheckIn() {
   };
 
   const renderFooter = () => {
-    return (
-      <Footer>
-        {loading && <ActivityIndicator color="red" size="large" />}
-      </Footer>
-    );
+    return <Footer>{loading && <Loading />}</Footer>;
   };
 
   return (

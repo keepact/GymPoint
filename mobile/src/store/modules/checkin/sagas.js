@@ -3,6 +3,8 @@ import { Alert } from 'react-native';
 
 import * as service from '~/services/checkin';
 
+import { removeDuplicates } from '~/util/functions';
+
 import { Types, checkInSuccess, checkInFailure } from './index';
 
 export function* createOrListCheckIn({ payload }) {
@@ -37,14 +39,6 @@ export function* createOrListCheckIn({ payload }) {
       const { checkIns } = yield select(state => state.checkin);
 
       const newCheckins = [...checkIns, ...checkInData];
-
-      const removeDuplicates = (list, attribute) => {
-        return list.filter(
-          (item, pos) =>
-            list.map(element => element[attribute]).indexOf(item[attribute]) ===
-            pos,
-        );
-      };
 
       const currentCheckins = removeDuplicates(newCheckins, 'id');
 
