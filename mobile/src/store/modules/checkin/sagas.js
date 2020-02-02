@@ -5,49 +5,58 @@ import * as service from '~/services/checkin';
 
 import { removeDuplicates } from '~/util/functions';
 
-import { Types, checkInSuccess, checkInFailure } from './index';
+import { Types, checkInSuccess, checkInFailure, checkInRequest } from './index';
 
-export function* createOrListCheckIn({ payload }) {
-  const { page, refresh } = payload;
+export function* createCheckIn({ payload }) {
+  const { page } = payload;
   const { studentId } = yield select(state => state.auth);
 
   try {
-    const checkin = { studentId, page };
+    yield call(service.checkinCreate, studentId);
 
-    if (!refresh) {
-      yield call(service.checkinCreate, studentId);
-    }
+    yield put(checkInRequest(page));
+  } catch (err) {
+    Alert.alert(err.response.data.error);
+    yield put(checkInFailure());
+  }
+}
 
+export function* listCheckIn({ payload }) {
+  const { page } = payload;
+  const { studentId } = yield select(state => state.auth);
+  const checkin = { studentId, page };
+
+  try {
     let response = {};
 
-    if (!page) {
-      response = yield call(service.checkinListNoPage, checkin);
-    } else {
+    if (page === 1) {
       response = yield call(service.checkinList, checkin);
+    } else {
+      response = yield call(service.checkinListNoPage, checkin);
     }
-
-    const { rows: checkInData } = response.data.content;
 
     const pages = {
       currentPage: page,
       lastPage: response.data.lastPage,
     };
 
-    if (page === 1) {
-      yield put(checkInSuccess(checkInData, pages));
-    } else {
-      const { checkIns } = yield select(state => state.checkin);
+    const { rows: checkInData } = response.data.content;
 
-      const newCheckins = [...checkIns, ...checkInData];
+    const { checkIns } = yield select(state => state.checkin);
 
-      const currentCheckins = removeDuplicates(newCheckins, 'id');
+    const newCheckins = [...checkIns, ...checkInData];
+    const currentCheckins = removeDuplicates(newCheckins, 'id');
 
-      yield put(checkInSuccess(currentCheckins, pages));
-    }
+    yield put(
+      checkInSuccess(page !== 1 ? currentCheckins : checkInData, pages),
+    );
   } catch (err) {
     Alert.alert('Falha na requisição', err.response.data.error);
     yield put(checkInFailure());
   }
 }
 
-export default all([takeLatest(Types.CHECKIN_REQUEST, createOrListCheckIn)]);
+export default all([
+  takeLatest(Types.CHECKIN_REQUEST, listCheckIn),
+  takeLatest(Types.CREATE_CHECKIN_REQUEST, createCheckIn),
+]);
