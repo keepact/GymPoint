@@ -25,7 +25,7 @@ function CheckIn() {
   const dispatch = useDispatch();
 
   const handleAddCheckIn = () => {
-    dispatch(createCheckInRequest(page));
+    dispatch(createCheckInRequest());
   };
 
   const handleLoadMore = () => {

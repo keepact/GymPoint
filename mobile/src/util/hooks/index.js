@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-function useCompare(val) {
+export const useCompare = val => {
   const usePrevious = value => {
     const ref = useRef();
 
@@ -12,6 +12,4 @@ function useCompare(val) {
   const prevVal = usePrevious(val);
 
   return prevVal !== val;
-}
-
-export default useCompare;
+};

@@ -5,42 +5,40 @@ import * as service from '~/services/checkin';
 
 import { removeDuplicates } from '~/util/functions';
 
-import { Types, checkInSuccess, checkInFailure, checkInRequest } from './index';
+import {
+  Types,
+  checkInSuccess,
+  checkInFailure,
+  createCheckInSuccess,
+} from './index';
 
-export function* createCheckIn({ payload }) {
-  const { page } = payload;
+export function* createCheckIn() {
   const { studentId } = yield select(state => state.auth);
-
   try {
-    yield call(service.checkinCreate, studentId);
+    const { data } = yield call(service.checkinCreate, studentId);
 
-    yield put(checkInRequest(page));
+    yield put(createCheckInSuccess(data));
   } catch (err) {
-    Alert.alert(err.response.data.error);
+    Alert.alert(err.data.error);
     yield put(checkInFailure());
   }
 }
 
-export function* listCheckIn({ payload }) {
+export function* listCheckIns({ payload }) {
   const { page } = payload;
   const { studentId } = yield select(state => state.auth);
   const checkin = { studentId, page };
 
   try {
-    let response = {};
-
-    if (page === 1) {
-      response = yield call(service.checkinList, checkin);
-    } else {
-      response = yield call(service.checkinListNoPage, checkin);
-    }
+    const { data } = yield call(service.checkinList, checkin);
 
     const pages = {
       currentPage: page,
-      lastPage: response.data.lastPage,
+      lastPage: data.lastPage,
+      total: data.content.count,
     };
 
-    const { rows: checkInData } = response.data.content;
+    const { rows: checkInData } = data.content;
 
     const { checkIns } = yield select(state => state.checkin);
 
@@ -51,12 +49,12 @@ export function* listCheckIn({ payload }) {
       checkInSuccess(page !== 1 ? currentCheckins : checkInData, pages),
     );
   } catch (err) {
-    Alert.alert('Falha na requisição', err.response.data.error);
+    Alert.alert('Falha na requisição', err.data.error);
     yield put(checkInFailure());
   }
 }
 
 export default all([
-  takeLatest(Types.CHECKIN_REQUEST, listCheckIn),
+  takeLatest(Types.CHECKIN_REQUEST, listCheckIns),
   takeLatest(Types.CREATE_CHECKIN_REQUEST, createCheckIn),
 ]);
