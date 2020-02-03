@@ -8,28 +8,30 @@ import NavigationService from '~/services/navigation';
 
 import {
   Types,
-  helpOrderRequest,
   helpOrderSuccess,
   helpOrderFailure,
   helpOrderAnswer,
+  createHelpOrderSuccess,
 } from './index';
 
 export function* createQuestion({ payload }) {
   const { studentId } = yield select(state => state.auth);
-  const { page } = yield select(state => state.helporder);
 
   const { data } = payload;
   const newHelpOrder = { data, studentId };
 
   try {
-    yield call(service.helpOrderCreate, newHelpOrder);
+    const { data: newQuestion } = yield call(
+      service.helpOrderCreate,
+      newHelpOrder,
+    );
 
-    yield put(helpOrderRequest(page));
+    yield put(createHelpOrderSuccess(newQuestion));
 
     NavigationService.navigate('HelpOrderList');
     Alert.alert('Sucesso', 'Pergunta Enviada');
   } catch (err) {
-    Alert.alert(err.response.data.error);
+    Alert.alert(err.data.error);
     yield put(helpOrderFailure());
   }
 }
@@ -41,19 +43,14 @@ export function* listQuestions({ payload }) {
   const helpOrder = { page, studentId };
 
   try {
-    let response = {};
+    const { data } = yield call(service.helpOrderList, helpOrder);
 
-    if (page === 1) {
-      response = yield call(service.helpOrderList, helpOrder);
-    } else {
-      response = yield call(service.helpOrderListNoPage, helpOrder);
-    }
-
-    const { rows: helpOrderData } = response.data.content;
+    const { rows: helpOrderData } = data.content;
 
     const pages = {
       currentPage: page,
-      lastPage: response.data.lastPage,
+      lastPage: data.lastPage,
+      total: data.content.count,
     };
 
     const { helporders } = yield select(state => state.helporder);
@@ -67,7 +64,7 @@ export function* listQuestions({ payload }) {
     );
   } catch (err) {
     yield put(helpOrderFailure());
-    Alert.alert('Falha na requisição', err.response.data.error);
+    Alert.alert('Falha na requisição', err.data.error);
   }
 }
 

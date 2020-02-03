@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Container, Text } from './styles';
 
-export default function Button({ children, loading, ...rest }) {
+function Button({ children, loading, ...rest }) {
   return (
     <Container {...rest}>
       {loading ? (
@@ -16,11 +16,13 @@ export default function Button({ children, loading, ...rest }) {
   );
 }
 
+Button.defaultProps = {
+  loading: false,
+};
+
 Button.propTypes = {
   children: PropTypes.string.isRequired,
   loading: PropTypes.bool,
 };
 
-Button.defaultProps = {
-  loading: false,
-};
+export default Button;
