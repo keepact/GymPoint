@@ -21,6 +21,7 @@ const INITIAL_STATE = {
   page: 1,
   lastPage: undefined,
   loading: false,
+  loaded: false,
   total: undefined,
 };
 
@@ -39,6 +40,9 @@ export default function helporder(state = INITIAL_STATE, action) {
         draft.lastPage = lastPage;
         draft.total = total;
         draft.loading = false;
+
+        if (draft.loaded) return;
+        draft.loaded = true;
         break;
       }
       case Types.HELP_ORDERS_FAILURE: {

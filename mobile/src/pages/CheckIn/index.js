@@ -15,11 +15,13 @@ import {
   CheckInButton,
   ButtonContainer,
   List,
-  Footer,
+  ContainerLoading,
+  LoadingWrapper,
+  LoadingIndicator,
 } from './styles';
 
 function CheckIn() {
-  const { checkIns, page, lastPage, loading } = useSelector(
+  const { checkIns, page, lastPage, loading, loaded } = useSelector(
     state => state.checkin,
   );
   const dispatch = useDispatch();
@@ -29,12 +31,22 @@ function CheckIn() {
   };
 
   const handleLoadMore = () => {
-    const newPage = page + 1;
-    dispatch(checkInRequest(newPage));
+    if (!loading && !lastPage) {
+      const newPage = page + 1;
+      dispatch(checkInRequest(newPage));
+    }
   };
 
   const renderFooter = () => {
-    return <Footer>{loading && <Loading />}</Footer>;
+    return (
+      <ContainerLoading>
+        {!lastPage && (
+          <LoadingWrapper>
+            <LoadingIndicator />
+          </LoadingWrapper>
+        )}
+      </ContainerLoading>
+    );
   };
 
   return (
@@ -42,20 +54,24 @@ function CheckIn() {
       <ButtonContainer>
         <CheckInButton onPress={handleAddCheckIn}>Novo check-in</CheckInButton>
       </ButtonContainer>
-      <List
-        refreshing={loading}
-        onEndReachedThreshold={0.1}
-        initialNumToRender={7}
-        onEndReached={() => {
-          if (!loading && !lastPage) {
-            handleLoadMore();
-          }
-        }}
-        ListFooterComponent={renderFooter}
-        data={checkIns}
-        keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => <CheckIns data={item} />}
-      />
+      {!loaded ? (
+        <ContainerLoading>
+          <Loading />
+          <Loading />
+          <Loading />
+        </ContainerLoading>
+      ) : (
+        <List
+          refreshing={loading}
+          onEndReachedThreshold={0.1}
+          initialNumToRender={7}
+          onEndReached={handleLoadMore}
+          ListFooterComponent={renderFooter}
+          data={checkIns}
+          keyExtractor={item => String(item.id)}
+          renderItem={({ item }) => <CheckIns data={item} />}
+        />
+      )}
     </Container>
   );
 }
