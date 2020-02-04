@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   page: 1,
   lastPage: undefined,
   loading: false,
+  loaded: false,
   total: undefined,
 };
 
@@ -35,6 +36,9 @@ export default function checkin(state = INITIAL_STATE, action) {
         draft.lastPage = lastPage;
         draft.total = total;
         draft.loading = false;
+
+        if (draft.loaded) return;
+        draft.loaded = true;
         break;
       }
       case Types.CREATE_CHECKIN_SUCCESS: {

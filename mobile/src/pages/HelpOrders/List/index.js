@@ -10,12 +10,14 @@ import {
   Container,
   ButtonContainer,
   NewQuetionButton,
-  Footer,
   List,
+  ContainerLoading,
+  LoadingWrapper,
+  LoadingIndicator,
 } from './styles';
 
 function HelpOrderList() {
-  const { helporders, loading, page, lastPage } = useSelector(
+  const { helporders, page, lastPage, loading, loaded } = useSelector(
     state => state.helporder,
   );
 
@@ -37,12 +39,22 @@ function HelpOrderList() {
   };
 
   const handleLoadMore = () => {
-    const newPage = page + 1;
-    dispatch(helpOrderRequest(newPage));
+    if (!loading && !lastPage) {
+      const newPage = page + 1;
+      dispatch(helpOrderRequest(newPage));
+    }
   };
 
   const renderFooter = () => {
-    return <Footer>{loading && <Loading />}</Footer>;
+    return (
+      <ContainerLoading>
+        {!lastPage && (
+          <LoadingWrapper>
+            <LoadingIndicator />
+          </LoadingWrapper>
+        )}
+      </ContainerLoading>
+    );
   };
 
   return (
@@ -53,22 +65,26 @@ function HelpOrderList() {
         </NewQuetionButton>
       </ButtonContainer>
 
-      <List
-        refreshing={loading}
-        onEndReachedThreshold={0.1}
-        initialNumToRender={7}
-        onEndReached={() => {
-          if (!loading && !lastPage) {
-            handleLoadMore();
-          }
-        }}
-        ListFooterComponent={renderFooter}
-        data={helporders}
-        keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => (
-          <Questions data={item} onSubmit={() => handleGoToAnswer(item)} />
-        )}
-      />
+      {!loaded ? (
+        <ContainerLoading>
+          <Loading />
+          <Loading />
+          <Loading />
+        </ContainerLoading>
+      ) : (
+        <List
+          refreshing={loading}
+          onEndReachedThreshold={0.1}
+          initialNumToRender={7}
+          onEndReached={handleLoadMore}
+          ListFooterComponent={renderFooter}
+          data={helporders}
+          keyExtractor={item => String(item.id)}
+          renderItem={({ item }) => (
+            <Questions data={item} onSubmit={() => handleGoToAnswer(item)} />
+          )}
+        />
+      )}
     </Container>
   );
 }

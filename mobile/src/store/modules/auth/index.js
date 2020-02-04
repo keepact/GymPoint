@@ -13,8 +13,8 @@ export const Types = {
 
 const INITIAL_STATE = {
   signed: false,
-  studentId: '',
   loading: false,
+  studentId: undefined,
 };
 
 export default function auth(state = INITIAL_STATE, action) {
