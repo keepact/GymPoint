@@ -3,9 +3,6 @@ import { addMonths } from 'date-fns';
 
 const fieldRequired = 'Esse campo é obrigatório';
 
-export const requestFailMessage =
-  'Houve um erro, tente novamente em alguns minutos';
-
 export const validateSignIn = Yup.object().shape({
   email: Yup.string()
     .email('Insira um e-mail válido')

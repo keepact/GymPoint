@@ -7,7 +7,6 @@ export const { format: formatPrice } = new Intl.NumberFormat('pt-BR', {
 });
 
 export const longDate = "d 'de' MMMM 'de' yyyy";
-
 export const datePlaceHolder = 'dd/mm/yyyy';
 export const pricePlaceHolder = 'R$ 0,00';
 

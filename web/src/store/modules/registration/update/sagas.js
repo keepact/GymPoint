@@ -13,7 +13,7 @@ import {
   updateOrCreateRegistrationFailure,
 } from './index';
 
-export function* requestNewOrEditRegistration({ payload }) {
+export function* createOrEditRegistration({ payload }) {
   const { id } = payload;
   const { student, plan, start_date } = payload.data;
 
@@ -25,17 +25,19 @@ export function* requestNewOrEditRegistration({ payload }) {
   };
 
   try {
+    let response = {};
+
     if (id) {
-      const response = yield call(registrationUpdate, registrations);
-
-      toast.success('Matrícula alterada com sucesso');
-      yield put(updateOrCreateRegistrationSuccess(response.data));
+      response = yield call(registrationUpdate, registrations);
     } else {
-      const response = yield call(registrationCreate, registrations);
-
-      toast.success('Matrícula criada com sucesso');
-      yield put(updateOrCreateRegistrationSuccess(response.data));
+      response = yield call(registrationCreate, registrations);
     }
+
+    toast.success(
+      id ? 'Matrícula alterada com sucesso' : 'Matrícula criada com sucesso'
+    );
+
+    yield put(updateOrCreateRegistrationSuccess(response.data));
     history.push('/registrations');
   } catch (err) {
     toast.error(err.response.data.error);
@@ -46,6 +48,6 @@ export function* requestNewOrEditRegistration({ payload }) {
 export default all([
   takeLatest(
     Types.CREATE_OR_EDIT_REGISTRATION_REQUEST,
-    requestNewOrEditRegistration
+    createOrEditRegistration
   ),
 ]);

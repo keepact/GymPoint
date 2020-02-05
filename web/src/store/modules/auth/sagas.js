@@ -8,9 +8,9 @@ import { Types, signInSuccess, signFailure } from './index';
 
 export function* signIn({ payload }) {
   try {
-    const response = yield call(authLogin, payload);
+    const { data } = yield call(authLogin, payload);
 
-    const { token, user } = response.data;
+    const { token, user } = data;
 
     localStorage.setItem('token', token);
 
@@ -18,7 +18,7 @@ export function* signIn({ payload }) {
 
     history.push('/students');
   } catch (err) {
-    toast.error(err.response.data.error);
+    toast.error(err.data.error);
     yield put(signFailure());
   }
 }

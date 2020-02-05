@@ -27,8 +27,8 @@ const INITIAL_STATE = {
   registrationId: null,
   loading: false,
   page: 1,
-  lastPage: false,
-  pending: false,
+  lastPage: undefined,
+  pending: undefined,
   pendingCount: 0,
 };
 

@@ -35,8 +35,7 @@ function PlansList() {
 
   useEffect(() => {
     dispatch(listPlanRequest(1));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const handleDelete = planId => {
     if (window.confirm('Você tem certeza que deseja apagar esse plano?')) {

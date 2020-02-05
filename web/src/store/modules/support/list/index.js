@@ -14,7 +14,7 @@ const INITIAL_STATE = {
   questions: [],
   loading: false,
   page: 1,
-  lastPage: '',
+  lastPage: undefined,
 };
 
 export default function supportList(state = INITIAL_STATE, action) {

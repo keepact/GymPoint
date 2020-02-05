@@ -13,37 +13,38 @@ import {
 } from './index';
 
 export function* updateProfile({ payload }) {
-  try {
-    const { name, email, ...rest } = payload.data;
-    const { id: avatar_id } = yield select(state => state.user.profile.avatar);
+  const { name, email, ...rest } = payload.data;
+  const { id: avatar_id } = yield select(state => state.user.profile.avatar);
 
-    const profile = {
-      name,
-      email,
-      avatar_id,
-      ...(rest.oldPassword ? rest : {}),
-    };
-    const response = yield call(profileUpdate, profile);
+  const profile = {
+    name,
+    email,
+    avatar_id,
+    ...(rest.oldPassword ? rest : {}),
+  };
+
+  try {
+    const { data } = yield call(profileUpdate, profile);
 
     toast.success('Perfil atualizado com sucesso');
 
-    yield put(updateProfileSuccess(response.data));
+    yield put(updateProfileSuccess(data));
   } catch (err) {
-    toast.error(err.response.data.error);
+    toast.error(err.data.error);
     yield put(updateProfileFailure());
   }
 }
 
 export function* updateAvatar({ payload }) {
   const { data: dataFile } = payload;
+  const dataFormated = new FormData();
+
+  dataFormated.append('file', dataFile);
+
   try {
-    const data = new FormData();
+    const { data } = yield call(uploadFile, dataFormated);
 
-    data.append('file', dataFile);
-
-    const response = yield call(uploadFile, data);
-
-    const { id, url } = response.data;
+    const { id, url } = data;
 
     const newAvatar = {
       id,
@@ -52,7 +53,7 @@ export function* updateAvatar({ payload }) {
 
     yield put(updateAvatarSuccess(newAvatar));
   } catch (err) {
-    toast.error(`Houve um erro, ${err.response.data.error}`);
+    toast.error(`Houve um erro, ${err.data.error}`);
     yield put(updateAvatarFailure());
   }
 }

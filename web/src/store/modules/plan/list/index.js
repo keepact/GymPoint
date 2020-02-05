@@ -27,7 +27,7 @@ const INITIAL_STATE = {
   planId: null,
   loading: false,
   page: 1,
-  lastPage: false,
+  lastPage: undefined,
 };
 
 export default function planList(state = INITIAL_STATE, action) {
