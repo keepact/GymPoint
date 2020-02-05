@@ -50,7 +50,7 @@ function Selector({ name, options, onChange, ...rest }) {
 }
 
 Selector.defaultProps = {
-  onChange: null,
+  onChange: () => {},
 };
 
 Selector.propTypes = {

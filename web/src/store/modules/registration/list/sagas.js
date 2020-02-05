@@ -3,9 +3,11 @@ import { toast } from 'react-toastify';
 import { format, parseISO } from 'date-fns';
 import { longDate, language, activeColor } from '~/util/format';
 
-import { requestFailMessage } from '~/util/validation';
-
-import * as registrationService from '~/services/registration';
+import {
+  registrationList,
+  registrationListId,
+  registrationPending,
+} from '~/services/registration';
 import history from '~/services/history';
 
 import { listPlanRequest } from '../../plan/list';
@@ -22,13 +24,13 @@ export function* listRegistrationId({ payload }) {
   const { id } = payload;
 
   try {
-    const response = yield call(registrationService.registrationListId, id);
+    const { data } = yield call(registrationListId, id);
 
     const registration = {
-      ...response.data,
+      ...data,
       id,
-      start_date: parseISO(response.data.start_date),
-      end_date: parseISO(response.data.end_date),
+      start_date: parseISO(data.start_date),
+      end_date: parseISO(data.end_date),
     };
 
     yield put(listRegistrationSuccessId(registration));
@@ -37,22 +39,21 @@ export function* listRegistrationId({ payload }) {
 
     history.push('/registrations/edit');
   } catch (err) {
-    toast.error(requestFailMessage);
+    toast.error(err.data.error);
     yield put(listRegistrationFailure());
   }
 }
 
 export function* listRegistrations({ payload }) {
   const { page, newList } = payload;
+
   try {
-    const response = yield call(
-      !newList
-        ? registrationService.registrationList
-        : registrationService.registrationPending,
+    const { data } = yield call(
+      !newList ? registrationList : registrationPending,
       page
     );
 
-    const registrations = response.data.content.rows.map(registration => ({
+    const registrations = data.content.rows.map(registration => ({
       id: registration.id,
       student: registration.student
         ? registration.student.name
@@ -68,7 +69,7 @@ export function* listRegistrations({ payload }) {
       ),
     }));
 
-    const { lastPage, pending: pendingCount } = response.data;
+    const { lastPage, pending: pendingCount } = data;
     const hasPending = pendingCount > 0;
 
     const pages = {
@@ -80,7 +81,7 @@ export function* listRegistrations({ payload }) {
 
     yield put(listRegistrationSuccess(registrations, pages));
   } catch (err) {
-    toast.error(requestFailMessage);
+    toast.error(err.data.error);
     yield put(listRegistrationFailure());
   }
 }

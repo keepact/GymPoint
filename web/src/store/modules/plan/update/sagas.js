@@ -10,30 +10,31 @@ import {
   updateOrCreatePlanFailure,
 } from './index';
 
-export function* requestNewOrEdiPlan({ payload }) {
+export function* createOrEdiPlan({ payload }) {
+  const { id } = payload;
+  const { title, duration, price } = payload.data;
+
+  const plan = {
+    id,
+    title,
+    duration,
+    price,
+  };
+
   try {
-    const { id } = payload;
-
-    const { title, duration, price } = payload.data;
-
-    const plan = {
-      id,
-      title,
-      duration,
-      price,
-    };
+    let response = {};
 
     if (id) {
-      const response = yield call(planService.planUpdate, plan);
-
-      toast.success('Plano alterado com sucesso');
-      yield put(updateOrCreatePlanSuccess(response.data));
+      response = yield call(planService.planUpdate, plan);
     } else {
-      const response = yield call(planService.planCreate, plan);
-
-      toast.success('Plano criado com sucesso');
-      yield put(updateOrCreatePlanSuccess(response.data));
+      response = yield call(planService.planCreate, plan);
     }
+
+    toast.success(
+      id ? 'Plano criado com sucesso' : 'Plano alterado com sucesso'
+    );
+
+    yield put(updateOrCreatePlanSuccess(response.data));
     history.push('/plans');
   } catch (err) {
     toast.error(err.response.data.error);
@@ -42,5 +43,5 @@ export function* requestNewOrEdiPlan({ payload }) {
 }
 
 export default all([
-  takeLatest(Types.CREATE_OR_EDIT_PLAN_REQUEST, requestNewOrEdiPlan),
+  takeLatest(Types.CREATE_OR_EDIT_PLAN_REQUEST, createOrEdiPlan),
 ]);

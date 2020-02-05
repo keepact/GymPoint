@@ -8,23 +8,23 @@ import { listSupportRequest } from '../list';
 import { Types, createSupportSuccess, createSupportFailure } from './index';
 
 export function* createAnswer({ payload }) {
+  const { id } = payload;
+  const { answer } = payload.data;
+
+  const supportAnswer = {
+    id,
+    answer,
+  };
+
   try {
-    const { id } = payload;
-    const { answer } = payload.data;
-
-    const supportAnswer = {
-      id,
-      answer,
-    };
-
-    const response = yield call(helpOrderCreate, supportAnswer);
+    const { data } = yield call(helpOrderCreate, supportAnswer);
 
     toast.success('Resposta enviada com sucesso');
 
     yield put(listSupportRequest(1));
-    yield put(createSupportSuccess(response.data));
+    yield put(createSupportSuccess(data));
   } catch (err) {
-    toast.error(err.response.data.error);
+    toast.error(err.data.error);
     yield put(createSupportFailure());
   }
 }

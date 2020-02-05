@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 
 import { registrationDelete } from '~/services/registration';
 import { listRegistrationRequest } from '../list';
-import { requestFailMessage } from '~/util/validation';
 
 import {
   Types,
@@ -12,17 +11,17 @@ import {
 } from './index';
 
 export function* deleteRegistration({ payload }) {
-  try {
-    const { id } = payload;
+  const { id } = payload;
 
-    const response = yield call(registrationDelete, id);
+  try {
+    const { data } = yield call(registrationDelete, id);
 
     toast.success('Matrícula removida com sucesso');
 
-    yield put(deleteRegistrationSuccess(response.data));
+    yield put(deleteRegistrationSuccess(data));
     yield put(listRegistrationRequest(1));
   } catch (err) {
-    toast.error(requestFailMessage);
+    toast.error(err.data.error);
     yield put(deleteRegistrationFailure());
   }
 }

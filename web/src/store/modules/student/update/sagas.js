@@ -12,37 +12,33 @@ import {
 } from './index';
 
 export function* updateStudent({ payload }) {
+  const { name, email, age, height_formatted, weight_formatted } = payload.data;
+
+  const { id } = payload;
+
+  const student = {
+    id,
+    name,
+    email,
+    age,
+    height: parseInteger(height_formatted, 'height'),
+    weight: parseInteger(weight_formatted),
+  };
+
   try {
-    const {
-      name,
-      email,
-      age,
-      height_formatted,
-      weight_formatted,
-    } = payload.data;
-
-    const { id } = payload;
-
-    const student = {
-      id,
-      name,
-      email,
-      age,
-      height: parseInteger(height_formatted, 'height'),
-      weight: parseInteger(weight_formatted),
-    };
+    let response = {};
 
     if (id) {
-      const response = yield call(studentUpdate, student);
-
-      toast.success('Estudante atualizado com sucesso');
-      yield put(updateOrCreateStudentSuccess(response.data));
+      response = yield call(studentUpdate, student);
     } else {
-      const response = yield call(studentCreate, student);
-
-      toast.success('Estudante criado com sucesso');
-      yield put(updateOrCreateStudentSuccess(response.data));
+      response = yield call(studentCreate, student);
     }
+
+    toast.success(
+      id ? 'Estudante atualizado com sucesso' : 'Estudante criado com sucesso'
+    );
+
+    yield put(updateOrCreateStudentSuccess(response.data));
     history.push('/students');
   } catch (err) {
     toast.error(err.response.data.error);

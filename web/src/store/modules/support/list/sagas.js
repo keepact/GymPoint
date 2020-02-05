@@ -1,18 +1,17 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
-import { requestFailMessage } from '~/util/validation';
 
 import { helpOrderList } from '~/services/helporder';
 
 import { Types, listSupportSuccess, listSupportFailure } from './index';
 
 export function* listSupport({ payload }) {
+  const { page } = payload;
+
   try {
-    const { page } = payload;
+    const { data } = yield call(helpOrderList, page);
 
-    const response = yield call(helpOrderList, page);
-
-    const questions = response.data.content.rows.map(support => ({
+    const questions = data.content.rows.map(support => ({
       questionId: support.id,
       id: support.student_id,
       name: support.student.name,
@@ -21,12 +20,12 @@ export function* listSupport({ payload }) {
 
     const pages = {
       currentPage: page,
-      lastPage: response.data.lastPage,
+      lastPage: data.lastPage,
     };
 
     yield put(listSupportSuccess(questions, pages));
   } catch (err) {
-    toast.error(requestFailMessage);
+    toast.error(err.data.error);
     yield put(listSupportFailure());
   }
 }

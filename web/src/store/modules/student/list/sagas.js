@@ -1,7 +1,6 @@
 import { takeLatest, call, put, all, delay } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import { parseDecimal } from '~/util/format';
-import { requestFailMessage } from '~/util/validation';
 
 import history from '~/services/history';
 import { studentList, studentListId } from '~/services/student';
@@ -17,8 +16,8 @@ export function* listStudentById({ payload }) {
   const { id } = payload;
 
   try {
-    const response = yield call(studentListId, id);
-    const { name, email, age, height, weight } = response.data;
+    const { data } = yield call(studentListId, id);
+    const { name, email, age, height, weight } = data;
 
     const student = {
       id,
@@ -32,7 +31,7 @@ export function* listStudentById({ payload }) {
     yield put(listStudentSuccessId(student));
     history.push('students/edit');
   } catch (err) {
-    toast.error(requestFailMessage);
+    toast.error(err.data.error);
     yield put(listStudentFailure());
   }
 }
@@ -40,20 +39,21 @@ export function* listStudentById({ payload }) {
 export function* listStudents({ payload }) {
   const { page, newList } = payload;
 
-  try {
-    if (newList !== undefined) {
-      yield delay(600);
-    }
-    const response = yield call(studentList, payload);
+  if (newList !== undefined) {
+    yield delay(600);
+  }
 
-    const students = response.data.content.rows.map(students => ({
+  try {
+    const { data } = yield call(studentList, payload);
+
+    const students = data.content.rows.map(students => ({
       id: students.id,
       name: students.name,
       email: students.email,
       age: students.age,
     }));
 
-    const { lastPage } = response.data;
+    const { lastPage } = data;
 
     const pages = {
       currentPage: page,
@@ -62,7 +62,7 @@ export function* listStudents({ payload }) {
 
     yield put(listStudentSuccess(students, pages));
   } catch (err) {
-    toast.error(requestFailMessage);
+    toast.error(err.data.error);
     yield put(listStudentFailure());
   }
 }

@@ -21,7 +21,7 @@ const INITIAL_STATE = {
   studentId: null,
   loading: false,
   page: 1,
-  lastPage: false,
+  lastPage: undefined,
 };
 
 export default function studentList(state = INITIAL_STATE, action) {

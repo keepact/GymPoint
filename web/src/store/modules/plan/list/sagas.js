@@ -1,6 +1,5 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
-import { requestFailMessage } from '~/util/validation';
 
 import { formatPrice } from '~/util/format';
 import history from '~/services/history';
@@ -17,8 +16,8 @@ export function* listPlanId({ payload }) {
   const { id } = payload;
 
   try {
-    const response = yield call(planService.planListId, id);
-    const { title, duration, price } = response.data;
+    const { data } = yield call(planService.planListId, id);
+    const { title, duration, price } = data;
 
     const plan = {
       id,
@@ -31,7 +30,7 @@ export function* listPlanId({ payload }) {
     yield put(listPlanSuccessId(plan));
     history.push('/plans/edit');
   } catch (err) {
-    toast.error(requestFailMessage);
+    toast.error(err.data.error);
     yield put(listPlanFailure());
   }
 }
@@ -40,9 +39,9 @@ export function* listPlans({ payload }) {
   const { page, newList } = payload;
 
   try {
-    const response = yield call(planService.planList, page);
+    const { data } = yield call(planService.planList, page);
 
-    const plans = response.data.content.map(plan => ({
+    const plans = data.content.map(plan => ({
       id: plan.id,
       duration: plan.duration,
       title: plan.title,
@@ -50,7 +49,7 @@ export function* listPlans({ payload }) {
       price: newList === 'registration' ? plan.price : formatPrice(plan.price),
     }));
 
-    const { lastPage } = response.data;
+    const { lastPage } = data;
 
     const pages = {
       currentPage: page,
@@ -59,7 +58,7 @@ export function* listPlans({ payload }) {
 
     yield put(listPlanSuccess(plans, pages));
   } catch (err) {
-    toast.error(requestFailMessage);
+    toast.error(err.data.error);
     yield put(listPlanFailure());
   }
 }
