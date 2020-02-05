@@ -51,6 +51,6 @@ export const registrationUpdate = data =>
 
 export const registrationDelete = id =>
   api().request({
-    url: `registration/${id}`,
+    url: `registrations/${id}`,
     method: 'DELETE',
   });
