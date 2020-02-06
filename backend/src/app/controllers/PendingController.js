@@ -2,8 +2,9 @@ import PendingService from '../services/PendingService';
 
 class PendingController {
   async index(req, res) {
-    const result = await new PendingService().index();
     const { page } = req.query;
+
+    const result = await new PendingService().index(page);
 
     const lastPage = page * 10 >= result.count;
 

@@ -5,11 +5,11 @@ import Student from '../models/Student';
 import Plan from '../models/Plan';
 
 class PendingService {
-  async index() {
+  async index(page) {
     try {
       return await Registration.findAndCountAll({
         limit: 10,
-        offset: 0,
+        offset: (page - 1) * 10,
         attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
         include: [
           {

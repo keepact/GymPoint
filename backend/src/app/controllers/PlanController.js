@@ -4,7 +4,7 @@ class PlanController {
   async index(req, res) {
     const { page } = req.query;
 
-    const result = await new PlanService().index();
+    const result = await new PlanService().index(page);
 
     const lastPage = page * 10 >= result.count;
 

@@ -5,7 +5,7 @@ class CheckinController {
     const { page } = req.query;
     const { id } = req.params;
 
-    const result = await new CheckinService().index(id);
+    const result = await new CheckinService().index(id, page);
 
     const lastPage = page * 10 >= result.count;
 
