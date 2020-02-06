@@ -4,7 +4,7 @@ import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Student';
 
 class HelpOrderService {
-  async index(reqParams) {
+  async index(reqParams, page) {
     const studentExist = await Student.findByPk(reqParams);
 
     if (!studentExist) {
@@ -18,8 +18,7 @@ class HelpOrderService {
         order: [['updated_at', 'DESC']],
         where: { student_id: reqParams },
         limit: 10,
-        offset: 0,
-
+        offset: (page - 1) * 10,
         include: [
           {
             model: Student,

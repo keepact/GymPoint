@@ -2,11 +2,12 @@ import * as Yup from 'yup';
 import Plan from '../models/Plan';
 
 class PlanService {
-  async index() {
+  async index(page) {
     try {
       return await Plan.findAndCountAll({
+        order: [['created_at', 'DESC']],
         limit: 10,
-        offset: 0,
+        offset: (page - 1) * 10,
       });
     } catch (err) {
       console.error('Houve um erro na listagem', err.response.data.error);

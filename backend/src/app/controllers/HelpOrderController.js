@@ -5,7 +5,7 @@ class HelpOrderController {
     const { page } = req.query;
     const { id } = req.params;
 
-    const result = await new HelpOrderService().index(id);
+    const result = await new HelpOrderService().index(id, page);
 
     const lastPage = page * 10 >= result.count;
 

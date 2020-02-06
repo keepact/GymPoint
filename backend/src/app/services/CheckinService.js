@@ -4,7 +4,7 @@ import Checkin from '../models/Checkin';
 import Student from '../models/Student';
 
 class CheckinController {
-  async index(reqParams) {
+  async index(reqParams, page) {
     const studentExist = await Student.findByPk(reqParams);
 
     if (!studentExist) {
@@ -18,7 +18,7 @@ class CheckinController {
         order: [['created_at', 'DESC']],
         where: { student_id: reqParams },
         limit: 10,
-        offset: 0,
+        offset: (page - 1) * 10,
         include: [
           {
             model: Student,
