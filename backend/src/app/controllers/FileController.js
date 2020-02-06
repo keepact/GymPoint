@@ -1,21 +1,12 @@
-import File from '../models/File';
+import FileService from '../services/FileService';
 
 class FileController {
   async store(req, res) {
-    const { originalname: name, filename: path } = req.file;
+    const { originalname, filename } = req.file;
 
-    const file = await File.create({
-      name,
-      path,
-    });
+    const result = await new FileService().store(originalname, filename);
 
-    if (!file.name || !file.path) {
-      return res
-        .status(400)
-        .json({ error: 'Arquivo corrompido, tente novamente com outra foto' });
-    }
-
-    return res.json(file);
+    return res.status(result ? 200 : 400).json(result);
   }
 }
 

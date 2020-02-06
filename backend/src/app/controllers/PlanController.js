@@ -1,102 +1,47 @@
-import * as Yup from 'yup';
-import Plan from '../models/Plan';
+import PlanService from '../services/PlanService';
 
 class PlanController {
   async index(req, res) {
-    const { page = 1, id, limit = 10 } = req.query;
+    const { page } = req.query;
 
-    const plans = await Plan.findAll({
-      limit,
-      offset: (page - 1) * limit,
-    });
+    const result = await new PlanService().index();
 
-    if (id) {
-      const plan = await Plan.findByPk(id);
+    const lastPage = page * 10 >= result.count;
 
-      if (!plan) {
-        return res.status(400).json({ error: 'Plano não existe' });
-      }
-      return res.json(plan);
-    }
+    return res.status(result ? 200 : 400).json({ content: result, lastPage });
+  }
 
-    const plansCount = await Plan.count();
-    const lastPage = page * limit >= plansCount;
+  async show(req, res) {
+    const { id } = req.params;
 
-    return res.json({ content: plans, lastPage });
+    const result = await new PlanService().show(id);
+
+    return res.status(result ? 200 : 400).json(result);
   }
 
   async store(req, res) {
-    const schema = Yup.object().shape({
-      title: Yup.string().required(),
-      duration: Yup.number().required(),
-      price: Yup.number().required(),
-    });
+    const plan = req.body;
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({
-        error: 'A validação falhou, verifique seus dados e tente novamente',
-      });
-    }
+    const result = await new PlanService().store(plan);
 
-    const planExists = await Plan.findOne({ where: { title: req.body.title } });
-
-    if (planExists) {
-      return res.status(400).json({ error: 'O plano já existe' });
-    }
-
-    const { id, title, duration, price } = req.body;
-
-    const plan = await Plan.create({
-      id,
-      title,
-      duration,
-      price,
-    });
-
-    return res.json(plan);
+    return res.status(result ? 200 : 400).json(result);
   }
 
   async update(req, res) {
-    const schema = Yup.object().shape({
-      title: Yup.string(),
-      duration: Yup.number(),
-      price: Yup.number(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.json('Validation fail');
-    }
-
-    const plan = await Plan.findByPk(req.params.id);
-
-    if (!plan) {
-      return res.json('Plan does not exist');
-    }
-
+    const plan = req.body;
     const { id } = req.params;
 
-    const { title, duration, price } = await plan.update(req.body);
+    const result = await new PlanService().update(id, plan);
 
-    return res.json({
-      id,
-      title,
-      duration,
-      price,
-    });
+    return res.status(result ? 200 : 400).json(result);
   }
 
   async delete(req, res) {
     const { id } = req.params;
 
-    const planExists = await Plan.findByPk(id);
+    const result = await new PlanService().delete(id);
 
-    if (!planExists) {
-      return res.status(400).json({ error: 'Plano não encontrado' });
-    }
-
-    await Plan.destroy({ where: { id } });
-
-    return res.send();
+    return res.status(result ? 200 : 400).send();
   }
 }
 

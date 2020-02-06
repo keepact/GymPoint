@@ -6,16 +6,10 @@ import Plan from '../models/Plan';
 
 class PendingService {
   async index() {
-    let limit = {};
-
-    limit = {
-      limit: 10,
-      offset: 0,
-    };
-
     try {
       return await Registration.findAndCountAll({
-        ...limit,
+        limit: 10,
+        offset: 0,
         attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
         include: [
           {
@@ -46,7 +40,8 @@ class PendingService {
       });
     } catch (e) {
       console.error(
-        `Não foi possível acessar as matrículas pendentes: ${JSON.stringify(e)}`
+        `Não foi possível acessar as matrículas pendentes: `,
+        e.response.data.error
       );
       return undefined;
     }
