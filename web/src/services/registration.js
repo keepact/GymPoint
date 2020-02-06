@@ -11,11 +11,8 @@ export const registrationList = page =>
 
 export const registrationListId = id =>
   api().request({
-    url: 'registrations',
+    url: `registrations/${id}`,
     method: 'GET',
-    params: {
-      id,
-    },
   });
 
 export const registrationPending = page =>

@@ -17,6 +17,7 @@ export function* listPlanId({ payload }) {
 
   try {
     const { data } = yield call(planService.planListId, id);
+
     const { title, duration, price } = data;
 
     const plan = {
@@ -41,7 +42,7 @@ export function* listPlans({ payload }) {
   try {
     const { data } = yield call(planService.planList, page);
 
-    const plans = data.content.map(plan => ({
+    const plans = data.content.rows.map(plan => ({
       id: plan.id,
       duration: plan.duration,
       title: plan.title,

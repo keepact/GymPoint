@@ -11,11 +11,8 @@ export const planList = page =>
 
 export const planListId = id =>
   api().request({
-    url: 'plans',
+    url: `plans/${id}`,
     method: 'GET',
-    params: {
-      id,
-    },
   });
 
 export const planCreate = data =>
