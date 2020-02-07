@@ -12,11 +12,8 @@ export const studentList = data =>
 
 export const studentListId = id =>
   api().request({
-    url: 'students',
+    url: `students/${id}`,
     method: 'GET',
-    params: {
-      id,
-    },
   });
 
 export const studentCreate = data =>

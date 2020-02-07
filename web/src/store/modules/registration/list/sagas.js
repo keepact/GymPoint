@@ -25,7 +25,6 @@ export function* listRegistrationId({ payload }) {
 
   try {
     const { data } = yield call(registrationListId, id);
-    console.log(data, 'data');
 
     const registration = {
       ...data,
