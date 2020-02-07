@@ -1,163 +1,47 @@
-import * as Yup from 'yup';
-import { Op } from 'sequelize';
-
-import Student from '../models/Student';
-import File from '../models/File';
+import StudentService from '../services/StudentService';
 
 class StudentController {
   async index(req, res) {
-    const { page, id, q } = req.query;
+    const { page, q } = req.query;
 
-    let limit = {};
-    const order = ['name'];
-    const attributes = ['id', 'name', 'email', 'age', 'height', 'weight'];
+    const result = await new StudentService().index(page, q);
 
-    if (page) {
-      limit = {
-        limit: 10,
-        offset: (page - 1) * 10,
-      };
-      const where = q ? { name: { [Op.iLike]: `%${q}%` } } : {};
+    const lastPage = page * 10 >= result.total;
 
-      const students = await Student.findAndCountAll({
-        order,
-        ...limit,
-        attributes,
-        include: {
-          model: File,
-          as: 'avatar',
-          attributes: ['id', 'path', 'url'],
-        },
-        where,
-      });
+    return res.status(result ? 200 : 400).json({ content: result, lastPage });
+  }
 
-      const lastPage = page * limit.limit >= students.count;
+  async show(req, res) {
+    const { id } = req.params;
 
-      return res.json({
-        content: students,
-        lastPage,
-      });
-    }
+    const result = await new StudentService().show(id);
 
-    if (id) {
-      const student = await Student.findByPk(id, {
-        attributes,
-      });
-
-      if (!student) {
-        return res.status(400).json({ error: 'Aluno não encontrado' });
-      }
-      return res.json(student);
-    }
-
-    const students = await Student.findAll({
-      order,
-      attributes,
-    });
-
-    return res.json(students);
+    return res.status(result ? 200 : 400).json(result);
   }
 
   async store(req, res) {
-    const schema = Yup.object().shape({
-      name: Yup.string().required(),
-      email: Yup.string()
-        .email()
-        .required(),
-      age: Yup.number().required(),
-      weight: Yup.number().required(),
-      height: Yup.number().required(),
-    });
+    const student = req.body;
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({
-        error: 'A validação falhou, verifique seus dados e tente novamente',
-      });
-    }
+    const result = await new StudentService().store(student);
 
-    const studentExists = await Student.findOne({
-      where: { email: req.body.email },
-    });
-
-    if (studentExists) {
-      return res.status(400).json({ error: 'O estudante já existe' });
-    }
-
-    const { id, name, email, age, weight, height } = await Student.create(
-      req.body
-    );
-
-    return res.json({
-      id,
-      name,
-      email,
-      age,
-      weight,
-      height,
-    });
+    return res.status(result ? 200 : 400).json(result);
   }
 
   async update(req, res) {
-    const schema = Yup.object().shape({
-      name: Yup.string(),
-      email: Yup.string().email(),
-      age: Yup.number(),
-      weight: Yup.number(),
-      height: Yup.number(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({
-        error: 'A validação falhou, verifique seus dados e tente novamente',
-      });
-    }
-
+    const student = req.body;
     const { id } = req.params;
 
-    const student = await Student.findOne({ where: { id } });
+    const result = await new StudentService().update(id, student);
 
-    if (!student) {
-      return res.status(400).json({ error: 'O estudante já existe' });
-    }
-
-    await student.update(req.body);
-
-    const { name, email, age, weight, height, avatar } = await Student.findByPk(
-      req.params.id,
-      {
-        include: [
-          {
-            model: File,
-            as: 'avatar',
-            attributes: ['id', 'path', 'url'],
-          },
-        ],
-      }
-    );
-
-    return res.json({
-      id,
-      name,
-      email,
-      age,
-      weight,
-      height,
-      avatar,
-    });
+    return res.status(result ? 200 : 400).json(result);
   }
 
   async delete(req, res) {
     const { id } = req.params;
 
-    const studentExists = await Student.findByPk(id);
+    const result = await new StudentService().delete(id);
 
-    if (!studentExists) {
-      return res.status(400).json({ error: 'Estudante não encontrado' });
-    }
-
-    await Student.destroy({ where: { id } });
-
-    return res.send();
+    return res.status(result ? 200 : 400).send();
   }
 }
 

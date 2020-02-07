@@ -1,61 +1,12 @@
-import jwt from 'jsonwebtoken';
-import * as Yup from 'yup';
-
-import User from '../models/User';
-import File from '../models/File';
-import authConfig from '../../config/auth';
+import SessionService from '../services/SessionService';
 
 class SessionController {
   async store(req, res) {
-    const schema = Yup.object().shape({
-      email: Yup.string()
-        .email()
-        .required(),
-      password: Yup.string().required(),
-    });
+    const user = req.body;
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({
-        error: 'A validação falhou, verifique seus dados e tente novamente',
-      });
-    }
+    const result = await new SessionService().store(user);
 
-    const { email, password } = req.body;
-
-    const user = await User.findOne({
-      where: { email },
-      include: [
-        {
-          model: File,
-          as: 'avatar',
-          attributes: ['id', 'path', 'url'],
-        },
-      ],
-    });
-
-    if (!user) {
-      return res.status(401).json({ error: 'Usuário não encontrado' });
-    }
-
-    if (!(await user.checkPassword(password))) {
-      return res
-        .status(401)
-        .json({ error: 'As senhas não batem, tente novamente' });
-    }
-
-    const { id, name, avatar } = user;
-
-    return res.json({
-      user: {
-        id,
-        name,
-        email,
-        avatar,
-      },
-      token: jwt.sign({ id }, authConfig.secret, {
-        expiresIn: authConfig.expiresIn,
-      }),
-    });
+    return res.status(result ? 200 : 400).json(result);
   }
 }
 
