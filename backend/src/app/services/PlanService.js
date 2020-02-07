@@ -82,13 +82,13 @@ class PlanService {
       );
     }
 
+    const plan = await Plan.findByPk(reqParams);
+
+    if (!plan) {
+      console.error('O plano não existe');
+    }
+
     try {
-      const plan = await Plan.findByPk(reqParams);
-
-      if (!plan) {
-        console.error('O plano não existe');
-      }
-
       const { title, duration, price } = await plan.update(reqBody);
 
       const updatedPlan = {

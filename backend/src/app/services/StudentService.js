@@ -139,7 +139,7 @@ class StudentService {
       }
     );
 
-    const studentData = {
+    const updatedStudent = {
       id: reqParams,
       name,
       email,
@@ -149,7 +149,7 @@ class StudentService {
       avatar,
     };
 
-    return studentData;
+    return updatedStudent;
   }
 
   async delete(reqParams) {

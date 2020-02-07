@@ -150,14 +150,14 @@ class UserService {
       ],
     });
 
-    const userData = {
+    const updatedUser = {
       id,
       name,
       email,
       avatar,
     };
 
-    return userData;
+    return updatedUser;
   }
 
   async delete(reqParams) {
