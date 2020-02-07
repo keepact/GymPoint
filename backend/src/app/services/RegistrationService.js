@@ -234,7 +234,7 @@ class RegistrationService {
     const finalPrice = plan.price * plan.duration;
 
     try {
-      const setRegistration = await registration.update({
+      const updatedRegistration = await registration.update({
         id: reqParams,
         student_id,
         plan_id,
@@ -243,7 +243,7 @@ class RegistrationService {
         price: finalPrice,
       });
 
-      return setRegistration;
+      return updatedRegistration;
     } catch (err) {
       console.error(`Não foi atualizar a matrícula: `, err.response.data.error);
     }
