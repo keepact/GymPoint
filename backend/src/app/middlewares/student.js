@@ -8,11 +8,11 @@ export const getAllStudents = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na listagem dos estudantes, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };
@@ -26,11 +26,11 @@ export const findStudent = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na busca do estudante, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };
@@ -58,10 +58,10 @@ export const createStudent = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res
       .status(400)
-      .json({ error: 'Validação falhou', messsages: error.inner });
+      .json({ err: 'Validação falhou', messsages: err.inner });
   }
 };
 
@@ -102,11 +102,11 @@ export const deleteStudent = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na tentativa de deletar o estudante, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };

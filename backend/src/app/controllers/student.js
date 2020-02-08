@@ -1,4 +1,4 @@
-import StudentRepository from '../repositories/student';
+import StudentRepository from '../repositories/Student';
 
 class StudentController {
   async index(req, res) {
@@ -24,7 +24,7 @@ class StudentController {
 
     const result = await new StudentRepository().create(student);
 
-    return res.status(result ? 200 : 400).json(result);
+    return res.status(result ? 201 : 400).json(result);
   }
 
   async update(req, res) {
@@ -41,7 +41,7 @@ class StudentController {
 
     const result = await new StudentRepository().delete(id);
 
-    return res.status(result ? 200 : 400).send();
+    return res.status(result ? 204 : 400).send();
   }
 }
 

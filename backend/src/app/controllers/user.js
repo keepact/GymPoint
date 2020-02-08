@@ -1,4 +1,4 @@
-import UserRepository from '../repositories/user';
+import UserRepository from '../repositories/User';
 
 class UserController {
   async index(req, res) {

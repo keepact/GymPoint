@@ -19,11 +19,11 @@ export const getAllCheckins = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na listagem de checkins, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };
@@ -54,11 +54,11 @@ export const createCheckin = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro ao salvar o aluno, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };

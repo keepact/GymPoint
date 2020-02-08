@@ -1,4 +1,4 @@
-import RegistrationRepository from '../repositories/registration';
+import RegistrationRepository from '../repositories/Registration';
 
 class RegistrationController {
   async index(req, res) {
@@ -28,7 +28,7 @@ class RegistrationController {
 
     const result = await new RegistrationRepository().create(registration);
 
-    return res.status(result ? 200 : 400).json(result);
+    return res.status(result ? 201 : 400).json(result);
   }
 
   async update(req, res) {
@@ -45,7 +45,7 @@ class RegistrationController {
 
     const result = await new RegistrationRepository().delete(id);
 
-    return res.status(result ? 200 : 400).send();
+    return res.status(result ? 204 : 400).send();
   }
 }
 

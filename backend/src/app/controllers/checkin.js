@@ -1,4 +1,4 @@
-import CheckinRepository from '../repositories/checkin';
+import CheckinRepository from '../repositories/Checkin';
 
 class CheckinController {
   async index(req, res) {

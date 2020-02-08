@@ -1,4 +1,4 @@
-import SupportCompanyRepository from '../repositories/support-company';
+import SupportCompanyRepository from '../repositories/Support-company';
 
 class SupportCompanyController {
   async index(req, res) {

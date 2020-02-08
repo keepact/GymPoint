@@ -12,11 +12,11 @@ export const getAllRegistrations = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na listagem de matrículas, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };
@@ -30,11 +30,11 @@ export const findRegistration = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na busca da matrícula, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };
@@ -84,10 +84,10 @@ export const createRegistration = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res
       .status(400)
-      .json({ error: 'Validação falhou', messsages: error.inner });
+      .json({ error: 'Validação falhou', messsages: err.inner });
   }
 };
 
@@ -128,10 +128,10 @@ export const updateRegistration = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res
       .status(400)
-      .json({ error: 'Validação falhou', messsages: error.inner });
+      .json({ error: 'Validação falhou', messsages: err.inner });
   }
 };
 
@@ -144,11 +144,11 @@ export const deleteRegistration = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na tentativa de deletar a matrícula, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };

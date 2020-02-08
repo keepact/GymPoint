@@ -1,4 +1,4 @@
-import SupportStudentRepository from '../repositories/support-student';
+import SupportStudentRepository from '../repositories/Support-student';
 
 class SupportStudentController {
   async index(req, res) {
