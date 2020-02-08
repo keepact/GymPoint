@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 import User from '../models/User';
 
-export default async function auth(req, res, next) {
+export default async function login(req, res, next) {
   const schema = Yup.object().shape({
     email: Yup.string()
       .email()

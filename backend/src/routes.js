@@ -21,11 +21,11 @@ import * as SupportStudentMiddlewares from './app/middlewares/Support-student';
 import * as SupportCompanyMiddlewares from './app/middlewares/Support-company';
 import * as CheckinMiddlewares from './app/middlewares/Checkin';
 
-import LoginMiddleware from './app/middlewares/Login';
 import FileMiddleware from './app/middlewares/File';
 import PendingMiddleware from './app/middlewares/Pending';
 
-import authMiddleware from './app/middlewares/Auth';
+import LoginMiddleware from './app/middlewares/Login';
+import AuthMiddleware from './app/middlewares/Auth';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -54,7 +54,7 @@ routes.post(
   SupportStudentController.store
 );
 
-routes.use(authMiddleware);
+routes.use(AuthMiddleware);
 
 routes.get('/users', UserMiddlewares.getAllUsers, UserController.index);
 routes.get('/users/:id', UserMiddlewares.findUser, UserController.show);
