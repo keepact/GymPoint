@@ -19,7 +19,9 @@ class StudentRepository {
         where: search ? { name: { [Op.iLike]: `%${search}%` } } : {},
       });
     } catch (err) {
-      console.error(`Não foi possível listar os estudantes: `, err);
+      console.error(
+        `Não foi possível listar os alunos cadastrados: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -30,7 +32,9 @@ class StudentRepository {
         attributes: ['id', 'name', 'email', 'age', 'height', 'weight'],
       });
     } catch (err) {
-      console.error(`Não foi possível encontrar o aluno: `, err);
+      console.error(
+        `Não foi possível mostrar o aluno cadastrado: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -39,7 +43,9 @@ class StudentRepository {
     try {
       return await Student.create(reqBody);
     } catch (err) {
-      console.error(`Não foi possível salvar o aluno: `, err);
+      console.error(
+        `Não foi possível criar o cadastro do aluno: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -59,7 +65,9 @@ class StudentRepository {
         ],
       });
     } catch (err) {
-      console.error(`Não foi possível atualizar o cadastro do aluno: `, err);
+      console.error(
+        `Não foi possível atualizar o cadastro do aluno: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -68,7 +76,9 @@ class StudentRepository {
     try {
       return await Student.destroy({ where: { id } });
     } catch (err) {
-      return console.error(`Não foi possível remover o aluno: `, err);
+      return console.error(
+        `Não foi possível remover o cadastro do aluno: ${JSON.stringify(err)}`
+      );
     }
   }
 }

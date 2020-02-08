@@ -18,7 +18,9 @@ class SupportStudentRepository {
         ],
       });
     } catch (err) {
-      console.error(`Não foi possível listar as perguntas: `, err);
+      console.error(
+        `Não foi possível listar as perguntas: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -30,7 +32,9 @@ class SupportStudentRepository {
         question: reqBody,
       });
     } catch (err) {
-      console.error(`Não foi possível salvar a pergunta: `, err);
+      console.error(
+        `Não foi possível salvar a pergunta: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }

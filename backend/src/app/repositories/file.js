@@ -8,7 +8,9 @@ class FileRepository {
         path,
       });
     } catch (err) {
-      console.error(`Não foi possível realizar o upload: `, err);
+      console.error(
+        `Não foi possível realizar o upload do arquivo: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }

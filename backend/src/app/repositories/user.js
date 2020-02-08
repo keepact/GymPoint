@@ -18,7 +18,11 @@ class UserRepository {
         ],
       });
     } catch (err) {
-      console.error(`Não foi possível listar os usuários: `, err);
+      console.error(
+        `Não foi possível listar os usuários cadastrados: ${JSON.stringify(
+          err
+        )}`
+      );
     }
     return undefined;
   }
@@ -36,8 +40,7 @@ class UserRepository {
       });
     } catch (err) {
       console.error(
-        `Não foi possível encontrar o usuário: `,
-        err.response.data.error
+        `Não foi possível mostrar o usuário cadastrado: ${JSON.stringify(err)}`
       );
     }
     return undefined;
@@ -47,7 +50,9 @@ class UserRepository {
     try {
       return await User.create(reqBody);
     } catch (err) {
-      console.error(`Não foi possível salvar o usuário: `, err);
+      console.error(
+        `Não foi possível criar o cadastro usuário: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -68,7 +73,9 @@ class UserRepository {
         ],
       });
     } catch (err) {
-      console.error(`Não foi possível editar o usuário: `, err);
+      console.error(
+        `Não foi possível editar o cadastro do usuário: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -77,7 +84,9 @@ class UserRepository {
     try {
       return await User.destroy({ where: { id } });
     } catch (err) {
-      console.error(`Não foi possível remover o usuário: `, err);
+      console.error(
+        `Não foi possível remover o cadastro do usuário: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }

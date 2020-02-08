@@ -65,7 +65,9 @@ class RegistrationRepository {
 
       return registrationsData;
     } catch (err) {
-      console.error(`Não foi possível listar as matrículas: `, err);
+      console.error(
+        `Não foi possível listar as matrículas: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -88,7 +90,9 @@ class RegistrationRepository {
         ],
       });
     } catch (err) {
-      console.error(`Não foi possível listar a matrícula: `, err);
+      console.error(
+        `Não foi possível mostrar a matrícula: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -135,7 +139,7 @@ class RegistrationRepository {
 
       return registration;
     } catch (err) {
-      console.error(`Não foi realizar a matrícula: `, err);
+      console.error(`Não foi criar a matrícula: ${JSON.stringify(err)}`);
     }
     return undefined;
   }
@@ -163,7 +167,7 @@ class RegistrationRepository {
 
       return updatedRegistration;
     } catch (err) {
-      console.error(`Não foi atualizar a matrícula: `, err);
+      console.error(`Não foi atualizar a matrícula: ${JSON.stringify(err)}`);
     }
     return undefined;
   }
@@ -172,7 +176,9 @@ class RegistrationRepository {
     try {
       return await Registration.destroy({ where: { id } });
     } catch (err) {
-      console.error(`Não foi possível remover a matrícula: `, err);
+      console.error(
+        `Não foi possível remover a matrícula: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }

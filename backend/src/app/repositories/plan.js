@@ -9,7 +9,9 @@ class PlanRepository {
         offset: (page - 1) * 10,
       });
     } catch (err) {
-      console.error('Houve um erro na listagem de planos', err);
+      console.error(
+        `Não foi possível listar os planos: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -18,7 +20,7 @@ class PlanRepository {
     try {
       return await Plan.findByPk(id);
     } catch (err) {
-      console.error('Plano não encontrado', err);
+      console.error(`Não foi possível mostrar o plano: ${JSON.stringify(err)}`);
     }
     return undefined;
   }
@@ -34,7 +36,7 @@ class PlanRepository {
         price,
       });
     } catch (err) {
-      console.error('Houve um erro no cadastro do plano', err);
+      console.error(`Não foi possível criar o plano: ${JSON.stringify(err)}`);
     }
     return undefined;
   }
@@ -54,7 +56,9 @@ class PlanRepository {
 
       return updatedPlan;
     } catch (err) {
-      console.error('Houve um erro ao atualizar o plano', err);
+      console.error(
+        `Não foi possível atualizar o plano: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }
@@ -63,7 +67,7 @@ class PlanRepository {
     try {
       return await Plan.destroy({ where: { id } });
     } catch (err) {
-      console.error('Houve um erro ao remover o plano', err);
+      console.error(`Não foi possível remover o plano: ${JSON.stringify(err)}`);
     }
     return undefined;
   }
