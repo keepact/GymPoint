@@ -1,10 +1,10 @@
-import RegistrationService from '../services/RegistrationService';
+import RegistrationRepository from '../repositories/registration';
 
 class RegistrationController {
   async index(req, res) {
     const { page } = req.query;
 
-    const result = await new RegistrationService().index(page);
+    const result = await new RegistrationRepository().getAll(page);
 
     const lastPage = page * 10 >= result.total;
 
@@ -18,7 +18,7 @@ class RegistrationController {
   async show(req, res) {
     const { id } = req.params;
 
-    const result = await new RegistrationService().show(id);
+    const result = await new RegistrationRepository().findById(id);
 
     return res.status(result ? 200 : 400).json(result);
   }
@@ -26,7 +26,7 @@ class RegistrationController {
   async store(req, res) {
     const registration = req.body;
 
-    const result = await new RegistrationService().store(registration);
+    const result = await new RegistrationRepository().create(registration);
 
     return res.status(result ? 200 : 400).json(result);
   }
@@ -35,7 +35,7 @@ class RegistrationController {
     const registration = req.body;
     const { id } = req.params;
 
-    const result = await new RegistrationService().update(id, registration);
+    const result = await new RegistrationRepository().update(id, registration);
 
     return res.status(result ? 200 : 400).json(result);
   }
@@ -43,7 +43,7 @@ class RegistrationController {
   async delete(req, res) {
     const { id } = req.params;
 
-    const result = await new RegistrationService().delete(id);
+    const result = await new RegistrationRepository().delete(id);
 
     return res.status(result ? 200 : 400).send();
   }

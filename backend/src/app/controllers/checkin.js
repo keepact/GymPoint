@@ -1,10 +1,11 @@
-import SupportService from '../services/SupportService';
+import CheckinRepository from '../repositories/checkin';
 
-class SupportController {
+class CheckinController {
   async index(req, res) {
     const { page } = req.query;
+    const { id } = req.params;
 
-    const result = await new SupportService().index(page);
+    const result = await new CheckinRepository().getAll(id, page);
 
     const lastPage = page * 10 >= result.count;
 
@@ -13,12 +14,11 @@ class SupportController {
 
   async store(req, res) {
     const { id } = req.params;
-    const support = req.body;
 
-    const result = await new SupportService().store(id, support);
+    const result = await new CheckinRepository().create(id);
 
     return res.status(result ? 200 : 400).json(result);
   }
 }
 
-export default new SupportController();
+export default new CheckinController();

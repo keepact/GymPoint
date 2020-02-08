@@ -1,11 +1,11 @@
-import CheckinService from '../services/CheckinService';
+import SupportStudentRepository from '../repositories/support-student';
 
-class CheckinController {
+class SupportStudentController {
   async index(req, res) {
     const { page } = req.query;
     const { id } = req.params;
 
-    const result = await new CheckinService().index(id, page);
+    const result = await new SupportStudentRepository().index(id, page);
 
     const lastPage = page * 10 >= result.count;
 
@@ -14,11 +14,12 @@ class CheckinController {
 
   async store(req, res) {
     const { id } = req.params;
+    const { question } = req.body;
 
-    const result = await new CheckinService().store(id);
+    const result = await new SupportStudentRepository().store(id, question);
 
     return res.status(result ? 200 : 400).json(result);
   }
 }
 
-export default new CheckinController();
+export default new SupportStudentController();

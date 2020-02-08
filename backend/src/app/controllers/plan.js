@@ -1,10 +1,10 @@
-import UserService from '../services/UserService';
+import PlanRepository from '../repositories/plan';
 
-class UserController {
+class PlanController {
   async index(req, res) {
     const { page } = req.query;
 
-    const result = await new UserService().index(page, req.userId);
+    const result = await new PlanRepository().getAll(page);
 
     const lastPage = page * 10 >= result.count;
 
@@ -14,23 +14,24 @@ class UserController {
   async show(req, res) {
     const { id } = req.params;
 
-    const result = await new UserService().show(id);
+    const result = await new PlanRepository().findById(id);
 
     return res.status(result ? 200 : 400).json(result);
   }
 
   async store(req, res) {
-    const user = req.body;
+    const plan = req.body;
 
-    const result = await new UserService().store(user);
+    const result = await new PlanRepository().create(plan);
 
     return res.status(result ? 200 : 400).json(result);
   }
 
   async update(req, res) {
-    const user = req.body;
+    const plan = req.body;
+    const { id } = req.params;
 
-    const result = await new UserService().update(req.userId, user);
+    const result = await new PlanRepository().update(id, plan);
 
     return res.status(result ? 200 : 400).json(result);
   }
@@ -38,10 +39,10 @@ class UserController {
   async delete(req, res) {
     const { id } = req.params;
 
-    const result = await new UserService().delete(id);
+    const result = await new PlanRepository().delete(id);
 
     return res.status(result ? 200 : 400).send();
   }
 }
 
-export default new UserController();
+export default new PlanController();
