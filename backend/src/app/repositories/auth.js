@@ -1,26 +1,12 @@
 import jwt from 'jsonwebtoken';
-import * as Yup from 'yup';
 
 import User from '../models/User';
 import File from '../models/File';
 import authConfig from '../../config/auth';
 
 class AuthRepository {
-  async store(reqBody) {
-    const schema = Yup.object().shape({
-      email: Yup.string()
-        .email()
-        .required(),
-      password: Yup.string().required(),
-    });
-
-    if (!(await schema.isValid(reqBody))) {
-      console.error(
-        'A validação falhou, verifique seus dados e tente novamente'
-      );
-    }
-
-    const { email, password } = reqBody;
+  async signIn(reqBody) {
+    const { email } = reqBody;
 
     try {
       const user = await User.findOne({
@@ -33,14 +19,6 @@ class AuthRepository {
           },
         ],
       });
-
-      if (!user) {
-        console.error('Estudante não encontrado');
-      }
-
-      if (!(await user.checkPassword(password))) {
-        console.error('As senhas não batem, tente novamente');
-      }
 
       const { id, name, avatar } = user;
 
@@ -58,7 +36,7 @@ class AuthRepository {
 
       return userData;
     } catch (err) {
-      console.error(`Erro na autenticação: `, err.response.data.error);
+      console.error(`Erro na autenticação: `, err);
     }
     return undefined;
   }

@@ -1,4 +1,4 @@
-import PendingRepository from '../repositories/pending';
+import PendingRepository from '../repositories/Pending';
 
 class PendingController {
   async index(req, res) {

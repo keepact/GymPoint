@@ -2,34 +2,35 @@ import { Router } from 'express';
 import multer from 'multer';
 import multerConfig from './config/multer';
 
-import UserController from './app/controllers/user';
-import StudentController from './app/controllers/student';
-import AuthController from './app/controllers/auth';
-import FileController from './app/controllers/file';
-import PlanController from './app/controllers/plan';
-import RegistrationController from './app/controllers/registration';
-import PendingController from './app/controllers/pending';
-import CheckinController from './app/controllers/checkin';
-import SupportStudentController from './app/controllers/support-student';
-import SupportCompanyController from './app/controllers/support-company';
+import UserController from './app/controllers/User';
+import StudentController from './app/controllers/Student';
+import AuthController from './app/controllers/Auth';
+import FileController from './app/controllers/File';
+import PlanController from './app/controllers/Plan';
+import RegistrationController from './app/controllers/Registration';
+import PendingController from './app/controllers/Pending';
+import CheckinController from './app/controllers/Checkin';
+import SupportStudentController from './app/controllers/Support-student';
+import SupportCompanyController from './app/controllers/Support-company';
 
-import * as UserMiddlewares from './app/middlewares/user';
-import * as StudentMiddlewares from './app/middlewares/student';
-import * as RegistrationMiddlewares from './app/middlewares/registration';
-import * as PlanMiddlewares from './app/middlewares/plan';
-import * as SupportStudentMiddlewares from './app/middlewares/support-student';
-import * as SupportCompanyMiddlewares from './app/middlewares/support-company';
-import * as CheckinMiddlewares from './app/middlewares/checkin';
+import * as UserMiddlewares from './app/middlewares/User';
+import * as StudentMiddlewares from './app/middlewares/Student';
+import * as RegistrationMiddlewares from './app/middlewares/Registration';
+import * as PlanMiddlewares from './app/middlewares/Plan';
+import * as SupportStudentMiddlewares from './app/middlewares/Support-student';
+import * as SupportCompanyMiddlewares from './app/middlewares/Support-company';
+import * as CheckinMiddlewares from './app/middlewares/Checkin';
 
-import FileMiddleware from './app/middlewares/file';
-import PendingMiddleware from './app/middlewares/pending';
+import LoginMiddleware from './app/middlewares/Login';
+import FileMiddleware from './app/middlewares/File';
+import PendingMiddleware from './app/middlewares/Pending';
 
-import authMiddleware from './app/middlewares/auth';
+import authMiddleware from './app/middlewares/Auth';
 
 const routes = new Router();
 const upload = multer(multerConfig);
 
-routes.post('/sessions', AuthController.store);
+routes.post('/sessions', LoginMiddleware, AuthController.store);
 
 routes.get(
   '/students/:id/checkins',
@@ -61,6 +62,12 @@ routes.post('/users', UserMiddlewares.createUser, UserController.store);
 routes.put('/users', UserMiddlewares.updateUser, UserController.update);
 routes.delete('/users/:id', UserMiddlewares.deleteUser, UserController.delete);
 
+routes.get('/plans', PlanMiddlewares.getAllPlans, PlanController.index);
+routes.get('/plans/:id', PlanMiddlewares.findPlan, PlanController.show);
+routes.post('/plans', PlanMiddlewares.createPlan, PlanController.store);
+routes.put('/plans/:id', PlanMiddlewares.updatePlan, PlanController.update);
+routes.delete('/plans/:id', PlanMiddlewares.deletePlan, PlanController.delete);
+
 routes.get(
   '/students',
   StudentMiddlewares.getAllStudents,
@@ -86,12 +93,6 @@ routes.delete(
   StudentMiddlewares.deleteStudent,
   StudentController.delete
 );
-
-routes.get('/plans', PlanMiddlewares.getAllPlans, PlanController.index);
-routes.get('/plans/:id', PlanMiddlewares.findPlan, PlanController.show);
-routes.post('/plans', PlanMiddlewares.createPlan, PlanController.store);
-routes.put('/plans/:id', PlanMiddlewares.updatePlan, PlanController.update);
-routes.delete('/plans/:id', PlanMiddlewares.deletePlan, PlanController.delete);
 
 routes.get(
   '/registrations',

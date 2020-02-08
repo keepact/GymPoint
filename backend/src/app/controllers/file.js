@@ -1,4 +1,4 @@
-import FileRepository from '../repositories/file';
+import FileRepository from '../repositories/File';
 
 class FileController {
   async store(req, res) {

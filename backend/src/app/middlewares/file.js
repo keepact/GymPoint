@@ -7,10 +7,10 @@ export default async function uploadFile(req, res, next) {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error: 'Houve no envio da image, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 }

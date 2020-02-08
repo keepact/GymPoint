@@ -1,4 +1,4 @@
-import PlanRepository from '../repositories/plan';
+import PlanRepository from '../repositories/Plan';
 
 class PlanController {
   async index(req, res) {
@@ -24,7 +24,7 @@ class PlanController {
 
     const result = await new PlanRepository().create(plan);
 
-    return res.status(result ? 200 : 400).json(result);
+    return res.status(result ? 201 : 400).json(result);
   }
 
   async update(req, res) {
@@ -41,7 +41,7 @@ class PlanController {
 
     const result = await new PlanRepository().delete(id);
 
-    return res.status(result ? 200 : 400).send();
+    return res.status(result ? 204 : 400).send();
   }
 }
 

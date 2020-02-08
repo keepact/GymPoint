@@ -8,11 +8,11 @@ export const getAllPlans = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na listagem de planos, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };
@@ -26,11 +26,11 @@ export const findPlan = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na busca do plano, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };
@@ -54,10 +54,10 @@ export const createPlan = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res
       .status(400)
-      .json({ error: 'Validação falhou', messsages: error.inner });
+      .json({ error: 'Validação falhou', messsages: err.inner });
   }
 };
 
@@ -78,10 +78,10 @@ export const updatePlan = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res
       .status(400)
-      .json({ error: 'Validação falhou', messsages: error.inner });
+      .json({ error: 'Validação falhou', messsages: err.inner });
   }
 };
 
@@ -94,11 +94,11 @@ export const deletePlan = async (req, res, next) => {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na tentativa de deletar o plano, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 };

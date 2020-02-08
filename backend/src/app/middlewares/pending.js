@@ -30,11 +30,11 @@ export default async function getAllPendingRegistrations(req, res, next) {
     }
 
     return next();
-  } catch (error) {
+  } catch (err) {
     return res.status(400).json({
       error:
         'Houve um erro na listagem de matrículas pendentes, tente novamente em alguns minutos',
-      messsages: error.inner,
+      messsages: err.inner,
     });
   }
 }
