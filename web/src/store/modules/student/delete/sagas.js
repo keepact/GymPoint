@@ -18,7 +18,7 @@ export function* deleteStudent({ payload }) {
     yield put(deleteStudentSuccess(data));
     yield put(listStudentRequest(1));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(deleteStudentFailure());
   }
 }

@@ -31,7 +31,7 @@ export function* listPlanId({ payload }) {
     yield put(listPlanSuccessId(plan));
     history.push('/plans/edit');
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(listPlanFailure());
   }
 }
@@ -59,7 +59,7 @@ export function* listPlans({ payload }) {
 
     yield put(listPlanSuccess(plans, pages));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(listPlanFailure());
   }
 }

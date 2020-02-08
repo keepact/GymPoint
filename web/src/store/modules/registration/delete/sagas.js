@@ -21,7 +21,7 @@ export function* deleteRegistration({ payload }) {
     yield put(deleteRegistrationSuccess(data));
     yield put(listRegistrationRequest(1));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(deleteRegistrationFailure());
   }
 }

@@ -39,7 +39,7 @@ export function* listRegistrationId({ payload }) {
 
     history.push('/registrations/edit');
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(listRegistrationFailure());
   }
 }
@@ -82,7 +82,7 @@ export function* listRegistrations({ payload }) {
 
     yield put(listRegistrationSuccess(registrations, pages));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(listRegistrationFailure());
   }
 }
