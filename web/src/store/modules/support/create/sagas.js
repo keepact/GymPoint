@@ -24,7 +24,7 @@ export function* createAnswer({ payload }) {
     yield put(listSupportRequest(1));
     yield put(createSupportSuccess(data));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(createSupportFailure());
   }
 }

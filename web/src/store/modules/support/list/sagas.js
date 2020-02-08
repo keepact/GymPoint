@@ -25,7 +25,7 @@ export function* listSupport({ payload }) {
 
     yield put(listSupportSuccess(questions, pages));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(listSupportFailure());
   }
 }

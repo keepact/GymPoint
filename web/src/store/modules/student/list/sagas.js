@@ -31,7 +31,7 @@ export function* listStudentById({ payload }) {
     yield put(listStudentSuccessId(student));
     history.push('students/edit');
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(listStudentFailure());
   }
 }
@@ -62,7 +62,7 @@ export function* listStudents({ payload }) {
 
     yield put(listStudentSuccess(students, pages));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(listStudentFailure());
   }
 }

@@ -30,7 +30,7 @@ export function* updateProfile({ payload }) {
 
     yield put(updateProfileSuccess(data));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(updateProfileFailure());
   }
 }
@@ -53,7 +53,7 @@ export function* updateAvatar({ payload }) {
 
     yield put(updateAvatarSuccess(newAvatar));
   } catch (err) {
-    toast.error(`Houve um erro, ${err.data.error}`);
+    toast.error(`Houve um erro, ${err.response.data.error}`);
     yield put(updateAvatarFailure());
   }
 }

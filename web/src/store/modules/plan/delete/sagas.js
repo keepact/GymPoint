@@ -17,7 +17,7 @@ export function* deletePlan({ payload }) {
     yield put(deletePlanSuccess(data));
     yield put(listPlanRequest(1));
   } catch (err) {
-    toast.error(err.data.error);
+    toast.error(err.response.data.error);
     yield put(deletePlanFailure());
   }
 }
