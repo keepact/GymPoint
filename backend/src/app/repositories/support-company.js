@@ -27,7 +27,11 @@ class SupportCompanyRepository {
         ],
       });
     } catch (err) {
-      console.error(`Sem pedidos de auxílio cadastrados: `, err);
+      console.error(
+        `Não foi possível carregar os pedidos de auxílio pendentes: ${JSON.stringify(
+          err
+        )}`
+      );
     }
     return undefined;
   }
@@ -58,7 +62,9 @@ class SupportCompanyRepository {
 
       return question;
     } catch (err) {
-      console.error(`Não foi possível enviar a resposta ao aluno: `, err);
+      console.error(
+        `Não foi possível enviar a resposta ao aluno: ${JSON.stringify(err)}`
+      );
     }
     return undefined;
   }

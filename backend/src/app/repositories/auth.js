@@ -36,7 +36,7 @@ class AuthRepository {
 
       return userData;
     } catch (err) {
-      console.error(`Erro na autenticação: `, err);
+      console.error(`Erro na autenticação: ${JSON.stringify(err)}`);
     }
     return undefined;
   }

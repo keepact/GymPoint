@@ -18,7 +18,9 @@ class CheckinRepository {
         ],
       });
     } catch (err) {
-      console.error(`Erro na listagem de checkins: `, err);
+      console.error(
+        `Não foi possível listar os checkins: ${JSON.stringify(err)}`
+      );
       return undefined;
     }
   }
@@ -29,7 +31,7 @@ class CheckinRepository {
         student_id: id,
       });
     } catch (err) {
-      console.error(`Não foi possível criar o checkin: `, err);
+      console.error(`Não foi possível criar o checkin: ${JSON.stringify(err)}`);
     }
     return undefined;
   }

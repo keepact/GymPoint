@@ -40,8 +40,9 @@ class PendingRepository {
       });
     } catch (err) {
       return console.error(
-        `Não foi possível acessar as matrículas pendentes: `,
-        err
+        `Não foi possível listar as matrículas pendentes: ${JSON.stringify(
+          err
+        )}`
       );
     }
   }
