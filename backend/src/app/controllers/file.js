@@ -1,10 +1,10 @@
-import FileService from '../services/FileService';
+import FileRepository from '../repositories/file';
 
 class FileController {
   async store(req, res) {
     const { originalname, filename } = req.file;
 
-    const result = await new FileService().store(originalname, filename);
+    const result = await new FileRepository().create(originalname, filename);
 
     return res.status(result ? 200 : 400).json(result);
   }

@@ -1,10 +1,10 @@
-import PendingService from '../services/PendingService';
+import PendingRepository from '../repositories/pending';
 
 class PendingController {
   async index(req, res) {
     const { page } = req.query;
 
-    const result = await new PendingService().index(page);
+    const result = await new PendingRepository().getAll(page);
 
     const lastPage = page * 10 >= result.count;
 
