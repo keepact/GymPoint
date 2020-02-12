@@ -11,7 +11,7 @@ export function* signIn({ payload }) {
     yield put(signInSuccess(id));
     yield put(checkInRequest(1));
   } catch (err) {
-    Alert.alert('Falha na autenticação', 'Verifique se seu ID está correto');
+    Alert.alert('Houve um erro', err.response.data.error);
     yield put(signFailure());
   }
 }

@@ -19,7 +19,7 @@ export function* createCheckIn() {
 
     yield put(createCheckInSuccess(data));
   } catch (err) {
-    Alert.alert(err.data.error);
+    Alert.alert(err.response.data.error);
     yield put(checkInFailure());
   }
 }
@@ -49,7 +49,7 @@ export function* listCheckIns({ payload }) {
       checkInSuccess(page !== 1 ? currentCheckins : checkInData, pages),
     );
   } catch (err) {
-    Alert.alert('Falha na requisição', err.data.error);
+    Alert.alert('Houve um erro', err.response.data.error);
     yield put(checkInFailure());
   }
 }
