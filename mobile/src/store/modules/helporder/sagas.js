@@ -31,7 +31,7 @@ export function* createQuestion({ payload }) {
     NavigationService.navigate('HelpOrderList');
     Alert.alert('Sucesso', 'Pergunta Enviada');
   } catch (err) {
-    Alert.alert(err.data.error);
+    Alert.alert(err.response.data.error);
     yield put(helpOrderFailure());
   }
 }
@@ -64,7 +64,7 @@ export function* listQuestions({ payload }) {
     );
   } catch (err) {
     yield put(helpOrderFailure());
-    Alert.alert('Falha na requisição', err.data.error);
+    Alert.alert('Houve um erro', err.response.data.error);
   }
 }
 
