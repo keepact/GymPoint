@@ -25,7 +25,7 @@ import FileMiddleware from './app/middlewares/File';
 import PendingMiddleware from './app/middlewares/Pending';
 
 import LoginMiddleware from './app/middlewares/Login';
-import AuthMiddleware from './app/middlewares/Auth';
+import { auth as AuthMiddleware } from './app/middlewares/Auth';
 
 const routes = new Router();
 const upload = multer(multerConfig);

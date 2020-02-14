@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
+import Student from '../models/Student';
 
 import authConfig from '../../config/auth';
 
-export default async function auth(req, res, next) {
+export const auth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -21,6 +22,24 @@ export default async function auth(req, res, next) {
   } catch (err) {
     return res
       .status(401)
-      .json({ error: 'Token invalid', messsages: err.inner });
+      .json({ error: 'Token invalido', messsages: err.inner });
   }
-}
+};
+
+export const studentAuth = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const student = await Student.findOne({ where: { email } });
+
+    if (student.email !== email) {
+      return res.status(401).json({ error: 'Email inválido' });
+    }
+
+    return next();
+  } catch (err) {
+    return res
+      .status(401)
+      .json({ error: 'Email inválido', messsages: err.inner });
+  }
+};

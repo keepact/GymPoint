@@ -2,7 +2,11 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/User';
 import File from '../models/File';
+import Student from '../models/Student';
+
 import authConfig from '../../config/auth';
+import Queue from '../../lib/Queue';
+import StudentFirstAccess from '../jobs/StudentFirstAccess';
 
 class AuthRepository {
   async signIn(reqBody) {
@@ -35,6 +39,21 @@ class AuthRepository {
       };
 
       return userData;
+    } catch (err) {
+      console.error(`Erro na autenticação: ${JSON.stringify(err)}`);
+    }
+    return undefined;
+  }
+
+  async studentAuth(email) {
+    try {
+      const student = await Student.findOne({ where: { email } });
+
+      await Queue.add(StudentFirstAccess.key, {
+        student,
+      });
+
+      return student;
     } catch (err) {
       console.error(`Erro na autenticação: ${JSON.stringify(err)}`);
     }
