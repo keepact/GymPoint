@@ -1,4 +1,6 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { startSubmit, stopSubmit } from 'redux-form';
+
 import { toast } from 'react-toastify';
 import { parseInteger } from '~/util/format';
 
@@ -25,6 +27,7 @@ export function* updateStudent({ payload }) {
     weight: parseInteger(weight_formatted),
   };
 
+  yield put(startSubmit('STUDENT_FORM_EDIT'));
   try {
     let response = {};
 
@@ -38,6 +41,7 @@ export function* updateStudent({ payload }) {
       id ? 'Estudante atualizado com sucesso' : 'Estudante criado com sucesso'
     );
 
+    yield put(stopSubmit('STUDENT_FORM_EDIT'));
     yield put(updateOrCreateStudentSuccess(response.data));
     history.push('/students');
   } catch (err) {

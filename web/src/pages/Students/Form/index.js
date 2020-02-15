@@ -1,15 +1,17 @@
-import React, { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector, connect } from 'react-redux';
 
-import { Input } from '@rocketseat/unform';
+import PropTypes from 'prop-types';
+
+import { Field, reduxForm } from 'redux-form';
 import { FiUpload } from 'react-icons/fi';
 
-import { validateStudents } from '~/util/validation';
+import { validateStudent } from '~/util/validate';
 
 import { updateOrCreateStudent } from '~/store/modules/student/update';
 import { listStudentRedirect } from '~/store/modules/student/list';
 
-import InputNumber from '~/components/NumberInput';
+import renderField from '~/components/FormFields/renderField';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -21,17 +23,13 @@ import {
   TitleWrapper,
 } from '~/styles/shared';
 
-function StudentForm() {
+function StudentForm({ handleSubmit, submitting }) {
   const dispatch = useDispatch();
 
-  const { student: currentStudent, studentId } = useSelector(
-    state => state.studentList
-  );
+  const { studentId } = useSelector(state => state.studentList);
   const { loading } = useSelector(state => state.studentUpdate);
 
-  const student = useMemo(() => currentStudent, [currentStudent]);
-
-  const handleSubmit = data => {
+  const submit = data => {
     dispatch(updateOrCreateStudent(data, studentId || undefined));
   };
 
@@ -50,45 +48,60 @@ function StudentForm() {
               >
                 Voltar
               </button>
-              <button form="Form" type="submit">
+              <button form="Form" disabled={submitting} type="submit">
                 <span>Salvar</span>
                 <FiUpload size={20} />
               </button>
             </div>
           </TitleWrapper>
           <Content>
-            <MyForm
-              id="Form"
-              schema={validateStudents}
-              initialData={student}
-              onSubmit={handleSubmit}
-            >
-              <label htmlFor="name">Nome Completo</label>
-              <Input name="name" placeholder="John Doe" />
-              <label htmlFor="email">Endereço de Email</label>
-              <Input name="email" placeholder="example@email.com" />
+            <MyForm id="Form" onSubmit={handleSubmit(data => submit(data))}>
+              <Field
+                name="name"
+                htmlFor="name"
+                label="Nome Completo"
+                component={renderField}
+                type="text"
+                placeholder="John Doe"
+              />
+              <Field
+                name="email"
+                htmlFor="name"
+                label="Endereço de Email"
+                component={renderField}
+                type="text"
+                placeholder="example@email.com"
+              />
 
               <NumberInputs>
                 <div>
-                  <label htmlFor="age">Idade</label>
-                  <Input name="age" type="number" placeholder="18" />
+                  <Field
+                    name="age"
+                    htmlFor="age"
+                    label="Idade"
+                    component={renderField}
+                    type="number"
+                    placeholder="18"
+                  />
                 </div>
                 <div>
-                  <label htmlFor="weight_formatted">
-                    Peso <span className="label">(em kg)</span>
-                  </label>
-                  <InputNumber
-                    decimalScale={3}
+                  <Field
                     name="weight_formatted"
+                    htmlFor="weight_formatted"
+                    label="Peso (em kg)"
+                    component={renderField}
+                    type="number"
                     placeholder="75.500"
                   />
                 </div>
                 <div>
-                  <label htmlFor="height_formatted">Altura</label>
-                  <InputNumber
-                    decimalScale={2}
-                    placeholder="1.70"
+                  <Field
                     name="height_formatted"
+                    htmlFor="height_formatted"
+                    label="Altura"
+                    component={renderField}
+                    type="number"
+                    placeholder="1.70"
                   />
                 </div>
               </NumberInputs>
@@ -100,4 +113,21 @@ function StudentForm() {
   );
 }
 
-export default StudentForm;
+StudentForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = state => {
+  return {
+    initialValues: state.studentList.student,
+  };
+};
+
+export default connect(mapStateToProps)(
+  reduxForm({
+    form: 'STUDENT_FORM_EDIT',
+    enableReinitialize: true,
+    validate: validateStudent,
+  })(StudentForm)
+);
