@@ -49,12 +49,11 @@ function PlansForm({ handleSubmit, submitting }) {
             <div>
               <button
                 type="button"
-                disabled={submitting}
                 onClick={() => dispatch(listPlanRedirect())}
               >
                 Voltar
               </button>
-              <button form="Form" type="submit">
+              <button form="Form" disabled={submitting} type="submit">
                 <span>Salvar</span>
                 <FiUpload size={20} />
               </button>
