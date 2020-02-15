@@ -1,11 +1,12 @@
-import React, { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector, connect } from 'react-redux';
 
-import { Input } from '@rocketseat/unform';
+import PropTypes from 'prop-types';
+import { Field, reduxForm } from 'redux-form';
 import { FiUpload } from 'react-icons/fi';
 
-import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
+import renderField from '~/components/FormFields/renderField';
 import loadingAnimation from '~/assets/animations/loader.json';
 
 import {
@@ -14,8 +15,7 @@ import {
   listPlanRedirect,
 } from '~/store/modules/plan/list';
 import { updateOrCreatePlan } from '~/store/modules/plan/update';
-
-import { validatePlans } from '~/util/validation';
+import { validatePlan } from '~/util/validate';
 
 import {
   Content,
@@ -25,15 +25,13 @@ import {
   TitleWrapper,
 } from '~/styles/shared';
 
-function PlansForm() {
-  const { plan: currentPlan, planId } = useSelector(state => state.planList);
+function PlansForm({ handleSubmit, submitting }) {
+  const { planId } = useSelector(state => state.planList);
+  const { loading } = useSelector(state => state.planUpdate);
 
   const dispatch = useDispatch();
 
-  const { loading } = useSelector(state => state.planUpdate);
-  const plan = useMemo(() => currentPlan, [currentPlan]);
-
-  const handleSubmit = data => {
+  const submit = data => {
     dispatch(updateOrCreatePlan(data, planId || undefined));
   };
 
@@ -56,6 +54,7 @@ function PlansForm() {
             <div>
               <button
                 type="button"
+                disabled={submitting}
                 onClick={() => dispatch(listPlanRedirect())}
               >
                 Voltar
@@ -67,41 +66,46 @@ function PlansForm() {
             </div>
           </TitleWrapper>
           <Content>
-            <MyForm
-              id="Form"
-              schema={validatePlans}
-              initialData={plan}
-              onSubmit={handleSubmit}
-            >
-              <label htmlFor="title">Título do Plano</label>
-              <Input name="title" />
+            <MyForm id="Form" onSubmit={handleSubmit(data => submit(data))}>
+              <Field
+                name="title"
+                htmlFor="title"
+                label="Título do Plano"
+                component={renderField}
+                type="text"
+                placeholder="title"
+              />
               <NumberInputs>
                 <div>
-                  <label htmlFor="duration">
-                    Duração <span className="label">(em meses)</span>
-                  </label>
-                  <Input
-                    type="number"
+                  <Field
                     name="duration"
+                    htmlFor="duration"
+                    label="Duração (em meses)"
+                    component={renderField}
+                    type="number"
+                    placeholder="duration"
                     onChange={e => handleDuration(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label htmlFor="price">Preço Mensal</label>
-                  <NumberInput
+                  <Field
                     name="price"
-                    onChange={handlePrice}
-                    decimalScale={2}
-                    prefix="R$ "
+                    htmlFor="price"
+                    label="Preço Mensal"
+                    component={renderField}
+                    type="number"
+                    placeholder="R$ 0,00"
+                    onChange={e => handlePrice(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label htmlFor="finalPrice">Preço Total</label>
-                  <NumberInput
+                  <Field
                     name="finalPrice"
-                    className="gray"
-                    decimalScale={2}
-                    prefix="R$ "
+                    htmlFor="finalPrice"
+                    label="Preço Total"
+                    component={renderField}
+                    type="number"
+                    placeholder="R$ 0,00"
                     disabled
                   />
                 </div>
@@ -114,4 +118,21 @@ function PlansForm() {
   );
 }
 
-export default PlansForm;
+PlansForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = state => {
+  return {
+    initialValues: state.planList.plan,
+  };
+};
+
+export default connect(mapStateToProps)(
+  reduxForm({
+    form: 'PLAN_FORM_EDIT',
+    enableReinitialize: true,
+    validate: validatePlan,
+  })(PlansForm)
+);

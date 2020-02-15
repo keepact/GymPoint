@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Form } from '@rocketseat/unform';
 
 export const Container = styled.div`
   max-width: ${props => (props.large ? '1440px' : '1200px')};
@@ -134,7 +133,7 @@ export const ContainerForm = styled.div`
   margin: 0 auto;
 `;
 
-export const MyForm = styled(Form)`
+export const MyForm = styled.form`
   display: flex;
   align-items: center;
   flex-direction: column;
