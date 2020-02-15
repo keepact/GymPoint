@@ -1,4 +1,4 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, select } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
 import { formatPrice } from '~/util/format';
@@ -10,6 +10,7 @@ import {
   listPlanSuccess,
   listPlanSuccessId,
   listPlanFailure,
+  updatePlanTotalSuccess,
 } from './index';
 
 export function* listPlanId({ payload }) {
@@ -20,12 +21,13 @@ export function* listPlanId({ payload }) {
 
     const { title, duration, price } = data;
 
+    const total = price * duration;
     const plan = {
       id,
       title,
       duration,
       price,
-      finalPrice: price * duration,
+      total: formatPrice(total),
     };
 
     yield put(listPlanSuccessId(plan));
@@ -64,6 +66,24 @@ export function* listPlans({ payload }) {
   }
 }
 
+export function* updatePlanTotal({ payload }) {
+  const { price, duration } = yield select(state => state.planList.plan);
+
+  const finalPrice =
+    payload.type === 'duration'
+      ? price * payload.data
+      : payload.data * duration;
+
+  const total = formatPrice(finalPrice);
+
+  const data =
+    payload.type === 'duration'
+      ? { duration: payload.data, total }
+      : { price: payload.data, total };
+
+  yield put(updatePlanTotalSuccess(data));
+}
+
 export function planInitialState() {
   history.push('plans/create');
 }
@@ -76,5 +96,6 @@ export default all([
   takeLatest(Types.LIST_PLANS_REQUEST, listPlans),
   takeLatest(Types.LIST_PLAN_ID_REQUEST, listPlanId),
   takeLatest(Types.UPDATE_PLAN_INITIAL_STATE, planInitialState),
+  takeLatest(Types.UPDATE_PLAN_TOTAL_REQUEST, updatePlanTotal),
   takeLatest(Types.PLAN_REDIRECT, planRedirect),
 ]);

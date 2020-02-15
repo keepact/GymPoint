@@ -6,12 +6,11 @@ import { Field, reduxForm } from 'redux-form';
 import { FiUpload } from 'react-icons/fi';
 
 import Animation from '~/components/Animation';
-import renderField from '~/components/FormFields/renderField';
 import loadingAnimation from '~/assets/animations/loader.json';
+import renderField from '~/components/FormFields/renderField';
 
 import {
-  listPlanUpdatePrice,
-  listPlanUpdateDuration,
+  updatePlanTotalRequest,
   listPlanRedirect,
 } from '~/store/modules/plan/list';
 import { updateOrCreatePlan } from '~/store/modules/plan/update';
@@ -35,12 +34,8 @@ function PlansForm({ handleSubmit, submitting }) {
     dispatch(updateOrCreatePlan(data, planId || undefined));
   };
 
-  const handlePrice = price => {
-    dispatch(listPlanUpdatePrice(price));
-  };
-
-  const handleDuration = duration => {
-    dispatch(listPlanUpdateDuration(duration));
+  const handleTotal = (data, type) => {
+    dispatch(updatePlanTotalRequest(data, type));
   };
 
   return (
@@ -84,7 +79,7 @@ function PlansForm({ handleSubmit, submitting }) {
                     component={renderField}
                     type="number"
                     placeholder="duration"
-                    onChange={e => handleDuration(e.target.value)}
+                    onChange={e => handleTotal(e.target.value, 'duration')}
                   />
                 </div>
                 <div>
@@ -94,18 +89,16 @@ function PlansForm({ handleSubmit, submitting }) {
                     label="Preço Mensal"
                     component={renderField}
                     type="number"
-                    placeholder="R$ 0,00"
-                    onChange={e => handlePrice(e.target.value)}
+                    onChange={e => handleTotal(e.target.value, 'price')}
                   />
                 </div>
                 <div>
                   <Field
-                    name="finalPrice"
-                    htmlFor="finalPrice"
+                    name="total"
+                    htmlFor="total"
                     label="Preço Total"
                     component={renderField}
-                    type="number"
-                    placeholder="R$ 0,00"
+                    type="text"
                     disabled
                   />
                 </div>

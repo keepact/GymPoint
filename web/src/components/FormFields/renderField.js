@@ -1,24 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const renderField = ({
+function renderField({
   input,
   label,
   type,
   htmlFor,
   disabled,
+  placeholder,
   meta: { touched, error, warning },
-}) => (
-  <>
-    <label htmlFor={htmlFor}>{label}</label>
-    <div>
-      <input {...input} placeholder={label} type={type} disabled={disabled} />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
-    </div>
-  </>
-);
+}) {
+  return (
+    <>
+      <label htmlFor={htmlFor}>{label}</label>
+      <div>
+        <input
+          {...input}
+          placeholder={placeholder}
+          type={type}
+          disabled={disabled}
+        />
+        {touched &&
+          ((error && <span>{error}</span>) ||
+            (warning && <span>{warning}</span>))}
+      </div>
+    </>
+  );
+}
 
 renderField.defaultProps = {
   label: '',
@@ -27,6 +35,7 @@ renderField.defaultProps = {
 
 renderField.propTypes = {
   input: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  placeholder: PropTypes.string.isRequired,
   label: PropTypes.string,
   type: PropTypes.string.isRequired,
   htmlFor: PropTypes.string.isRequired,
