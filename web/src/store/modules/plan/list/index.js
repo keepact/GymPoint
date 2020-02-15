@@ -7,8 +7,8 @@ export const Types = {
   LIST_PLANS_SUCCESS: '@plan/LIST_PLANS_SUCCESS',
   LIST_PLAN_ID_REQUEST: '@plan/LIST_PLAN_ID_REQUEST',
   LIST_PLAN_ID_SUCCESS: '@plan/LIST_PLAN_ID_SUCCESS',
-  UPDATE_PLAN_DURATION: '@plan/UPDATE_PLAN_DURATION',
-  UPDATE_PLAN_PRICE: '@plan/UPDATE_PLAN_PRICE',
+  UPDATE_PLAN_TOTAL_REQUEST: '@plan/UPDATE_PLAN_TOTAL_REQUEST',
+  UPDATE_PLAN_TOTAL_SUCCESS: '@plan/UPDATE_PLAN_TOTAL_SUCCESS',
   UPDATE_PLAN_INITIAL_STATE: '@plan/UPDATE_PLAN_INITIAL_STATE',
   PLAN_REDIRECT: '@plan/PLAN_REDIRECT',
   LIST_PLANS_FAILURE: '@plan/LIST_PLANS_FAILURE',
@@ -21,7 +21,7 @@ const INITIAL_STATE = {
     id: undefined,
     duration: undefined,
     price: undefined,
-    finalPrice: undefined,
+    total: undefined,
   },
   plans: [],
   planId: null,
@@ -56,18 +56,12 @@ export default function planList(state = INITIAL_STATE, action) {
         draft.plan = action.payload.data;
         break;
       }
-      case Types.UPDATE_PLAN_DURATION: {
-        const { duration } = action.payload;
+      case Types.UPDATE_PLAN_TOTAL_SUCCESS: {
+        const { duration, price, total } = action.payload.data;
 
-        draft.plan.duration = duration;
-        draft.plan.finalPrice = draft.plan.price * duration;
-        break;
-      }
-      case Types.UPDATE_PLAN_PRICE: {
-        const { price } = action.payload;
-
-        draft.plan.price = price;
-        draft.plan.finalPrice = draft.plan.duration * price;
+        draft.plan.duration = duration || draft.plan.duration;
+        draft.plan.price = price || draft.plan.price;
+        draft.plan.total = total;
         break;
       }
       case Types.UPDATE_PLAN_INITIAL_STATE: {
@@ -116,17 +110,17 @@ export function listPlanSuccessId(data) {
   };
 }
 
-export function listPlanUpdateDuration(duration) {
+export function updatePlanTotalRequest(data, type) {
   return {
-    type: Types.UPDATE_PLAN_DURATION,
-    payload: { duration },
+    type: Types.UPDATE_PLAN_TOTAL_REQUEST,
+    payload: { data, type },
   };
 }
 
-export function listPlanUpdatePrice(price) {
+export function updatePlanTotalSuccess(data) {
   return {
-    type: Types.UPDATE_PLAN_PRICE,
-    payload: { price },
+    type: Types.UPDATE_PLAN_TOTAL_SUCCESS,
+    payload: { data },
   };
 }
 
