@@ -68,7 +68,7 @@ function PlansForm({ handleSubmit, submitting }) {
                 label="Título do Plano"
                 component={renderField}
                 type="text"
-                placeholder="title"
+                placeholder="Título"
               />
               <NumberInputs>
                 <div>
@@ -78,7 +78,7 @@ function PlansForm({ handleSubmit, submitting }) {
                     label="Duração (em meses)"
                     component={renderField}
                     type="number"
-                    placeholder="duration"
+                    placeholder="Duração"
                     onChange={e => handleTotal(e.target.value, 'duration')}
                   />
                 </div>
@@ -89,6 +89,7 @@ function PlansForm({ handleSubmit, submitting }) {
                     label="Preço Mensal"
                     component={renderField}
                     type="number"
+                    placeholder="Defina o preço"
                     onChange={e => handleTotal(e.target.value, 'price')}
                   />
                 </div>
@@ -99,6 +100,7 @@ function PlansForm({ handleSubmit, submitting }) {
                     label="Preço Total"
                     component={renderField}
                     type="text"
+                    placeholder="R$ 0,00"
                     disabled
                   />
                 </div>
