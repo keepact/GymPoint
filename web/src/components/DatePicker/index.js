@@ -1,33 +1,17 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactDatePicker from 'react-datepicker';
 import MaskedTextInput from 'react-text-mask';
 
-import { useField } from '@rocketseat/unform';
-import { datePlaceHolder } from '~/util/format';
-
 import 'react-datepicker/dist/react-datepicker.css';
 
-function DatePicker({ name, placeholder, disabled, ...rest }) {
-  const ref = useRef(null);
-  const { fieldName, registerField, defaultValue, error } = useField(name);
-  const [selected, setSelected] = useState(defaultValue);
-
-  useMemo(() => {
-    setSelected(defaultValue);
-  }, [defaultValue]);
-
-  useEffect(() => {
-    registerField({
-      name: fieldName,
-      ref: ref.current,
-      path: 'props.selected',
-      clearValue: pickerRef => {
-        pickerRef.clear();
-      },
-    });
-  }, [ref.current, fieldName]); // eslint-disable-line
-
+function DatePicker({
+  input,
+  label,
+  disabled,
+  placeholderText,
+  meta: { touched, error, warning },
+}) {
   useEffect(() => {
     const datePickers = document.getElementsByClassName(
       'react-datepicker__input-container'
@@ -39,36 +23,39 @@ function DatePicker({ name, placeholder, disabled, ...rest }) {
 
   return (
     <>
+      <label htmlFor={label}>{label}</label>
+
       <ReactDatePicker
-        name={fieldName}
-        selected={selected}
-        onChange={date => setSelected(date)}
+        {...input}
         dateFormat="dd/MM/yyyy"
-        placeholderText={datePlaceHolder}
-        disabled={!!disabled}
-        ref={ref}
+        placeholderText={placeholderText}
+        disabled={disabled}
+        selected={input.value ? input.value : null}
         customInput={
           <MaskedTextInput
             type="text"
             mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
           />
         }
-        {...rest}
       />
-      {error && <span>{error}</span>}
+      {touched &&
+        ((error && <span>{error}</span>) ||
+          (warning && <span>{warning}</span>))}
     </>
   );
 }
 
 DatePicker.defaultProps = {
+  label: '',
   disabled: false,
-  placeholder: '',
 };
 
 DatePicker.propTypes = {
-  name: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
+  input: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  placeholderText: PropTypes.string.isRequired,
+  label: PropTypes.string,
   disabled: PropTypes.bool,
+  meta: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
 export default DatePicker;

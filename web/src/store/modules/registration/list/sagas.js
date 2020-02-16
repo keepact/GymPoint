@@ -70,7 +70,6 @@ export function* listRegistrations({ payload }) {
     }));
 
     const { lastPage, pending: pendingCount } = data;
-    console.log(data, 'data');
     const hasPending = pendingCount > 0;
 
     const pages = {

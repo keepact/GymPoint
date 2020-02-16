@@ -1,84 +1,60 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React from 'react';
 import NumberFormat from 'react-number-format';
-import { useField } from '@rocketseat/unform';
 import PropTypes from 'prop-types';
 
-import { pricePlaceHolder } from '~/util/format';
-
 function InputNumber({
-  name,
+  input,
+  label,
+  className,
   disabled,
   prefix,
+  placeholder,
   thousandSeparator,
   decimalScale,
-  onChange,
-  ...rest
+  meta: { touched, error, warning },
 }) {
-  const ref = useRef();
-  const { fieldName, defaultValue, registerField, error } = useField(
-    name || ''
-  );
-  const [value, setValue] = useState();
-
-  useMemo(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
-
-  useEffect(() => {
-    if (ref.current) {
-      registerField({
-        name: fieldName,
-        ref: ref.current,
-        path: 'props.value',
-        defaultValue,
-        clearValue: pickerRef => {
-          pickerRef.setInputValue(null);
-        },
-      });
-    }
-  }, [ref.current, fieldName]); //eslint-disable-line
-
   return (
     <>
+      <label htmlFor={label}>{label}</label>
       <NumberFormat
-        id={fieldName}
+        {...input}
+        className={className}
         thousandSeparator={thousandSeparator}
         isNumericString
         fixedDecimalScale
         decimalScale={decimalScale}
-        placeholder={pricePlaceHolder}
+        placeholder={placeholder}
         prefix={prefix}
-        ref={ref}
-        name={fieldName}
-        value={value}
-        onValueChange={values => {
-          setValue(values.floatValue);
-          if (onChange) onChange(values.floatValue);
-        }}
-        disabled={!!disabled}
-        {...rest}
+        disabled={disabled}
       />
-      {error && <span>{error}</span>}
+      {touched &&
+        ((error && <span>{error}</span>) ||
+          (warning && <span>{warning}</span>))}
     </>
   );
 }
 
 InputNumber.defaultProps = {
   disabled: false,
+  className: 'gray',
+  label: '',
   prefix: '',
   thousandSeparator: '',
   decimalScale: '',
   name: null,
-  onChange: null,
 };
 
 InputNumber.propTypes = {
+  input: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  placeholder: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  className: PropTypes.string,
   name: PropTypes.string,
   disabled: PropTypes.bool,
   prefix: PropTypes.string,
   thousandSeparator: PropTypes.string,
   decimalScale: PropTypes.number,
-  onChange: PropTypes.func,
+  meta: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
 export default InputNumber;

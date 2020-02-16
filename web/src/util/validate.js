@@ -1,3 +1,5 @@
+import { addMonths } from 'date-fns';
+
 export const validatePlan = values => {
   const errors = {};
   if (!values.title) {
@@ -71,6 +73,27 @@ export const validateStudent = values => {
     errors.height_formatted = 'Máximo de 3 digitos';
   } else if (values.height_formatted.length < 1) {
     errors.height_formatted = 'Mínimo de 1 digitos';
+  }
+
+  return errors;
+};
+
+export const validateRegistration = values => {
+  const errors = {};
+  if (!values.student) {
+    errors.student = 'Esse campo é obrigatório';
+  }
+
+  if (!values.plan) {
+    errors.plan = 'Esse campo é obrigatório';
+  }
+
+  if (!values.start_date) {
+    errors.start_date = 'Esse campo é obrigatório';
+  } else if (new Date(values.start_date) < new Date()) {
+    errors.start_date = 'Datas passadas não são permitidas';
+  } else if (new Date(values.start_date) > addMonths(new Date(), 3)) {
+    errors.start_date = 'Agendamentos podem ocorrer em até 3 meses';
   }
 
   return errors;

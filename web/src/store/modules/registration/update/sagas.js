@@ -1,4 +1,6 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { startSubmit, stopSubmit } from 'redux-form';
+
 import { toast } from 'react-toastify';
 
 import history from '~/services/history';
@@ -24,6 +26,7 @@ export function* createOrEditRegistration({ payload }) {
     start_date,
   };
 
+  yield put(startSubmit('REGISTRATION_FORM_EDIT'));
   try {
     let response = {};
 
@@ -37,6 +40,7 @@ export function* createOrEditRegistration({ payload }) {
       id ? 'Matrícula alterada com sucesso' : 'Matrícula criada com sucesso'
     );
 
+    yield put(stopSubmit('REGISTRATION_FORM_EDIT'));
     yield put(updateOrCreateRegistrationSuccess(response.data));
     history.push('/registrations');
   } catch (err) {

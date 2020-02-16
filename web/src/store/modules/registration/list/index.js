@@ -7,8 +7,6 @@ export const Types = {
   LIST_REGISTRATIONS_SUCCESS: '@registration/LIST_REGISTRATIONS_SUCCESS',
   LIST_REGISTRATION_ID_REQUEST: '@registration/LIST_REGISTRATION_ID_REQUEST',
   LIST_REGISTRATION_ID_SUCCESS: '@registration/LIST_REGISTRATION_ID_SUCCESS',
-  UPDATE_REGISTRATION_DATE: '@registration/UPDATE_REGISTRATION_DATE',
-  UPDATE_REGISTRATION_PLAN: '@registration/UPDATE_REGISTRATION_PLAN',
   UPDATE_REGISTRATION_INITIAL_STATE:
     '@registration/UPDATE_REGISTRATION_INITIAL_STATE',
   REGISTRATION_REDIRECT: '@registration/REGISTRATION_REDIRECT',
@@ -19,6 +17,8 @@ export const Types = {
 
 const INITIAL_STATE = {
   registration: {
+    student: undefined,
+    plan: undefined,
     start_date: undefined,
     end_date: undefined,
     price: undefined,
@@ -66,21 +66,6 @@ export default function registrationList(state = INITIAL_STATE, action) {
         draft.registration = action.payload.data;
         break;
       }
-      case Types.UPDATE_REGISTRATION_DATE: {
-        const { newStartDate, newEndDate } = action.payload.data;
-        draft.registration.start_date = newStartDate;
-        draft.registration.end_date = newEndDate;
-        break;
-      }
-      case Types.UPDATE_REGISTRATION_PLAN: {
-        const { price, end_date } = action.payload.data;
-        const { plan } = action.payload.plan;
-
-        draft.registration.plan = plan;
-        draft.registration.end_date = end_date;
-        draft.registration.price = price;
-        break;
-      }
       case Types.UPDATE_REGISTRATION_INITIAL_STATE: {
         if (state.registrationId || state.registration.plan) {
           draft.registration = INITIAL_STATE.registration;
@@ -124,20 +109,6 @@ export function listRegistrationSuccessId(data) {
   return {
     type: Types.LIST_REGISTRATION_ID_SUCCESS,
     payload: { data },
-  };
-}
-
-export function listRegistrationUpdateDate(data) {
-  return {
-    type: Types.UPDATE_REGISTRATION_DATE,
-    payload: { data },
-  };
-}
-
-export function listRegistrationUpdatePlan(plan, data) {
-  return {
-    type: Types.UPDATE_REGISTRATION_PLAN,
-    payload: { plan, data },
   };
 }
 
