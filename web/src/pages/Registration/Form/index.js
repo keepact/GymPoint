@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector, connect } from 'react-redux';
 
+import PropTypes from 'prop-types';
+
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { addMonths } from 'date-fns';
 import { FiUpload } from 'react-icons/fi';
 
-import { validateRegistrations } from '~/util/validation';
+import { validateRegistration } from '~/util/validate';
 
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -14,11 +17,7 @@ import PlanSelector from '~/components/Select';
 import NumberInput from '~/components/NumberInput';
 import DatePicker from '~/components/DatePicker';
 
-import {
-  listRegistrationUpdatePlan,
-  listRegistrationUpdateDate,
-  listRegistrationRedirect,
-} from '~/store/modules/registration/list';
+import { listRegistrationRedirect } from '~/store/modules/registration/list';
 import { updateOrCreateRegistration } from '~/store/modules/registration/update';
 
 import {
@@ -29,12 +28,14 @@ import {
   TitleWrapper,
 } from '~/styles/shared';
 
-function RegistrationForm() {
-  const { registration, registrationId } = useSelector(
-    state => state.registrationList
-  );
+function RegistrationForm({ change, handleSubmit, submitting }) {
+  const { registrationId } = useSelector(state => state.registrationList);
+
+  const selector = formValueSelector('REGISTRATION_FORM_EDIT');
+  const plan = useSelector(state => selector(state, 'plan'));
+  const startDate = useSelector(state => selector(state, 'start_date'));
+
   const dispatch = useDispatch();
-  const [disableDate, setDisableDate] = useState(!registrationId);
 
   const { loading } = useSelector(state => state.registrationUpdate);
   const { plans } = useSelector(state => state.planList);
@@ -52,50 +53,24 @@ function RegistrationForm() {
     });
   };
 
-  const handleDate = newDate => {
-    const currentPlan = plans.filter(p => p.id === registration.plan.id);
-    const newEndDate = addMonths(
-      newDate,
-      registration.plan.id !== undefined
-        ? currentPlan[0].duration
-        : registration.plan.duration
-    );
+  const updateDate = value => {
+    const endDate = addMonths(value, plan.duration);
 
-    const newDates = {
-      newStartDate: newDate,
-      newEndDate,
-    };
-
-    dispatch(listRegistrationUpdateDate(newDates));
+    change('end_date', endDate);
+    return value;
   };
 
-  const handlePlan = newPlan => {
-    const newEndDate = registration.start_date
-      ? addMonths(registration.start_date, newPlan.duration)
-      : undefined;
-    const newPrice = newPlan.price * newPlan.duration;
-
-    const newRegistrationPlan = {
-      plan: {
-        id: newPlan.id,
-        duration: newPlan.duration,
-        title: newPlan.title,
-      },
-    };
-
-    const newPriceAndDate = {
-      end_date: newEndDate,
-      price: newPrice,
-    };
-
-    dispatch(listRegistrationUpdatePlan(newRegistrationPlan, newPriceAndDate));
-
-    if (!registrationId) {
-      setDisableDate(false);
+  const updatePlan = value => {
+    if (startDate) {
+      const endDate = addMonths(startDate, value.duration);
+      change('end_date', endDate);
     }
+
+    change('price', value.price);
+    return value;
   };
 
-  const handleSubmit = data => {
+  const submit = data => {
     dispatch(updateOrCreateRegistration(data, registrationId || undefined));
   };
 
@@ -116,54 +91,67 @@ function RegistrationForm() {
               >
                 Voltar
               </button>
-              <button form="Form" type="submit">
+              <button form="Form" disabled={submitting} type="submit">
                 <span>Salvar</span>
                 <FiUpload size={20} />
               </button>
             </div>
           </TitleWrapper>
           <Content>
-            <MyForm
-              id="Form"
-              schema={validateRegistrations}
-              initialData={registration}
-              onSubmit={handleSubmit}
-            >
-              <label htmlFor="student">Aluno</label>
-              <StudentSelector
+            <MyForm id="Form" onSubmit={handleSubmit(data => submit(data))}>
+              <Field
                 name="student"
+                type="text"
+                htmlFor="student"
+                label="Aluno"
+                placeholder="Digite para buscar um estudante..."
                 loadOptions={loadStudentOptions}
+                component={StudentSelector}
               />
+
               <NumberInputs columns>
                 <div>
-                  <label htmlFor="plan">Plano</label>
-                  <PlanSelector
+                  <Field
                     name="plan"
+                    htmlFor="plan"
+                    label="Plano"
+                    placeholder="Selecione"
                     options={plans}
-                    onChange={handlePlan}
+                    component={PlanSelector}
+                    onChange={updatePlan}
                   />
                 </div>
                 <div>
-                  <label htmlFor="start_date">Data de ínicio</label>
-                  <DatePicker
+                  <Field
                     name="start_date"
-                    onChange={handleDate}
-                    disabled={disableDate || registration.plan === null}
+                    htmlFor="start_date"
+                    label="Data de ínicio"
+                    placeholderText="dd/mm/yyyy"
+                    component={DatePicker}
+                    onChange={updateDate}
                   />
                 </div>
                 <div>
-                  <label htmlFor="end_date">Data de término</label>
-                  <DatePicker className="gray" name="end_date" disabled />
+                  <Field
+                    name="end_date"
+                    htmlFor="end_date"
+                    label="Data de término"
+                    placeholderText="dd/mm/yyyy"
+                    component={DatePicker}
+                    disabled
+                  />
                 </div>
                 <div>
-                  <label htmlFor="price">Valor Final</label>
-                  <NumberInput
+                  <Field
                     name="price"
                     className="gray"
+                    htmlFor="price"
+                    label="Valor Final"
+                    placeholder="R$ 0,00"
                     decimalScale={2}
                     prefix="R$ "
+                    component={NumberInput}
                     disabled
-                    value={registration.price}
                   />
                 </div>
               </NumberInputs>
@@ -175,4 +163,21 @@ function RegistrationForm() {
   );
 }
 
-export default RegistrationForm;
+RegistrationForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = state => {
+  return {
+    initialValues: state.registrationList.registration,
+  };
+};
+
+export default connect(mapStateToProps)(
+  reduxForm({
+    form: 'REGISTRATION_FORM_EDIT',
+    validate: validateRegistration,
+  })(RegistrationForm)
+);

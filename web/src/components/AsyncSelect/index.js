@@ -1,62 +1,52 @@
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-
-import { useField } from '@rocketseat/unform';
 
 import { MyAsyncSelect } from './styles';
 
-function AsyncSelector({ name, loadOptions, noOptionsMessage, ...rest }) {
-  const ref = useRef();
-  const { fieldName, registerField, defaultValue, error } = useField(name);
-  const [value, setValue] = useState(defaultValue);
-
-  useMemo(() => setValue(defaultValue), [defaultValue]); //eslint-disable-line
-
-  useEffect(() => {
-    registerField({
-      name: fieldName,
-      ref: ref.current,
-      path: 'props.value',
-    });
-  }, [ref.current, fieldName]); // eslint-disable-line
-
-  const handleChange = selectedValue => {
-    setValue(selectedValue);
-  };
-
+function AsyncSelector({
+  input,
+  label,
+  loadOptions,
+  placeholder,
+  noOptionsMessage,
+  meta: { touched, error, warning },
+}) {
   return (
     <>
+      <label htmlFor={label}>{label}</label>
       <MyAsyncSelect
-        name={fieldName}
+        onChange={option => input.onChange(option.value)}
         loadOptions={loadOptions}
-        value={value}
-        ref={ref}
-        onChange={handleChange}
         getOptionValue={option => option.id}
         getOptionLabel={option => option.name}
         className="react-asyncselect-container"
         classNamePrefix="react-asyncselect"
-        placeholder="Digite para buscar um estudante..."
+        placeholder={placeholder}
         loadingMessage={() => 'Carregando...'}
         noOptionsMessage={() =>
           noOptionsMessage || 'Nenhum registro encontrado'
         }
-        {...rest}
       />
 
-      {error && <span>{error}</span>}
+      {touched &&
+        ((error && <span>{error}</span>) ||
+          (warning && <span>{warning}</span>))}
     </>
   );
 }
 
 AsyncSelector.defaultProps = {
   noOptionsMessage: null,
+  label: '',
 };
 
 AsyncSelector.propTypes = {
-  name: PropTypes.string.isRequired,
+  input: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  placeholder: PropTypes.string.isRequired,
+  label: PropTypes.string,
   loadOptions: PropTypes.func.isRequired,
   noOptionsMessage: PropTypes.string,
+  meta: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
-export default AsyncSelector;
+export default memo(AsyncSelector);
