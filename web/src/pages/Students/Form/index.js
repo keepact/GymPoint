@@ -12,6 +12,7 @@ import { updateOrCreateStudent } from '~/store/modules/student/update';
 import { listStudentRedirect } from '~/store/modules/student/list';
 
 import renderField from '~/components/FormFields/renderField';
+import NumberInput from '~/components/NumberInput';
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -79,8 +80,7 @@ function StudentForm({ handleSubmit, submitting }) {
                     name="age"
                     htmlFor="age"
                     label="Idade"
-                    component={renderField}
-                    type="number"
+                    component={NumberInput}
                     placeholder="18"
                   />
                 </div>
@@ -89,8 +89,9 @@ function StudentForm({ handleSubmit, submitting }) {
                     name="weight_formatted"
                     htmlFor="weight_formatted"
                     label="Peso (em kg)"
-                    component={renderField}
-                    type="number"
+                    component={NumberInput}
+                    decimalScale={3}
+                    thousandSeparator
                     placeholder="75.500"
                   />
                 </div>
@@ -98,9 +99,10 @@ function StudentForm({ handleSubmit, submitting }) {
                   <Field
                     name="height_formatted"
                     htmlFor="height_formatted"
+                    thousandSeparator
                     label="Altura"
-                    component={renderField}
-                    type="number"
+                    component={NumberInput}
+                    decimalScale={2}
                     placeholder="1.70"
                   />
                 </div>

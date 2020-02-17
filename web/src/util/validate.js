@@ -69,9 +69,9 @@ export const validateStudent = values => {
 
   if (!values.height_formatted) {
     errors.height_formatted = 'Esse campo é obrigatório';
-  } else if (values.height_formatted.length > 3) {
+  } else if (Number(values.height_formatted) > 3) {
     errors.height_formatted = 'Máximo de 3 digitos';
-  } else if (values.height_formatted.length < 1) {
+  } else if (Number(values.height_formatted) < 1) {
     errors.height_formatted = 'Mínimo de 1 digitos';
   }
 
