@@ -7,8 +7,6 @@ export const Types = {
   LIST_PLANS_SUCCESS: '@plan/LIST_PLANS_SUCCESS',
   LIST_PLAN_ID_REQUEST: '@plan/LIST_PLAN_ID_REQUEST',
   LIST_PLAN_ID_SUCCESS: '@plan/LIST_PLAN_ID_SUCCESS',
-  UPDATE_PLAN_TOTAL_REQUEST: '@plan/UPDATE_PLAN_TOTAL_REQUEST',
-  UPDATE_PLAN_TOTAL_SUCCESS: '@plan/UPDATE_PLAN_TOTAL_SUCCESS',
   UPDATE_PLAN_INITIAL_STATE: '@plan/UPDATE_PLAN_INITIAL_STATE',
   PLAN_REDIRECT: '@plan/PLAN_REDIRECT',
   LIST_PLANS_FAILURE: '@plan/LIST_PLANS_FAILURE',
@@ -19,6 +17,7 @@ export const Types = {
 const INITIAL_STATE = {
   plan: {
     id: undefined,
+    title: undefined,
     duration: undefined,
     price: undefined,
     total: undefined,
@@ -54,14 +53,6 @@ export default function planList(state = INITIAL_STATE, action) {
       case Types.LIST_PLAN_ID_SUCCESS: {
         draft.loading = false;
         draft.plan = action.payload.data;
-        break;
-      }
-      case Types.UPDATE_PLAN_TOTAL_SUCCESS: {
-        const { duration, price, total } = action.payload.data;
-
-        draft.plan.duration = duration || draft.plan.duration;
-        draft.plan.price = price || draft.plan.price;
-        draft.plan.total = total;
         break;
       }
       case Types.UPDATE_PLAN_INITIAL_STATE: {
@@ -106,20 +97,6 @@ export function listPlanRequestId(id) {
 export function listPlanSuccessId(data) {
   return {
     type: Types.LIST_PLAN_ID_SUCCESS,
-    payload: { data },
-  };
-}
-
-export function updatePlanTotalRequest(data, type) {
-  return {
-    type: Types.UPDATE_PLAN_TOTAL_REQUEST,
-    payload: { data, type },
-  };
-}
-
-export function updatePlanTotalSuccess(data) {
-  return {
-    type: Types.UPDATE_PLAN_TOTAL_SUCCESS,
     payload: { data },
   };
 }
