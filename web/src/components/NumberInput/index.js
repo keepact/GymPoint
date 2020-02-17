@@ -40,8 +40,7 @@ InputNumber.defaultProps = {
   label: '',
   prefix: '',
   thousandSeparator: '',
-  decimalScale: '',
-  name: null,
+  decimalScale: 0,
 };
 
 InputNumber.propTypes = {
@@ -49,7 +48,6 @@ InputNumber.propTypes = {
   placeholder: PropTypes.string.isRequired,
   label: PropTypes.string,
   className: PropTypes.string,
-  name: PropTypes.string,
   disabled: PropTypes.bool,
   prefix: PropTypes.string,
   thousandSeparator: PropTypes.string,

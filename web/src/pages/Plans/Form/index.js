@@ -2,17 +2,15 @@ import React from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { FiUpload } from 'react-icons/fi';
 
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
+import NumberInput from '~/components/NumberInput';
 import renderField from '~/components/FormFields/renderField';
 
-import {
-  updatePlanTotalRequest,
-  listPlanRedirect,
-} from '~/store/modules/plan/list';
+import { listPlanRedirect } from '~/store/modules/plan/list';
 import { updateOrCreatePlan } from '~/store/modules/plan/update';
 import { validatePlan } from '~/util/validate';
 
@@ -24,9 +22,13 @@ import {
   TitleWrapper,
 } from '~/styles/shared';
 
-function PlansForm({ handleSubmit, submitting }) {
+function PlansForm({ handleSubmit, submitting, change }) {
   const { planId } = useSelector(state => state.planList);
   const { loading } = useSelector(state => state.planUpdate);
+
+  const selector = formValueSelector('PLAN_FORM_EDIT');
+  const duration = useSelector(state => selector(state, 'duration'));
+  const price = useSelector(state => selector(state, 'price'));
 
   const dispatch = useDispatch();
 
@@ -34,8 +36,23 @@ function PlansForm({ handleSubmit, submitting }) {
     dispatch(updateOrCreatePlan(data, planId || undefined));
   };
 
-  const handleTotal = (data, type) => {
-    dispatch(updatePlanTotalRequest(data, type));
+  const updateDuration = newDuration => {
+    if (price) {
+      const total = parseInt(newDuration, 10) * parseInt(price, 10);
+      change('total', total);
+    }
+    return +newDuration;
+  };
+
+  const updatePrice = newPrice => {
+    const priceFormatted = () => {
+      return +newPrice.replace('R$', '');
+    };
+
+    const total = priceFormatted() * duration;
+    change('total', total);
+
+    return priceFormatted();
   };
 
   return (
@@ -75,10 +92,9 @@ function PlansForm({ handleSubmit, submitting }) {
                     name="duration"
                     htmlFor="duration"
                     label="Duração (em meses)"
-                    component={renderField}
-                    type="number"
+                    component={NumberInput}
                     placeholder="Duração"
-                    onChange={e => handleTotal(e.target.value, 'duration')}
+                    normalize={updateDuration}
                   />
                 </div>
                 <div>
@@ -86,10 +102,11 @@ function PlansForm({ handleSubmit, submitting }) {
                     name="price"
                     htmlFor="price"
                     label="Preço Mensal"
-                    component={renderField}
-                    type="number"
-                    placeholder="Defina o preço"
-                    onChange={e => handleTotal(e.target.value, 'price')}
+                    decimalScale={2}
+                    component={NumberInput}
+                    prefix="R$ "
+                    normalize={updatePrice}
+                    placeholder="R$ 0,00"
                   />
                 </div>
                 <div>
@@ -97,8 +114,9 @@ function PlansForm({ handleSubmit, submitting }) {
                     name="total"
                     htmlFor="total"
                     label="Preço Total"
-                    component={renderField}
-                    type="text"
+                    decimalScale={2}
+                    component={NumberInput}
+                    prefix="R$ "
                     placeholder="R$ 0,00"
                     disabled
                   />
@@ -115,6 +133,7 @@ function PlansForm({ handleSubmit, submitting }) {
 PlansForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
+  change: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -126,7 +145,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(
   reduxForm({
     form: 'PLAN_FORM_EDIT',
-    enableReinitialize: true,
     validate: validatePlan,
   })(PlansForm)
 );
