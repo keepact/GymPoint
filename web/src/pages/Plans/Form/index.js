@@ -111,6 +111,7 @@ function PlansForm({ handleSubmit, submitting, change }) {
                 </div>
                 <div>
                   <Field
+                    className="gray"
                     name="total"
                     htmlFor="total"
                     label="Preço Total"

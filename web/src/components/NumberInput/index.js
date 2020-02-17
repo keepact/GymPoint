@@ -36,10 +36,10 @@ function InputNumber({
 
 InputNumber.defaultProps = {
   disabled: false,
-  className: 'gray',
+  className: '',
   label: '',
   prefix: '',
-  thousandSeparator: '',
+  thousandSeparator: '. ',
   decimalScale: 0,
 };
 

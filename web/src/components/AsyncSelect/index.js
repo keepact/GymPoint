@@ -15,8 +15,9 @@ function AsyncSelector({
     <>
       <label htmlFor={label}>{label}</label>
       <MyAsyncSelect
-        onChange={option => input.onChange(option.value)}
+        {...input}
         loadOptions={loadOptions}
+        onBlur={() => {}}
         getOptionValue={option => option.id}
         getOptionLabel={option => option.name}
         className="react-asyncselect-container"
