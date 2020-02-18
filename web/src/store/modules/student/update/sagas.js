@@ -27,7 +27,7 @@ export function* updateStudent({ payload }) {
     weight: parseInteger(weight_formatted),
   };
 
-  yield put(startSubmit('STUDENT_FORM_EDIT'));
+  yield put(startSubmit('STUDENT_FORM'));
   try {
     let response = {};
 
@@ -41,7 +41,7 @@ export function* updateStudent({ payload }) {
       id ? 'Estudante atualizado com sucesso' : 'Estudante criado com sucesso'
     );
 
-    yield put(stopSubmit('STUDENT_FORM_EDIT'));
+    yield put(stopSubmit('STUDENT_FORM'));
     yield put(updateOrCreateStudentSuccess(response.data));
     history.push('/students');
   } catch (err) {

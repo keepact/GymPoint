@@ -31,7 +31,7 @@ import {
 function RegistrationForm({ change, handleSubmit, submitting }) {
   const { registrationId } = useSelector(state => state.registrationList);
 
-  const selector = formValueSelector('REGISTRATION_FORM_EDIT');
+  const selector = formValueSelector('REGISTRATION_FORM');
   const plan = useSelector(state => selector(state, 'plan'));
   const startDate = useSelector(state => selector(state, 'start_date'));
 
@@ -177,7 +177,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps)(
   reduxForm({
-    form: 'REGISTRATION_FORM_EDIT',
+    form: 'REGISTRATION_FORM',
     validate: validateRegistration,
   })(RegistrationForm)
 );

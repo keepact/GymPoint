@@ -1,4 +1,6 @@
 import { takeLatest, call, put, all, select } from 'redux-saga/effects';
+import { startSubmit, stopSubmit } from 'redux-form';
+
 import { toast } from 'react-toastify';
 
 import { profileUpdate } from '~/services/user';
@@ -23,11 +25,13 @@ export function* updateProfile({ payload }) {
     ...(rest.oldPassword ? rest : {}),
   };
 
+  yield put(startSubmit('PROFILE_FORM'));
   try {
     const { data } = yield call(profileUpdate, profile);
 
     toast.success('Perfil atualizado com sucesso');
 
+    yield put(stopSubmit('PROFILE_FORM'));
     yield put(updateProfileSuccess(data));
   } catch (err) {
     toast.error(err.response.data.error);

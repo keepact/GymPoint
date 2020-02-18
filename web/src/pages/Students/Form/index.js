@@ -91,7 +91,6 @@ function StudentForm({ handleSubmit, submitting }) {
                     label="Peso (em kg)"
                     component={NumberInput}
                     decimalScale={3}
-                    thousandSeparator
                     placeholder="75.500"
                   />
                 </div>
@@ -99,7 +98,6 @@ function StudentForm({ handleSubmit, submitting }) {
                   <Field
                     name="height_formatted"
                     htmlFor="height_formatted"
-                    thousandSeparator
                     label="Altura"
                     component={NumberInput}
                     decimalScale={2}
@@ -128,8 +126,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps)(
   reduxForm({
-    form: 'STUDENT_FORM_EDIT',
-    enableReinitialize: true,
+    form: 'STUDENT_FORM',
     validate: validateStudent,
   })(StudentForm)
 );

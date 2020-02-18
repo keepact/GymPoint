@@ -22,7 +22,7 @@ export function* createOrEdiPlan({ payload }) {
     price,
   };
 
-  yield put(startSubmit('PLAN_FORM_EDIT'));
+  yield put(startSubmit('PLAN_FORM'));
   try {
     let response = {};
 
@@ -36,7 +36,7 @@ export function* createOrEdiPlan({ payload }) {
       id ? 'Plano criado com sucesso' : 'Plano alterado com sucesso'
     );
 
-    yield put(stopSubmit('PLAN_FORM_EDIT'));
+    yield put(stopSubmit('PLAN_FORM'));
     yield put(updateOrCreatePlanSuccess(response.data));
     history.push('/plans');
   } catch (err) {

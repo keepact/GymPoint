@@ -15,7 +15,13 @@ export const Types = {
 // Reducer
 
 const INITIAL_STATE = {
-  profile: null,
+  profile: {
+    name: undefined,
+    email: undefined,
+    password: undefined,
+    oldPassword: undefined,
+    confirmPassword: undefined,
+  },
   loading: false,
 };
 

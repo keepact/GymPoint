@@ -41,6 +41,7 @@ export const Content = styled.div`
 
     input {
       background: #fff;
+      width: 100%;
       border-radius: 4px;
       border: solid 1px #dddddd;
       height: 44px;
