@@ -26,7 +26,7 @@ function PlansForm({ handleSubmit, submitting, change }) {
   const { planId } = useSelector(state => state.planList);
   const { loading } = useSelector(state => state.planUpdate);
 
-  const selector = formValueSelector('PLAN_FORM_EDIT');
+  const selector = formValueSelector('PLAN_FORM');
   const duration = useSelector(state => selector(state, 'duration'));
   const price = useSelector(state => selector(state, 'price'));
 
@@ -145,7 +145,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps)(
   reduxForm({
-    form: 'PLAN_FORM_EDIT',
+    form: 'PLAN_FORM',
     validate: validatePlan,
   })(PlansForm)
 );

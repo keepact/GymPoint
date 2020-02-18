@@ -1,19 +1,23 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Form, Input } from '@rocketseat/unform';
+import PropTypes from 'prop-types';
+
+import { Field, reduxForm } from 'redux-form';
 
 import { signInRequest } from '~/store/modules/auth';
-import { validateSignIn } from '~/util/validation';
+import { validateSignIn } from '~/util/validate';
 
+import renderField from '~/components/FormFields/renderField';
 import logo from '~/assets/images/logo.svg';
 
-function SignIn() {
+function SignIn({ handleSubmit, submitting }) {
   const dispatch = useDispatch();
 
   const { loading } = useSelector(state => state.auth);
 
-  const handleSubmit = ({ email, password }) => {
+  const submit = data => {
+    const { email, password } = data;
     dispatch(signInRequest(email, password));
   };
 
@@ -21,16 +25,37 @@ function SignIn() {
     <>
       <img src={logo} alt="GymPoint" />
 
-      <Form schema={validateSignIn} onSubmit={handleSubmit}>
-        <label htmlFor="email">Seu Email</label>
-        <Input name="email" type="email" placeholder="exemplo@email.com" />
-        <label htmlFor="password">Sua Senha</label>
-        <Input name="password" type="password" />
+      <form onSubmit={handleSubmit(data => submit(data))}>
+        <Field
+          name="email"
+          htmlFor="email"
+          label="Seu Email"
+          type="email"
+          placeholder="exemplo@email.com"
+          component={renderField}
+        />
+        <Field
+          name="password"
+          htmlFor="password"
+          label="Sua Senha"
+          type="password"
+          component={renderField}
+        />
 
-        <button type="submit">{loading ? 'Carregando...' : 'Acessar'}</button>
-      </Form>
+        <button disabled={submitting} type="submit">
+          {loading ? 'Carregando...' : 'Acessar'}
+        </button>
+      </form>
     </>
   );
 }
 
-export default SignIn;
+SignIn.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+};
+
+export default reduxForm({
+  form: 'SIGN_IN_FORM',
+  validate: validateSignIn,
+})(SignIn);

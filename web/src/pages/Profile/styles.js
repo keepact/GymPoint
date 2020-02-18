@@ -38,6 +38,7 @@ export const Container = styled.div`
       border-radius: 4px;
       border: solid 1px #dddddd;
       height: 44px;
+      width: 100%;
       padding: 0 15px;
       color: #999;
       margin: 0 0 10px;

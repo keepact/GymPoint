@@ -1,7 +1,58 @@
 import { addMonths } from 'date-fns';
 
+export const validateProfile = values => {
+  const errors = {};
+
+  if (!values.name) {
+    errors.name = 'Esse campo é obrigatório';
+  } else if (values.name.length < 3) {
+    errors.name = 'Mínimo de 3 letras';
+  }
+
+  if (!values.email) {
+    errors.email = 'Esse campo é obrigatório';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'O formato precisa ser "example@email.com"';
+  }
+
+  if (values.oldPassword && !values.password) {
+    errors.password = 'Esse campo é obrigatório';
+  } else if (Number(values.password) < 6) {
+    errors.password = 'Mínimo de 6 letras';
+  }
+
+  if (values.password && !values.confirmPassword) {
+    errors.confirmPassword = 'Esse campo é obrigatório';
+  } else if (Number(values.password) < 6) {
+    errors.confirmPassword = 'Mínimo de 6 letras';
+  } else if (values.password !== values.confirmPassword) {
+    errors.confirmPassword = 'Suas senhas não conferem, tente novamente.';
+  }
+
+  return errors;
+};
+
+export const validateSignIn = values => {
+  const errors = {};
+
+  if (!values.email) {
+    errors.email = 'Esse campo é obrigatório';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'O formato precisa ser "example@email.com"';
+  }
+
+  if (!values.password) {
+    errors.password = 'Esse campo é obrigatório';
+  } else if (values.password.length < 6) {
+    errors.password = 'Mínimo de 6 letras';
+  }
+
+  return errors;
+};
+
 export const validatePlan = values => {
   const errors = {};
+
   if (!values.title) {
     errors.title = 'Esse campo é obrigatório';
   } else if (values.title.length > 30) {
@@ -33,6 +84,7 @@ export const validatePlan = values => {
 
 export const validateStudent = values => {
   const errors = {};
+
   if (!values.name) {
     errors.name = 'Esse campo é obrigatório';
   } else if (values.name.length > 80) {
@@ -80,6 +132,7 @@ export const validateStudent = values => {
 
 export const validateRegistration = values => {
   const errors = {};
+
   if (!values.student) {
     errors.student = 'Esse campo é obrigatório';
   }

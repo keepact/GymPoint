@@ -12,7 +12,7 @@ function renderField({
 }) {
   return (
     <>
-      <label htmlFor={htmlFor}>{label}</label>
+      {label && <label htmlFor={htmlFor}>{label}</label>}
       <div>
         <input
           {...input}
@@ -30,12 +30,13 @@ function renderField({
 
 renderField.defaultProps = {
   label: '',
+  placeholder: '',
   disabled: false,
 };
 
 renderField.propTypes = {
   input: PropTypes.oneOfType([PropTypes.object]).isRequired,
-  placeholder: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   label: PropTypes.string,
   type: PropTypes.string.isRequired,
   htmlFor: PropTypes.string.isRequired,

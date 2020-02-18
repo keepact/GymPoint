@@ -26,7 +26,7 @@ export function* createOrEditRegistration({ payload }) {
     start_date,
   };
 
-  yield put(startSubmit('REGISTRATION_FORM_EDIT'));
+  yield put(startSubmit('REGISTRATION_FORM'));
   try {
     let response = {};
 
@@ -40,7 +40,7 @@ export function* createOrEditRegistration({ payload }) {
       id ? 'Matrícula alterada com sucesso' : 'Matrícula criada com sucesso'
     );
 
-    yield put(stopSubmit('REGISTRATION_FORM_EDIT'));
+    yield put(stopSubmit('REGISTRATION_FORM'));
     yield put(updateOrCreateRegistrationSuccess(response.data));
     history.push('/registrations');
   } catch (err) {
