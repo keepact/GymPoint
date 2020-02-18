@@ -8,7 +8,7 @@ import { Field, reduxForm } from 'redux-form';
 import { signInRequest } from '~/store/modules/auth';
 import { validateSignIn } from '~/util/validate';
 
-import renderField from '~/components/FormFields/renderField';
+import Input from '~/components/FormFields/Input';
 import logo from '~/assets/images/logo.svg';
 
 function SignIn({ handleSubmit, submitting }) {
@@ -32,14 +32,14 @@ function SignIn({ handleSubmit, submitting }) {
           label="Seu Email"
           type="email"
           placeholder="exemplo@email.com"
-          component={renderField}
+          component={Input}
         />
         <Field
           name="password"
           htmlFor="password"
           label="Sua Senha"
           type="password"
-          component={renderField}
+          component={Input}
         />
 
         <button disabled={submitting} type="submit">

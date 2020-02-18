@@ -8,7 +8,7 @@ import { Field, reduxForm } from 'redux-form';
 import { signOut } from '~/store/modules/auth';
 import { updateProfileRequest } from '~/store/modules/user';
 
-import renderField from '~/components/FormFields/renderField';
+import Input from '~/components/FormFields/Input';
 import { validateProfile } from '~/util/validate';
 
 import AvatarInput from './AvatarInput';
@@ -38,14 +38,14 @@ function Profile({ handleSubmit, submitting }) {
           htmlFor="name"
           type="text"
           placeholder="Nome completo"
-          component={renderField}
+          component={Input}
         />
         <Field
           name="email"
           htmlFor="email"
           type="email"
           placeholder="Seu endereço de e-mail"
-          component={renderField}
+          component={Input}
         />
 
         <hr />
@@ -55,21 +55,21 @@ function Profile({ handleSubmit, submitting }) {
           htmlFor="oldPassword"
           type="password"
           placeholder="Sua senha atual"
-          component={renderField}
+          component={Input}
         />
         <Field
           name="password"
           htmlFor="password"
           type="password"
           placeholder="Nova senha"
-          component={renderField}
+          component={Input}
         />
         <Field
           name="confirmPassword"
           htmlFor="confirmPassword"
           type="password"
           placeholder="Confirmação de senha"
-          component={renderField}
+          component={Input}
         />
 
         <button type="submit" disabled={submitting}>

@@ -1,7 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import { Container, Content, TextArea, FormPopUp } from './styles';
+import PropTypes from 'prop-types';
+import { Field, reduxForm } from 'redux-form';
+
+import { validateHelpOrders } from '~/util/validate';
+import TextArea from '~/components/FormFields/TextArea';
+
+import { Container, Content, FormPopUp } from './styles';
 
 function PopUp({
   name,
@@ -11,22 +16,27 @@ function PopUp({
   buttonLabel,
   placeholder,
   modal,
-  schema,
+  handleSubmit,
   onSubmit,
+  submitting,
 }) {
   return (
     <Container>
       <Content>
-        <FormPopUp schema={schema} onSubmit={onSubmit}>
+        <FormPopUp onSubmit={handleSubmit(values => onSubmit(values))}>
           <span>{title}</span>
           <p>{question}</p>
-          <label htmlFor={name}>{label}</label>
-          <TextArea
+          <Field
             name={name}
+            htmlFor={name}
+            label={label}
+            component={TextArea}
+            type="text"
             placeholder={placeholder}
-            onChange={e => e.target.value}
           />
-          <button type="submit">{buttonLabel}</button>
+          <button disabled={submitting} type="submit">
+            {buttonLabel}
+          </button>
           <button cancel="true" type="button" onClick={modal}>
             Cancelar
           </button>
@@ -41,7 +51,6 @@ PopUp.defaultProps = {
 };
 
 PopUp.propTypes = {
-  schema: PropTypes.oneOfType([PropTypes.object]).isRequired,
   name: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   question: PropTypes.string.isRequired,
@@ -49,7 +58,12 @@ PopUp.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   modal: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
 };
 
-export default PopUp;
+export default reduxForm({
+  form: 'HELPORDER_FORM',
+  validate: validateHelpOrders,
+})(PopUp);

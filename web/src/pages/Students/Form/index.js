@@ -11,8 +11,9 @@ import { validateStudent } from '~/util/validate';
 import { updateOrCreateStudent } from '~/store/modules/student/update';
 import { listStudentRedirect } from '~/store/modules/student/list';
 
-import renderField from '~/components/FormFields/renderField';
-import NumberInput from '~/components/NumberInput';
+import Input from '~/components/FormFields/Input';
+import NumberInput from '~/components/FormFields/NumberInput';
+
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -61,7 +62,7 @@ function StudentForm({ handleSubmit, submitting }) {
                 name="name"
                 htmlFor="name"
                 label="Nome Completo"
-                component={renderField}
+                component={Input}
                 type="text"
                 placeholder="John Doe"
               />
@@ -69,7 +70,7 @@ function StudentForm({ handleSubmit, submitting }) {
                 name="email"
                 htmlFor="name"
                 label="Endereço de Email"
-                component={renderField}
+                component={Input}
                 type="text"
                 placeholder="example@email.com"
               />

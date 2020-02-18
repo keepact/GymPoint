@@ -151,3 +151,14 @@ export const validateRegistration = values => {
 
   return errors;
 };
+
+export const validateHelpOrders = values => {
+  const errors = {};
+
+  if (!values.answer) {
+    errors.answer = 'Digite uma resposta';
+  } else if (values.answer.length < 10) {
+    errors.answer = 'Mínimo de 10 letras';
+  }
+  return errors;
+};

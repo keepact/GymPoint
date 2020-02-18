@@ -10,12 +10,12 @@ import { FiUpload } from 'react-icons/fi';
 import { validateRegistration } from '~/util/validate';
 
 import loadingAnimation from '~/assets/animations/loader.json';
-
 import Animation from '~/components/Animation';
-import StudentSelector from '~/components/AsyncSelect';
-import PlanSelector from '~/components/Select';
-import NumberInput from '~/components/NumberInput';
-import DatePicker from '~/components/DatePicker';
+
+import AsyncSelect from '~/components/FormFields/AsyncSelect';
+import Select from '~/components/FormFields/Select';
+import NumberInput from '~/components/FormFields/NumberInput';
+import DatePicker from '~/components/FormFields/DatePicker';
 
 import { listRegistrationRedirect } from '~/store/modules/registration/list';
 import { updateOrCreateRegistration } from '~/store/modules/registration/update';
@@ -106,7 +106,7 @@ function RegistrationForm({ change, handleSubmit, submitting }) {
                 label="Aluno"
                 placeholder="Digite para buscar um estudante..."
                 loadOptions={loadStudentOptions}
-                component={StudentSelector}
+                component={AsyncSelect}
               />
 
               <NumberInputs columns>
@@ -117,7 +117,7 @@ function RegistrationForm({ change, handleSubmit, submitting }) {
                     label="Plano"
                     placeholder="Selecione"
                     options={plans}
-                    component={PlanSelector}
+                    component={Select}
                     onChange={updatePlan}
                   />
                 </div>

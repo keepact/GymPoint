@@ -7,8 +7,9 @@ import { FiUpload } from 'react-icons/fi';
 
 import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
-import NumberInput from '~/components/NumberInput';
-import renderField from '~/components/FormFields/renderField';
+
+import NumberInput from '~/components/FormFields/NumberInput';
+import Input from '~/components/FormFields/Input';
 
 import { listPlanRedirect } from '~/store/modules/plan/list';
 import { updateOrCreatePlan } from '~/store/modules/plan/update';
@@ -82,7 +83,7 @@ function PlansForm({ handleSubmit, submitting, change }) {
                 name="title"
                 htmlFor="title"
                 label="Título do Plano"
-                component={renderField}
+                component={Input}
                 type="text"
                 placeholder="Título"
               />
