@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function renderField({
+function TextArea({
   input,
   label,
   type,
@@ -14,8 +14,9 @@ function renderField({
     <>
       {label && <label htmlFor={htmlFor}>{label}</label>}
       <div>
-        <input
+        <textarea
           {...input}
+          id={htmlFor}
           placeholder={placeholder}
           type={type}
           disabled={disabled}
@@ -28,13 +29,13 @@ function renderField({
   );
 }
 
-renderField.defaultProps = {
+TextArea.defaultProps = {
   label: '',
   placeholder: '',
   disabled: false,
 };
 
-renderField.propTypes = {
+TextArea.propTypes = {
   input: PropTypes.oneOfType([PropTypes.object]).isRequired,
   placeholder: PropTypes.string,
   label: PropTypes.string,
@@ -44,4 +45,4 @@ renderField.propTypes = {
   meta: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
-export default renderField;
+export default TextArea;

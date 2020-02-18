@@ -2,24 +2,24 @@ import React from 'react';
 import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
 
-function InputNumber({
+function NumberInput({
   input,
   label,
+  htmlFor,
   className,
   disabled,
   prefix,
   placeholder,
-  thousandSeparator,
   decimalScale,
   meta: { touched, error, warning },
 }) {
   return (
     <>
-      <label htmlFor={label}>{label}</label>
+      {label && <label htmlFor={htmlFor}>{label}</label>}
       <NumberFormat
         {...input}
         className={className}
-        thousandSeparator={thousandSeparator}
+        thousandSeparator
         isNumericString
         fixedDecimalScale
         decimalScale={decimalScale}
@@ -34,25 +34,25 @@ function InputNumber({
   );
 }
 
-InputNumber.defaultProps = {
+NumberInput.defaultProps = {
   disabled: false,
   className: '',
   label: '',
+  htmlFor: '',
   prefix: '',
-  thousandSeparator: '. ',
   decimalScale: 0,
 };
 
-InputNumber.propTypes = {
+NumberInput.propTypes = {
   input: PropTypes.oneOfType([PropTypes.object]).isRequired,
   placeholder: PropTypes.string.isRequired,
   label: PropTypes.string,
+  htmlFor: PropTypes.string,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   prefix: PropTypes.string,
-  thousandSeparator: PropTypes.string,
   decimalScale: PropTypes.number,
   meta: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
-export default InputNumber;
+export default NumberInput;

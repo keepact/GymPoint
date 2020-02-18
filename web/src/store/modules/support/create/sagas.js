@@ -1,4 +1,6 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { startSubmit, stopSubmit } from 'redux-form';
+
 import { toast } from 'react-toastify';
 
 import { helpOrderCreate } from '~/services/helporder';
@@ -16,11 +18,13 @@ export function* createAnswer({ payload }) {
     answer,
   };
 
+  yield put(startSubmit('HELPORDER_FORM'));
   try {
     const { data } = yield call(helpOrderCreate, supportAnswer);
 
     toast.success('Resposta enviada com sucesso');
 
+    yield put(stopSubmit('HELPORDER_FORM'));
     yield put(listSupportRequest(1));
     yield put(createSupportSuccess(data));
   } catch (err) {

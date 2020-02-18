@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Form, Input } from '@rocketseat/unform';
 
 export const Container = styled.div`
   position: fixed;
@@ -37,7 +36,7 @@ export const Content = styled.div`
   z-index: 3;
 `;
 
-export const FormPopUp = styled(Form)`
+export const FormPopUp = styled.form`
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -47,6 +46,15 @@ export const FormPopUp = styled(Form)`
   width: 100%;
   height: 100%;
   padding: 24px;
+
+  textarea {
+    align-self: center;
+    min-width: 390px;
+    min-height: 127px;
+    margin: 10px 0;
+    border: solid 1px #ddd;
+    padding: 10px;
+  }
 
   p {
     font-size: 16px;
@@ -96,15 +104,4 @@ export const FormPopUp = styled(Form)`
     background: #ee4d64;
     margin-top: 5px;
   }
-`;
-
-export const TextArea = styled(Input).attrs({
-  multiline: true,
-})`
-  align-self: center;
-  min-width: 390px;
-  min-height: 127px;
-  margin: 10px 0;
-  border: solid 1px #ddd;
-  padding: 10px;
 `;

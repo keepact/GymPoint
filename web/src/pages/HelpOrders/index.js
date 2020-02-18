@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import PageActions from '~/components/Pagination';
-import PopUp from '~/components/PopUp';
+import PopUp from './PopUp';
 import Animation from '~/components/Animation';
 
 import loadingAnimation from '~/assets/animations/loader.json';
@@ -10,8 +10,6 @@ import clearAnimation from '~/assets/animations/clear.json';
 
 import { createSupportRequest } from '~/store/modules/support/create';
 import { listSupportRequest } from '~/store/modules/support/list';
-
-import { validateHelpOrders } from '~/util/validation';
 
 import {
   Container,
@@ -94,7 +92,6 @@ function HelpOrders() {
               />
               {open ? (
                 <PopUp
-                  schema={validateHelpOrders}
                   name="answer"
                   title="Pergunta do Aluno"
                   label="Sua Resposta aqui"
