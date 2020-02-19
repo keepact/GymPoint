@@ -94,7 +94,7 @@ export const createRegistration = async (req, res, next) => {
 export const updateRegistration = async (req, res, next) => {
   try {
     const schema = Yup.object().shape({
-      name: Yup.string().required(),
+      name: Yup.string(),
       email: Yup.string().email(),
       age: Yup.number(),
       weight: Yup.number(),
@@ -103,20 +103,12 @@ export const updateRegistration = async (req, res, next) => {
 
     await schema.validate(req.body, { abortEarly: false });
 
-    const { student_id, start_date } = req.body;
+    const { start_date } = req.body;
 
     const registration = await Registration.findByPk(req.params.id);
 
     if (!registration) {
       return res.status(400).json({ error: 'Matrícula não encontrado' });
-    }
-
-    const checkRegistration = await Registration.findOne({
-      where: { student_id },
-    });
-
-    if (checkRegistration) {
-      return res.status(400).json({ error: 'O aluno já tem um plano' });
     }
 
     const dateStart = startOfDay(parseISO(start_date));
