@@ -28,7 +28,7 @@ export default function studentList(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.LIST_STUDENTS_REQUEST: {
-        draft.loading = typeof action.payload.newList !== 'string';
+        draft.loading = typeof action.payload.student !== 'string';
         break;
       }
       case Types.LIST_STUDENTS_SUCCESS: {
@@ -68,10 +68,10 @@ export default function studentList(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function listStudentRequest(page, newList) {
+export function listStudentRequest(page, student) {
   return {
     type: Types.LIST_STUDENTS_REQUEST,
-    payload: { page, newList },
+    payload: { page, student },
   };
 }
 

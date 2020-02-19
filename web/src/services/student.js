@@ -6,7 +6,7 @@ export const studentList = data =>
     method: 'GET',
     params: {
       page: data.page,
-      q: data.newList || '',
+      q: data.student || '',
     },
   });
 
