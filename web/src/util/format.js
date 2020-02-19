@@ -29,9 +29,9 @@ export function parseDecimal(numberVal, type) {
 }
 
 export function parseInteger(numberVal, type) {
-  function decimalRegex(number) {
+  const decimalRegex = number => {
     return String(number).replace(/[^0-9|-]/g, '');
-  }
+  };
   if (numberVal < 2 && type === 'height') {
     return (numberVal * 1000) / 10;
   }

@@ -23,8 +23,6 @@ import {
 import { Table } from './styles';
 
 function StudentsList() {
-  const [studentName, setStudendName] = useState('');
-
   const dispatch = useDispatch();
 
   const { students: currentStudetns, loading, page, lastPage } = useSelector(
@@ -39,8 +37,7 @@ function StudentsList() {
   }, [dispatch]);
 
   const handleSearch = e => {
-    setStudendName(e.target.value);
-    dispatch(listStudentRequest(page, studentName));
+    dispatch(listStudentRequest(page, e.target.value));
   };
 
   const handleDelete = studentId => {
