@@ -37,9 +37,9 @@ export function* listStudentById({ payload }) {
 }
 
 export function* listStudents({ payload }) {
-  const { page, newList } = payload;
+  const { page, student } = payload;
 
-  if (newList !== undefined) {
+  if (student) {
     yield delay(600);
   }
 
