@@ -64,6 +64,7 @@ class UserRepository {
       await user.update(reqBody);
 
       return await User.findByPk(id, {
+        attributes: ['id', 'name', 'email'],
         include: [
           {
             model: File,
