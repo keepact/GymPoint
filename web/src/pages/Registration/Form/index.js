@@ -18,7 +18,7 @@ import NumberInput from '~/components/FormFields/NumberInput';
 import DatePicker from '~/components/FormFields/DatePicker';
 
 import { filterStudent } from '~/store/modules/student/list';
-import { listRegistrationRedirect } from '~/store/modules/registration/list';
+import { redirectRegistration } from '~/store/modules/registration/list';
 import { updateOrCreateRegistration } from '~/store/modules/registration/update';
 
 import {
@@ -81,7 +81,7 @@ function RegistrationForm({ change, handleSubmit, submitting }) {
             <div>
               <button
                 type="button"
-                onClick={() => dispatch(listRegistrationRedirect())}
+                onClick={() => dispatch(redirectRegistration())}
               >
                 Voltar
               </button>

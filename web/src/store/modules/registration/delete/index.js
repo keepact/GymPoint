@@ -36,21 +36,9 @@ export default function registrationDelete(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function deleteRegistrationRequest(id) {
+export function deleteRegistration(id) {
   return {
     type: Types.DELETE_REGISTRATION_REQUEST,
     payload: { id },
-  };
-}
-
-export function deleteRegistrationSuccess() {
-  return {
-    type: Types.DELETE_REGISTRATION_SUCCESS,
-  };
-}
-
-export function deleteRegistrationFailure() {
-  return {
-    type: Types.DELETE_REGISTRATION_FAILURE,
   };
 }

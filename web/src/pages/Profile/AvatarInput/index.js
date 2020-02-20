@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { updateAvatarRequest } from '~/store/modules/user';
+import { updateAvatar } from '~/store/modules/user';
 
 import { Container } from './styles';
 
@@ -10,7 +10,7 @@ function AvatarInput() {
   const { profile } = useSelector(state => state.user);
 
   const handleChange = e => {
-    dispatch(updateAvatarRequest(e.target.files[0]));
+    dispatch(updateAvatar(e.target.files[0]));
   };
 
   return (

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 
 import { signOut } from '~/store/modules/auth';
-import { updateProfileRequest } from '~/store/modules/user';
+import { updateProfile } from '~/store/modules/user';
 
 import Input from '~/components/FormFields/Input';
 import { validateProfile } from '~/util/validate';
@@ -21,7 +21,7 @@ function Profile({ handleSubmit, submitting }) {
   const { loading } = useSelector(state => state.user);
 
   const submit = data => {
-    dispatch(updateProfileRequest(data));
+    dispatch(updateProfile(data));
   };
 
   const handleSignOut = () => {

@@ -6,13 +6,7 @@ import { toast } from 'react-toastify';
 import { profileUpdate } from '~/services/user';
 import { uploadFile } from '~/services/file';
 
-import {
-  Types,
-  updateProfileSuccess,
-  updateProfileFailure,
-  updateAvatarSuccess,
-  updateAvatarFailure,
-} from './index';
+import { Types } from './index';
 
 export function* updateProfile({ payload }) {
   const { name, email, ...rest } = payload.data;
@@ -32,10 +26,15 @@ export function* updateProfile({ payload }) {
     toast.success('Perfil atualizado com sucesso');
 
     yield put(stopSubmit('PROFILE_FORM'));
-    yield put(updateProfileSuccess(data));
+    yield put({
+      type: Types.UPDATE_PROFILE_SUCCESS,
+      payload: { data },
+    });
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(updateProfileFailure());
+    yield put({
+      type: Types.UPDATE_PROFILE_FAILURE,
+    });
   }
 }
 
@@ -55,10 +54,15 @@ export function* updateAvatar({ payload }) {
       url,
     };
 
-    yield put(updateAvatarSuccess(newAvatar));
+    yield put({
+      type: Types.UPDATE_AVATAR_SUCCESS,
+      payload: { newAvatar },
+    });
   } catch (err) {
     toast.error(`Houve um erro, ${err.response.data.error}`);
-    yield put(updateAvatarFailure());
+    yield put({
+      type: Types.UPDATE_AVATAR_FAILURE,
+    });
   }
 }
 

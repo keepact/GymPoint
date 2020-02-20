@@ -41,7 +41,7 @@ export default function user(state = INITIAL_STATE, action) {
         break;
       }
       case Types.UPDATE_PROFILE_SUCCESS: {
-        draft.profile = action.payload.profile;
+        draft.profile = action.payload.data;
         draft.loading = false;
         break;
       }
@@ -60,42 +60,16 @@ export default function user(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function updateProfileRequest(data) {
+export function updateProfile(data) {
   return {
     type: Types.UPDATE_PROFILE_REQUEST,
     payload: { data },
   };
 }
 
-export function updateProfileSuccess(profile) {
-  return {
-    type: Types.UPDATE_PROFILE_SUCCESS,
-    payload: { profile },
-  };
-}
-
-export function updateProfileFailure() {
-  return {
-    type: Types.UPDATE_PROFILE_FAILURE,
-  };
-}
-
-export function updateAvatarRequest(data) {
+export function updateAvatar(data) {
   return {
     type: Types.UPDATE_AVATAR_REQUEST,
     payload: { data },
-  };
-}
-
-export function updateAvatarSuccess(newAvatar) {
-  return {
-    type: Types.UPDATE_AVATAR_SUCCESS,
-    payload: { newAvatar },
-  };
-}
-
-export function updateAvatarFailure() {
-  return {
-    type: Types.UPDATE_AVATAR_FAILURE,
   };
 }

@@ -5,12 +5,7 @@ import { formatPrice } from '~/util/format';
 import history from '~/services/history';
 import * as planService from '~/services/plan';
 
-import {
-  Types,
-  listPlanSuccess,
-  listPlanSuccessId,
-  listPlanFailure,
-} from './index';
+import { Types } from './index';
 
 export function* listPlanId({ payload }) {
   const { id } = payload;
@@ -29,11 +24,16 @@ export function* listPlanId({ payload }) {
       total,
     };
 
-    yield put(listPlanSuccessId(plan));
+    yield put({
+      type: Types.LIST_PLAN_ID_SUCCESS,
+      payload: { plan },
+    });
     history.push('/plans/edit');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(listPlanFailure());
+    yield put({
+      type: Types.LIST_PLANS_FAILURE,
+    });
   }
 }
 
@@ -58,10 +58,15 @@ export function* listPlans({ payload }) {
       lastPage,
     };
 
-    yield put(listPlanSuccess(plans, pages));
+    yield put({
+      type: Types.LIST_PLANS_SUCCESS,
+      payload: { plans, pages },
+    });
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(listPlanFailure());
+    yield put({
+      type: Types.LIST_PLANS_FAILURE,
+    });
   }
 }
 

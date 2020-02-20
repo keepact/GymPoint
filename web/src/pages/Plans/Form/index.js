@@ -11,7 +11,7 @@ import loadingAnimation from '~/assets/animations/loader.json';
 import NumberInput from '~/components/FormFields/NumberInput';
 import Input from '~/components/FormFields/Input';
 
-import { listPlanRedirect } from '~/store/modules/plan/list';
+import { redirectPlan } from '~/store/modules/plan/list';
 import { updateOrCreatePlan } from '~/store/modules/plan/update';
 import { validatePlan } from '~/util/validate';
 
@@ -65,10 +65,7 @@ function PlansForm({ handleSubmit, submitting, change }) {
           <TitleWrapper>
             <h1>{planId ? 'Edição de Plano' : 'Cadastro de Plano'}</h1>
             <div>
-              <button
-                type="button"
-                onClick={() => dispatch(listPlanRedirect())}
-              >
+              <button type="button" onClick={() => dispatch(redirectPlan())}>
                 Voltar
               </button>
               <button form="Form" disabled={submitting} type="submit">

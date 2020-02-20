@@ -10,15 +10,10 @@ import {
 } from '~/services/registration';
 import history from '~/services/history';
 
-import { listPlanRequest } from '../../plan/list';
-import { listStudentRequest } from '../../student/list';
+import { getAllPlans } from '../../plan/list';
+import { getAllStudents } from '../../student/list';
 
-import {
-  Types,
-  listRegistrationSuccess,
-  listRegistrationSuccessId,
-  listRegistrationFailure,
-} from './index';
+import { Types } from './index';
 
 export function* listRegistrationId({ payload }) {
   const { id } = payload;
@@ -33,14 +28,20 @@ export function* listRegistrationId({ payload }) {
       end_date: parseISO(data.end_date),
     };
 
-    yield put(listRegistrationSuccessId(registration));
-    yield put(listPlanRequest(1, 'registration'));
-    yield put(listStudentRequest(1));
+    yield put({
+      type: Types.LIST_REGISTRATION_ID_SUCCESS,
+      payload: { registration },
+    });
+
+    yield put(getAllPlans(1, 'registration'));
+    yield put(getAllStudents(1));
 
     history.push('/registrations/edit');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(listRegistrationFailure());
+    yield put({
+      type: Types.LIST_REGISTRATIONS_FAILURE,
+    });
   }
 }
 
@@ -79,16 +80,21 @@ export function* listRegistrations({ payload }) {
       pending: hasPending,
     };
 
-    yield put(listRegistrationSuccess(registrations, pages));
+    yield put({
+      type: Types.LIST_REGISTRATIONS_SUCCESS,
+      payload: { registrations, pages },
+    });
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(listRegistrationFailure());
+    yield put({
+      type: Types.LIST_REGISTRATIONS_FAILURE,
+    });
   }
 }
 
 export function* registrationInitialState() {
-  yield put(listPlanRequest(1, 'registration'));
-  yield put(listStudentRequest(1));
+  yield put(getAllPlans(1, 'registration'));
+  yield put(getAllStudents(1));
   history.push('registrations/create');
 }
 

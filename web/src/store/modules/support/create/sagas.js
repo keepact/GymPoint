@@ -5,9 +5,9 @@ import { toast } from 'react-toastify';
 
 import { helpOrderCreate } from '~/services/helporder';
 
-import { listSupportRequest } from '../list';
+import { getAllSupportQuestions } from '../list';
 
-import { Types, createSupportSuccess, createSupportFailure } from './index';
+import { Types } from './index';
 
 export function* createAnswer({ payload }) {
   const { id } = payload;
@@ -25,11 +25,17 @@ export function* createAnswer({ payload }) {
     toast.success('Resposta enviada com sucesso');
 
     yield put(stopSubmit('HELPORDER_FORM'));
-    yield put(listSupportRequest(1));
-    yield put(createSupportSuccess(data));
+    yield put(getAllSupportQuestions(1));
+
+    yield put({
+      type: Types.CREATE_ANSWER_SUCCESS,
+      payload: { data },
+    });
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(createSupportFailure());
+    yield put({
+      type: Types.CREATE_ANSWER_FAILURE,
+    });
   }
 }
 

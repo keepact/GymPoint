@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 import { helpOrderList } from '~/services/helporder';
 
-import { Types, listSupportSuccess, listSupportFailure } from './index';
+import { Types } from './index';
 
 export function* listSupport({ payload }) {
   const { page } = payload;
@@ -23,10 +23,15 @@ export function* listSupport({ payload }) {
       lastPage: data.lastPage,
     };
 
-    yield put(listSupportSuccess(questions, pages));
+    yield put({
+      type: Types.LIST_QUESTIONS_SUCCESS,
+      payload: { questions, pages },
+    });
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(listSupportFailure());
+    yield put({
+      type: Types.LIST_QUESTIONS_FAILURE,
+    });
   }
 }
 

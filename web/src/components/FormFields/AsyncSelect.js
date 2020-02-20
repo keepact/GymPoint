@@ -50,7 +50,7 @@ AsyncSelector.propTypes = {
   label: PropTypes.string,
   loadOptions: PropTypes.func.isRequired,
   noOptionsMessage: PropTypes.string,
-  defaultOptions: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  defaultOptions: PropTypes.oneOfType([PropTypes.array]).isRequired,
   meta: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
