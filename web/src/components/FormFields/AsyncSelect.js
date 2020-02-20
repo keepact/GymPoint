@@ -9,6 +9,7 @@ function AsyncSelector({
   loadOptions,
   placeholder,
   noOptionsMessage,
+  defaultOptions,
   meta: { touched, error, warning },
 }) {
   return (
@@ -16,8 +17,10 @@ function AsyncSelector({
       <label htmlFor={label}>{label}</label>
       <MyAsyncSelect
         {...input}
+        cacheOptions
         loadOptions={loadOptions}
         onBlur={() => {}}
+        defaultOptions={defaultOptions}
         getOptionValue={option => option.id}
         getOptionLabel={option => option.name}
         className="react-asyncselect-container"
@@ -47,6 +50,7 @@ AsyncSelector.propTypes = {
   label: PropTypes.string,
   loadOptions: PropTypes.func.isRequired,
   noOptionsMessage: PropTypes.string,
+  defaultOptions: PropTypes.oneOfType([PropTypes.object]).isRequired,
   meta: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 

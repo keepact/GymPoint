@@ -4,6 +4,8 @@ import produce from 'immer';
 
 export const Types = {
   LIST_STUDENTS_REQUEST: '@student/LIST_STUDENTS_REQUEST',
+  FILTER_STUDENTS_REQUEST: '@student/FILTER_STUDENTS_REQUEST',
+  FILTER_STUDENTS_SUCCESS: '@student/FILTER_STUDENTS_SUCCESS',
   LIST_STUDENTS_SUCCESS: '@student/LIST_STUDENTS_SUCCESS',
   LIST_STUDENT_ID_REQUEST: '@student/LIST_STUDENT_ID_REQUEST',
   LIST_STUDENT_ID_SUCCESS: '@student/LIST_STUDENT_ID_SUCCESS',
@@ -18,6 +20,7 @@ export const Types = {
 const INITIAL_STATE = {
   student: undefined,
   students: [],
+  filteredStudent: {},
   studentId: null,
   loading: false,
   page: 1,
@@ -61,6 +64,10 @@ export default function studentList(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
+      case Types.FILTER_STUDENTS_SUCCESS: {
+        draft.filteredStudent = action.payload;
+        break;
+      }
       default:
     }
   });
@@ -72,6 +79,13 @@ export function listStudentRequest(page, student) {
   return {
     type: Types.LIST_STUDENTS_REQUEST,
     payload: { page, student },
+  };
+}
+
+export function filterStudent(student) {
+  return {
+    type: Types.FILTER_STUDENTS_REQUEST,
+    payload: { student },
   };
 }
 
