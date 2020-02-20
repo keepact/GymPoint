@@ -42,16 +42,3 @@ export function updateOrCreatePlan(data, id) {
     payload: { data, id },
   };
 }
-
-export function updateOrCreatePlanSuccess(plan) {
-  return {
-    type: Types.CREATE_OR_EDIT_PLAN_SUCCESS,
-    payload: { plan },
-  };
-}
-
-export function updateOrCreatePlanFailure() {
-  return {
-    type: Types.CREATE_OR_EDIT_PLAN_FAILURE,
-  };
-}

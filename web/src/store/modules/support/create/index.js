@@ -36,22 +36,9 @@ export default function supportCreate(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function createSupportRequest(data, id) {
+export function createAnswer(data, id) {
   return {
     type: Types.CREATE_ANSWER_REQUEST,
     payload: { data, id },
-  };
-}
-
-export function createSupportSuccess(helpOrders) {
-  return {
-    type: Types.CREATE_ANSWER_SUCCESS,
-    payload: { helpOrders },
-  };
-}
-
-export function createSupportFailure() {
-  return {
-    type: Types.CREATE_ANSWER_FAILURE,
   };
 }

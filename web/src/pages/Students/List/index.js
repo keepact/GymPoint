@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FiPlusCircle } from 'react-icons/fi';
 
 import {
-  listStudentRequest,
-  listStudentRequestId,
-  listStudentCreate,
+  getAllStudents,
+  getStudentById,
+  createStudent,
 } from '~/store/modules/student/list';
-import { deleteStudentRequest } from '~/store/modules/student/delete';
+import { deleteStudent } from '~/store/modules/student/delete';
 
 import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
@@ -33,21 +33,21 @@ function StudentsList() {
   const studentsQty = useMemo(() => students.length, [students]);
 
   useEffect(() => {
-    dispatch(listStudentRequest(1));
+    dispatch(getAllStudents(1));
   }, [dispatch]);
 
   const handleSearch = e => {
-    dispatch(listStudentRequest(page, e.target.value));
+    dispatch(getAllStudents(page, e.target.value));
   };
 
   const handleDelete = studentId => {
     if (window.confirm('Você tem certeza que deseja apagar esse aluno?')) {
-      dispatch(deleteStudentRequest(studentId));
+      dispatch(deleteStudent(studentId));
     }
   };
 
   const handlePage = page => {
-    dispatch(listStudentRequest(page));
+    dispatch(getAllStudents(page));
   };
 
   return (
@@ -60,10 +60,7 @@ function StudentsList() {
             <h1>Gereciando alunos</h1>
 
             <div>
-              <button
-                type="button"
-                onClick={() => dispatch(listStudentCreate())}
-              >
+              <button type="button" onClick={() => dispatch(createStudent())}>
                 <span>Cadastrar</span>
                 <FiPlusCircle size={20} />
               </button>
@@ -108,7 +105,7 @@ function StudentsList() {
                             <button
                               type="button"
                               onClick={() =>
-                                dispatch(listStudentRequestId(student.id))
+                                dispatch(getStudentById(student.id))
                               }
                             >
                               editar

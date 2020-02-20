@@ -42,16 +42,3 @@ export function updateOrCreateStudent(data, id) {
     payload: { data, id },
   };
 }
-
-export function updateOrCreateStudentSuccess(student) {
-  return {
-    type: Types.CREATE_OR_EDIT_STUDENT_SUCCESS,
-    payload: { student },
-  };
-}
-
-export function updateOrCreateStudentFailure() {
-  return {
-    type: Types.CREATE_OR_EDIT_STUDENT_FAILURE,
-  };
-}

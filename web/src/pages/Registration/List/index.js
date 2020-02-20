@@ -5,11 +5,11 @@ import { FaCircle } from 'react-icons/fa';
 import { FiPlusCircle } from 'react-icons/fi';
 
 import {
-  listRegistrationRequest,
-  listRegistrationCreate,
-  listRegistrationRequestId,
+  getAllRegistrations,
+  createRegistration,
+  getRegistrationById,
 } from '~/store/modules/registration/list';
-import { deleteRegistrationRequest } from '~/store/modules/registration/delete';
+import { deleteRegistration } from '~/store/modules/registration/delete';
 
 import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
@@ -40,24 +40,24 @@ function RegistrationList() {
   const registrationsQty = useMemo(() => registrations.length, [registrations]);
 
   useEffect(() => {
-    dispatch(listRegistrationRequest(1));
+    dispatch(getAllRegistrations(1));
   }, [dispatch]);
 
   const handleDelete = registrationId => {
     if (window.confirm('Você tem certeza que deseja apagar essa matrícula?')) {
-      dispatch(deleteRegistrationRequest(registrationId));
+      dispatch(deleteRegistration(registrationId));
     }
   };
 
   const handlePage = page => {
-    dispatch(listRegistrationRequest(page));
+    dispatch(getAllRegistrations(page));
   };
 
   const handlePendingPage = () => {
     if (pending) {
-      dispatch(listRegistrationRequest(1, 'pending'));
+      dispatch(getAllRegistrations(1, 'pending'));
     } else {
-      dispatch(listRegistrationRequest(page));
+      dispatch(getAllRegistrations(page));
     }
   };
 
@@ -80,7 +80,7 @@ function RegistrationList() {
               </button>
               <button
                 type="button"
-                onClick={() => dispatch(listRegistrationCreate())}
+                onClick={() => dispatch(createRegistration())}
               >
                 <span>Cadastrar</span>
                 <FiPlusCircle size={20} />
@@ -116,9 +116,7 @@ function RegistrationList() {
                             <button
                               type="button"
                               onClick={() =>
-                                dispatch(
-                                  listRegistrationRequestId(registration.id)
-                                )
+                                dispatch(getRegistrationById(registration.id))
                               }
                             >
                               editar

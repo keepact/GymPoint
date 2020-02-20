@@ -47,7 +47,7 @@ export default function registrationList(state = INITIAL_STATE, action) {
           pendingCount,
         } = action.payload.pages;
 
-        draft.registrations = action.payload.data;
+        draft.registrations = action.payload.registrations;
 
         draft.page = currentPage;
         draft.lastPage = lastPage;
@@ -63,7 +63,7 @@ export default function registrationList(state = INITIAL_STATE, action) {
       }
       case Types.LIST_REGISTRATION_ID_SUCCESS: {
         draft.loading = false;
-        draft.registration = action.payload.data;
+        draft.registration = action.payload.registration;
         break;
       }
       case Types.UPDATE_REGISTRATION_INITIAL_STATE: {
@@ -84,48 +84,28 @@ export default function registrationList(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function listRegistrationRequest(page, newList) {
+export function getAllRegistrations(page, newList) {
   return {
     type: Types.LIST_REGISTRATIONS_REQUEST,
     payload: { page, newList },
   };
 }
 
-export function listRegistrationSuccess(data, pages) {
-  return {
-    type: Types.LIST_REGISTRATIONS_SUCCESS,
-    payload: { data, pages },
-  };
-}
-
-export function listRegistrationRequestId(id) {
+export function getRegistrationById(id) {
   return {
     type: Types.LIST_REGISTRATION_ID_REQUEST,
     payload: { id },
   };
 }
 
-export function listRegistrationSuccessId(data) {
-  return {
-    type: Types.LIST_REGISTRATION_ID_SUCCESS,
-    payload: { data },
-  };
-}
-
-export function listRegistrationCreate() {
+export function createRegistration() {
   return {
     type: Types.UPDATE_REGISTRATION_INITIAL_STATE,
   };
 }
 
-export function listRegistrationRedirect() {
+export function redirectRegistration() {
   return {
     type: Types.REGISTRATION_REDIRECT,
-  };
-}
-
-export function listRegistrationFailure() {
-  return {
-    type: Types.LIST_REGISTRATIONS_FAILURE,
   };
 }

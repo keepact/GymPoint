@@ -45,16 +45,3 @@ export function updateOrCreateRegistration(data, id) {
     payload: { data, id },
   };
 }
-
-export function updateOrCreateRegistrationSuccess(registration) {
-  return {
-    type: Types.CREATE_OR_EDIT_REGISTRATION_SUCCESS,
-    payload: { registration },
-  };
-}
-
-export function updateOrCreateRegistrationFailure() {
-  return {
-    type: Types.CREATE_OR_EDIT_REGISTRATION_FAILURE,
-  };
-}

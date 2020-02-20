@@ -9,11 +9,7 @@ import {
   registrationCreate,
 } from '~/services/registration';
 
-import {
-  Types,
-  updateOrCreateRegistrationSuccess,
-  updateOrCreateRegistrationFailure,
-} from './index';
+import { Types } from './index';
 
 export function* createOrEditRegistration({ payload }) {
   const { id } = payload;
@@ -36,16 +32,24 @@ export function* createOrEditRegistration({ payload }) {
       response = yield call(registrationCreate, registrations);
     }
 
+    const registration = response.data;
+
     toast.success(
       id ? 'Matrícula alterada com sucesso' : 'Matrícula criada com sucesso'
     );
 
     yield put(stopSubmit('REGISTRATION_FORM'));
-    yield put(updateOrCreateRegistrationSuccess(response.data));
+
+    yield put({
+      type: Types.CREATE_OR_EDIT_REGISTRATION_SUCCESS,
+      payload: { registration },
+    });
     history.push('/registrations');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(updateOrCreateRegistrationFailure());
+    yield put({
+      type: Types.CREATE_OR_EDIT_REGISTRATION_FAILURE,
+    });
   }
 }
 

@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FiPlusCircle } from 'react-icons/fi';
 
 import {
-  listPlanRequest,
-  listPlanCreate,
-  listPlanRequestId,
+  getAllPlans,
+  createPlan,
+  getPlanById,
 } from '~/store/modules/plan/list';
-import { deletePlanRequest } from '~/store/modules/plan/delete';
+import { deletePlan } from '~/store/modules/plan/delete';
 
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -34,17 +34,17 @@ function PlansList() {
   const plansQty = useMemo(() => plans.length, [plans]);
 
   useEffect(() => {
-    dispatch(listPlanRequest(1));
+    dispatch(getAllPlans(1));
   }, [dispatch]);
 
   const handleDelete = planId => {
     if (window.confirm('Você tem certeza que deseja apagar esse plano?')) {
-      dispatch(deletePlanRequest(planId));
+      dispatch(deletePlan(planId));
     }
   };
 
   const handlePage = page => {
-    dispatch(listPlanRequest(page));
+    dispatch(getAllPlans(page));
   };
 
   return (
@@ -56,7 +56,7 @@ function PlansList() {
           <TitleWrapper>
             <h1>Gereciando Planos</h1>
             <div>
-              <button type="button" onClick={() => dispatch(listPlanCreate())}>
+              <button type="button" onClick={() => dispatch(createPlan())}>
                 <span>Cadastrar</span>
                 <FiPlusCircle size={20} />
               </button>
@@ -85,9 +85,7 @@ function PlansList() {
                           <div>
                             <button
                               type="button"
-                              onClick={() =>
-                                dispatch(listPlanRequestId(plan.id))
-                              }
+                              onClick={() => dispatch(getPlanById(plan.id))}
                             >
                               editar
                             </button>

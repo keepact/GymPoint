@@ -39,7 +39,7 @@ export default function planList(state = INITIAL_STATE, action) {
       case Types.LIST_PLANS_SUCCESS: {
         const { currentPage, lastPage } = action.payload.pages;
 
-        draft.plans = action.payload.data;
+        draft.plans = action.payload.plans;
         draft.page = currentPage;
         draft.lastPage = lastPage;
         draft.loading = false;
@@ -52,7 +52,7 @@ export default function planList(state = INITIAL_STATE, action) {
       }
       case Types.LIST_PLAN_ID_SUCCESS: {
         draft.loading = false;
-        draft.plan = action.payload.data;
+        draft.plan = action.payload.plan;
         break;
       }
       case Types.UPDATE_PLAN_INITIAL_STATE: {
@@ -73,48 +73,28 @@ export default function planList(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function listPlanRequest(page, newList) {
+export function getAllPlans(page, newList) {
   return {
     type: Types.LIST_PLANS_REQUEST,
     payload: { page, newList },
   };
 }
 
-export function listPlanSuccess(data, pages) {
-  return {
-    type: Types.LIST_PLANS_SUCCESS,
-    payload: { data, pages },
-  };
-}
-
-export function listPlanRequestId(id) {
+export function getPlanById(id) {
   return {
     type: Types.LIST_PLAN_ID_REQUEST,
     payload: { id },
   };
 }
 
-export function listPlanSuccessId(data) {
-  return {
-    type: Types.LIST_PLAN_ID_SUCCESS,
-    payload: { data },
-  };
-}
-
-export function listPlanCreate() {
+export function createPlan() {
   return {
     type: Types.UPDATE_PLAN_INITIAL_STATE,
   };
 }
 
-export function listPlanRedirect() {
+export function redirectPlan() {
   return {
     type: Types.PLAN_REDIRECT,
-  };
-}
-
-export function listPlanFailure() {
-  return {
-    type: Types.LIST_PLANS_FAILURE,
   };
 }

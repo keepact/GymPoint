@@ -36,21 +36,9 @@ export default function studentDelete(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function deleteStudentRequest(id) {
+export function deleteStudent(id) {
   return {
     type: Types.DELETE_STUDENT_REQUEST,
     payload: { id },
-  };
-}
-
-export function deleteStudentSuccess() {
-  return {
-    type: Types.DELETE_STUDENT_SUCCESS,
-  };
-}
-
-export function deleteStudentFailure() {
-  return {
-    type: Types.DELETE_STUDENT_FAILURE,
   };
 }

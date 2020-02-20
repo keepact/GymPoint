@@ -5,12 +5,7 @@ import { parseDecimal } from '~/util/format';
 import history from '~/services/history';
 import { studentList, studentListId } from '~/services/student';
 
-import {
-  Types,
-  listStudentSuccess,
-  listStudentSuccessId,
-  listStudentFailure,
-} from './index';
+import { Types } from './index';
 
 export function* listStudentById({ payload }) {
   const { id } = payload;
@@ -28,11 +23,16 @@ export function* listStudentById({ payload }) {
       weight_formatted: parseDecimal(weight, 'weight'),
     };
 
-    yield put(listStudentSuccessId(student));
+    yield put({
+      type: Types.LIST_STUDENT_ID_SUCCESS,
+      payload: { student },
+    });
     history.push('students/edit');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(listStudentFailure());
+    yield put({
+      type: Types.LIST_STUDENTS_FAILURE,
+    });
   }
 }
 
@@ -60,10 +60,15 @@ export function* listStudents({ payload }) {
       lastPage,
     };
 
-    yield put(listStudentSuccess(students, pages));
+    yield put({
+      type: Types.LIST_STUDENTS_SUCCESS,
+      payload: { students, pages },
+    });
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(listStudentFailure());
+    yield put({
+      type: Types.LIST_STUDENTS_FAILURE,
+    });
   }
 }
 
@@ -88,7 +93,7 @@ export function* filterStudent({ payload }) {
 
     yield put({
       type: Types.FILTER_STUDENTS_SUCCESS,
-      payload: students,
+      payload: { students },
     });
   } catch (err) {
     console.log(err);

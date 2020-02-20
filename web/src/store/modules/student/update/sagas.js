@@ -7,18 +7,14 @@ import { parseInteger } from '~/util/format';
 import history from '~/services/history';
 import { studentCreate, studentUpdate } from '~/services/student';
 
-import {
-  Types,
-  updateOrCreateStudentSuccess,
-  updateOrCreateStudentFailure,
-} from './index';
+import { Types } from './index';
 
 export function* updateStudent({ payload }) {
   const { name, email, age, height_formatted, weight_formatted } = payload.data;
 
   const { id } = payload;
 
-  const student = {
+  const studentData = {
     id,
     name,
     email,
@@ -32,21 +28,28 @@ export function* updateStudent({ payload }) {
     let response = {};
 
     if (id) {
-      response = yield call(studentUpdate, student);
+      response = yield call(studentUpdate, studentData);
     } else {
-      response = yield call(studentCreate, student);
+      response = yield call(studentCreate, studentData);
     }
+
+    const student = response.data;
 
     toast.success(
       id ? 'Estudante atualizado com sucesso' : 'Estudante criado com sucesso'
     );
 
     yield put(stopSubmit('STUDENT_FORM'));
-    yield put(updateOrCreateStudentSuccess(response.data));
+    yield put({
+      type: Types.CREATE_OR_EDIT_STUDENT_SUCCESS,
+      payload: { student },
+    });
     history.push('/students');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(updateOrCreateStudentFailure());
+    yield put({
+      type: Types.CREATE_OR_EDIT_STUDENT_FAILURE,
+    });
   }
 }
 

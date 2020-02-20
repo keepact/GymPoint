@@ -8,8 +8,8 @@ import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 import clearAnimation from '~/assets/animations/clear.json';
 
-import { createSupportRequest } from '~/store/modules/support/create';
-import { listSupportRequest } from '~/store/modules/support/list';
+import { createAnswer } from '~/store/modules/support/create';
+import { getAllSupportQuestions } from '~/store/modules/support/list';
 
 import {
   Container,
@@ -33,7 +33,7 @@ function HelpOrders() {
   const questionsQty = useMemo(() => questions.length, [questions]);
 
   useEffect(() => {
-    dispatch(listSupportRequest(1));
+    dispatch(getAllSupportQuestions(1));
   }, [dispatch]);
 
   const popUpAction = () => {
@@ -46,12 +46,12 @@ function HelpOrders() {
   };
 
   const handleSubmit = data => {
-    dispatch(createSupportRequest(data, selectedQuestion.questionId));
+    dispatch(createAnswer(data, selectedQuestion.questionId));
     popUpAction();
   };
 
   const handlePage = page => {
-    dispatch(listSupportRequest(page));
+    dispatch(getAllSupportQuestions(page));
   };
 
   return (

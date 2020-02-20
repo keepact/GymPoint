@@ -3,23 +3,27 @@ import { toast } from 'react-toastify';
 
 import { studentDelete } from '~/services/student';
 
-import { listStudentRequest } from '../list';
+import { getAllStudents } from '../list';
 
-import { Types, deleteStudentSuccess, deleteStudentFailure } from './index';
+import { Types } from './index';
 
 export function* deleteStudent({ payload }) {
   const { id } = payload;
 
   try {
-    const { data } = yield call(studentDelete, id);
+    yield call(studentDelete, id);
 
     toast.success('Aluno removido com sucesso');
 
-    yield put(deleteStudentSuccess(data));
-    yield put(listStudentRequest(1));
+    yield put({
+      type: Types.DELETE_STUDENT_SUCCESS,
+    });
+    yield put(getAllStudents(1));
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(deleteStudentFailure());
+    yield put({
+      type: Types.DELETE_STUDENT_FAILURE,
+    });
   }
 }
 

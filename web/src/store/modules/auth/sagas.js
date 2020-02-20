@@ -4,7 +4,7 @@ import history from '~/services/history';
 
 import { authLogin } from '~/services/auth';
 
-import { Types, signInSuccess, signFailure } from './index';
+import { Types } from './index';
 
 export function* signIn({ payload }) {
   try {
@@ -14,12 +14,16 @@ export function* signIn({ payload }) {
 
     localStorage.setItem('token', token);
 
-    yield put(signInSuccess(user));
-
+    yield put({
+      type: Types.SIGN_IN_SUCCESS,
+      payload: { user },
+    });
     history.push('/students');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(signFailure());
+    yield put({
+      type: Types.SIGN_FAILURE,
+    });
   }
 }
 

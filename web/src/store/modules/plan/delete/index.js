@@ -36,21 +36,9 @@ export default function planDelete(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function deletePlanRequest(id) {
+export function deletePlan(id) {
   return {
     type: Types.DELETE_PLAN_REQUEST,
     payload: { id },
-  };
-}
-
-export function deletePlanSuccess() {
-  return {
-    type: Types.DELETE_PLAN_SUCCESS,
-  };
-}
-
-export function deletePlanFailure() {
-  return {
-    type: Types.DELETE_PLAN_FAILURE,
   };
 }

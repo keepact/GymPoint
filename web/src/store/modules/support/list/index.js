@@ -27,7 +27,7 @@ export default function supportList(state = INITIAL_STATE, action) {
       case Types.LIST_QUESTIONS_SUCCESS: {
         const { currentPage, lastPage } = action.payload.pages;
 
-        draft.questions = action.payload.data;
+        draft.questions = action.payload.questions;
         draft.page = currentPage;
         draft.lastPage = lastPage;
         draft.loading = false;
@@ -44,22 +44,9 @@ export default function supportList(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function listSupportRequest(page, newList) {
+export function getAllSupportQuestions(page, newList) {
   return {
     type: Types.LIST_QUESTIONS_REQUEST,
     payload: { page, newList },
-  };
-}
-
-export function listSupportSuccess(data, pages) {
-  return {
-    type: Types.LIST_QUESTIONS_SUCCESS,
-    payload: { data, pages },
-  };
-}
-
-export function listSupportFailure() {
-  return {
-    type: Types.LIST_QUESTIONS_FAILURE,
   };
 }

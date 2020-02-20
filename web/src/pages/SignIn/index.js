@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { Field, reduxForm } from 'redux-form';
 
-import { signInRequest } from '~/store/modules/auth';
+import { signIn } from '~/store/modules/auth';
 import { validateSignIn } from '~/util/validate';
 
 import Input from '~/components/FormFields/Input';
@@ -18,7 +18,7 @@ function SignIn({ handleSubmit, submitting }) {
 
   const submit = data => {
     const { email, password } = data;
-    dispatch(signInRequest(email, password));
+    dispatch(signIn(email, password));
   };
 
   return (

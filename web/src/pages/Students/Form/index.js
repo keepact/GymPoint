@@ -9,7 +9,7 @@ import { FiUpload } from 'react-icons/fi';
 import { validateStudent } from '~/util/validate';
 
 import { updateOrCreateStudent } from '~/store/modules/student/update';
-import { listStudentRedirect } from '~/store/modules/student/list';
+import { redirectStudent } from '~/store/modules/student/list';
 
 import Input from '~/components/FormFields/Input';
 import NumberInput from '~/components/FormFields/NumberInput';
@@ -44,10 +44,7 @@ function StudentForm({ handleSubmit, submitting }) {
           <TitleWrapper>
             <h1>{studentId ? 'Edição de aluno' : 'Cadastro de Aluno'}</h1>
             <div>
-              <button
-                type="button"
-                onClick={() => dispatch(listStudentRedirect())}
-              >
+              <button type="button" onClick={() => dispatch(redirectStudent())}>
                 Voltar
               </button>
               <button form="Form" disabled={submitting} type="submit">

@@ -5,17 +5,13 @@ import { toast } from 'react-toastify';
 import history from '~/services/history';
 import * as planService from '~/services/plan';
 
-import {
-  Types,
-  updateOrCreatePlanSuccess,
-  updateOrCreatePlanFailure,
-} from './index';
+import { Types } from './index';
 
 export function* createOrEdiPlan({ payload }) {
   const { id } = payload;
   const { title, duration, price } = payload.data;
 
-  const plan = {
+  const planData = {
     id,
     title,
     duration,
@@ -27,21 +23,29 @@ export function* createOrEdiPlan({ payload }) {
     let response = {};
 
     if (id) {
-      response = yield call(planService.planUpdate, plan);
+      response = yield call(planService.planUpdate, planData);
     } else {
-      response = yield call(planService.planCreate, plan);
+      response = yield call(planService.planCreate, planData);
     }
+
+    const plan = response.data;
 
     toast.success(
       id ? 'Plano criado com sucesso' : 'Plano alterado com sucesso'
     );
 
     yield put(stopSubmit('PLAN_FORM'));
-    yield put(updateOrCreatePlanSuccess(response.data));
+
+    yield put({
+      type: Types.CREATE_OR_EDIT_PLAN_SUCCESS,
+      payload: { plan },
+    });
     history.push('/plans');
   } catch (err) {
     toast.error(err.response.data.error);
-    yield put(updateOrCreatePlanFailure());
+    yield put({
+      type: Types.CREATE_OR_EDIT_PLAN_FAILURE,
+    });
   }
 }
 

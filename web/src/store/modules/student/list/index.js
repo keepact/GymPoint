@@ -37,7 +37,7 @@ export default function studentList(state = INITIAL_STATE, action) {
       case Types.LIST_STUDENTS_SUCCESS: {
         const { currentPage, lastPage } = action.payload.pages;
 
-        draft.students = action.payload.data;
+        draft.students = action.payload.students;
         draft.page = currentPage;
         draft.lastPage = lastPage;
         draft.loading = false;
@@ -50,7 +50,7 @@ export default function studentList(state = INITIAL_STATE, action) {
       }
       case Types.LIST_STUDENT_ID_SUCCESS: {
         draft.loading = false;
-        draft.student = action.payload.data;
+        draft.student = action.payload.student;
         break;
       }
       case Types.UPDATE_STUDENT_INITIAL_STATE: {
@@ -65,7 +65,7 @@ export default function studentList(state = INITIAL_STATE, action) {
         break;
       }
       case Types.FILTER_STUDENTS_SUCCESS: {
-        draft.filteredStudent = action.payload;
+        draft.filteredStudent = action.payload.students;
         break;
       }
       default:
@@ -75,7 +75,7 @@ export default function studentList(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function listStudentRequest(page, student) {
+export function getAllStudents(page, student) {
   return {
     type: Types.LIST_STUDENTS_REQUEST,
     payload: { page, student },
@@ -89,41 +89,21 @@ export function filterStudent(student) {
   };
 }
 
-export function listStudentSuccess(data, pages) {
-  return {
-    type: Types.LIST_STUDENTS_SUCCESS,
-    payload: { data, pages },
-  };
-}
-
-export function listStudentRequestId(id) {
+export function getStudentById(id) {
   return {
     type: Types.LIST_STUDENT_ID_REQUEST,
     payload: { id },
   };
 }
 
-export function listStudentSuccessId(data) {
-  return {
-    type: Types.LIST_STUDENT_ID_SUCCESS,
-    payload: { data },
-  };
-}
-
-export function listStudentCreate() {
+export function createStudent() {
   return {
     type: Types.UPDATE_STUDENT_INITIAL_STATE,
   };
 }
 
-export function listStudentRedirect() {
+export function redirectStudent() {
   return {
     type: Types.STUDENT_REDIRECT,
-  };
-}
-
-export function listStudentFailure() {
-  return {
-    type: Types.LIST_STUDENTS_FAILURE,
   };
 }
