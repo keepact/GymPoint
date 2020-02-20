@@ -17,6 +17,7 @@ import Select from '~/components/FormFields/Select';
 import NumberInput from '~/components/FormFields/NumberInput';
 import DatePicker from '~/components/FormFields/DatePicker';
 
+import { filterStudent } from '~/store/modules/student/list';
 import { listRegistrationRedirect } from '~/store/modules/registration/list';
 import { updateOrCreateRegistration } from '~/store/modules/registration/update';
 
@@ -39,18 +40,11 @@ function RegistrationForm({ change, handleSubmit, submitting }) {
 
   const { loading } = useSelector(state => state.registrationUpdate);
   const { plans } = useSelector(state => state.planList);
-  const { students } = useSelector(state => state.studentList);
-
-  const filterStudent = (data, inputValue) => {
-    return data.filter(i =>
-      i.name.toLowerCase().includes(inputValue.toLowerCase())
-    );
-  };
+  const { students, filteredStudent } = useSelector(state => state.studentList);
 
   const loadStudentOptions = async inputValue => {
-    return new Promise(resolve => {
-      resolve(filterStudent(students, inputValue));
-    });
+    dispatch(filterStudent(inputValue));
+    return filteredStudent && filteredStudent;
   };
 
   const updateDate = value => {
@@ -105,6 +99,7 @@ function RegistrationForm({ change, handleSubmit, submitting }) {
                 htmlFor="student"
                 label="Aluno"
                 placeholder="Digite para buscar um estudante..."
+                defaultOptions={students}
                 loadOptions={loadStudentOptions}
                 component={AsyncSelect}
               />
