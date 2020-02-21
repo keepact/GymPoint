@@ -7,8 +7,8 @@ import {
   getAllStudents,
   getStudentById,
   createStudent,
-} from '~/store/modules/student/list';
-import { deleteStudent } from '~/store/modules/student/delete';
+  deleteStudent,
+} from '~/store/ducks/student';
 
 import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
@@ -26,7 +26,7 @@ function StudentsList() {
   const dispatch = useDispatch();
 
   const { students: currentStudetns, loading, page, lastPage } = useSelector(
-    state => state.studentList
+    state => state.student
   );
 
   const students = useMemo(() => currentStudetns, [currentStudetns]);

@@ -2,14 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import PageActions from '~/components/Pagination';
-import PopUp from './PopUp';
+import ModalForm from './Form';
 import Animation from '~/components/Animation';
 
 import loadingAnimation from '~/assets/animations/loader.json';
 import clearAnimation from '~/assets/animations/clear.json';
 
-import { createAnswer } from '~/store/modules/support/create';
-import { getAllSupportQuestions } from '~/store/modules/support/list';
+import { createAnswer, getAllSupportQuestions } from '~/store/ducks/helporder';
 
 import {
   Container,
@@ -27,7 +26,7 @@ function HelpOrders() {
   const dispatch = useDispatch();
 
   const { lastPage, page, questions, loading } = useSelector(
-    state => state.supportList
+    state => state.helporder
   );
 
   const questionsQty = useMemo(() => questions.length, [questions]);
@@ -91,7 +90,7 @@ function HelpOrders() {
                 currentPage={page}
               />
               {open ? (
-                <PopUp
+                <ModalForm
                   name="answer"
                   title="Pergunta do Aluno"
                   label="Sua Resposta aqui"

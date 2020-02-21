@@ -8,8 +8,10 @@ export const Types = {
   LIST_PLAN_ID_REQUEST: '@plan/LIST_PLAN_ID_REQUEST',
   LIST_PLAN_ID_SUCCESS: '@plan/LIST_PLAN_ID_SUCCESS',
   UPDATE_PLAN_INITIAL_STATE: '@plan/UPDATE_PLAN_INITIAL_STATE',
+  DELETE_PLAN_REQUEST: '@plan/DELETE_PLAN_REQUEST',
+  CREATE_OR_EDIT_PLAN_REQUEST: '@plan/CREATE_OR_EDIT_PLAN_REQUEST',
   PLAN_REDIRECT: '@plan/PLAN_REDIRECT',
-  LIST_PLANS_FAILURE: '@plan/LIST_PLANS_FAILURE',
+  PLAN_LOADED: '@plan/PLAN_LOADED',
 };
 
 // Reducer
@@ -29,10 +31,18 @@ const INITIAL_STATE = {
   lastPage: undefined,
 };
 
-export default function planList(state = INITIAL_STATE, action) {
+export default function plan(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.LIST_PLANS_REQUEST: {
+        draft.loading = true;
+        break;
+      }
+      case Types.DELETE_PLAN_REQUEST: {
+        draft.loading = true;
+        break;
+      }
+      case Types.CREATE_OR_EDIT_PLAN_REQUEST: {
         draft.loading = true;
         break;
       }
@@ -62,7 +72,7 @@ export default function planList(state = INITIAL_STATE, action) {
         }
         break;
       }
-      case Types.LIST_PLANS_FAILURE: {
+      case Types.PLAN_LOADED: {
         draft.loading = false;
         break;
       }
@@ -96,5 +106,19 @@ export function createPlan() {
 export function redirectPlan() {
   return {
     type: Types.PLAN_REDIRECT,
+  };
+}
+
+export function deletePlan(id) {
+  return {
+    type: Types.DELETE_PLAN_REQUEST,
+    payload: { id },
+  };
+}
+
+export function updateOrCreatePlan(data, id) {
+  return {
+    type: Types.CREATE_OR_EDIT_PLAN_REQUEST,
+    payload: { data, id },
   };
 }

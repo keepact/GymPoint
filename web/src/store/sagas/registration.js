@@ -1,25 +1,23 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { startSubmit, stopSubmit } from 'redux-form';
+
 import { toast } from 'react-toastify';
 import { format, parseISO } from 'date-fns';
 import { longDate, language, activeColor } from '~/util/format';
 
-import {
-  registrationList,
-  registrationListId,
-  registrationPending,
-} from '~/services/registration';
+import * as registrationService from '~/services/registration';
 import history from '~/services/history';
 
-import { getAllPlans } from '../../plan/list';
-import { getAllStudents } from '../../student/list';
+import { getAllPlans } from '../ducks/plan';
+import { getAllStudents } from '../ducks/student';
 
-import { Types } from './index';
+import { Types, getAllRegistrations } from '../ducks/registration';
 
 export function* listRegistrationId({ payload }) {
   const { id } = payload;
 
   try {
-    const { data } = yield call(registrationListId, id);
+    const { data } = yield call(registrationService.registrationListId, id);
 
     const registration = {
       ...data,
@@ -40,7 +38,7 @@ export function* listRegistrationId({ payload }) {
   } catch (err) {
     toast.error(err.response.data.error);
     yield put({
-      type: Types.LIST_REGISTRATIONS_FAILURE,
+      type: Types.REGISTRATION_LOADED,
     });
   }
 }
@@ -50,7 +48,9 @@ export function* listRegistrations({ payload }) {
 
   try {
     const { data } = yield call(
-      !newList ? registrationList : registrationPending,
+      !newList
+        ? registrationService.registrationList
+        : registrationService.registrationPending,
       page
     );
 
@@ -87,7 +87,7 @@ export function* listRegistrations({ payload }) {
   } catch (err) {
     toast.error(err.response.data.error);
     yield put({
-      type: Types.LIST_REGISTRATIONS_FAILURE,
+      type: Types.REGISTRATION_LOADED,
     });
   }
 }
@@ -102,9 +102,72 @@ export function registrationRedirect() {
   history.push('/registrations');
 }
 
+export function* createOrEditRegistration({ payload }) {
+  const { id } = payload;
+  const { student, plan, start_date } = payload.data;
+
+  const registrations = {
+    id,
+    student_id: student.id,
+    plan_id: plan.id,
+    start_date,
+  };
+
+  yield put(startSubmit('REGISTRATION_FORM'));
+  try {
+    if (id) {
+      yield call(registrationService.registrationUpdate, registrations);
+    } else {
+      yield call(registrationService.registrationCreate, registrations);
+    }
+
+    toast.success(
+      id ? 'Matrícula alterada com sucesso' : 'Matrícula criada com sucesso'
+    );
+
+    yield put(stopSubmit('REGISTRATION_FORM'));
+
+    yield put({
+      type: Types.REGISTRATION_LOADED,
+    });
+    history.push('/registrations');
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put({
+      type: Types.REGISTRATION_LOADED,
+    });
+  }
+}
+
+export function* deleteRegistration({ payload }) {
+  const { id } = payload;
+
+  try {
+    yield call(registrationService.registrationDelete, id);
+
+    toast.success('Matrícula removida com sucesso');
+
+    yield put({
+      type: Types.REGISTRATION_LOADED,
+    });
+
+    yield put(getAllRegistrations(1));
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put({
+      type: Types.REGISTRATION_LOADED,
+    });
+  }
+}
+
 export default all([
   takeLatest(Types.LIST_REGISTRATIONS_REQUEST, listRegistrations),
   takeLatest(Types.LIST_REGISTRATION_ID_REQUEST, listRegistrationId),
   takeLatest(Types.UPDATE_REGISTRATION_INITIAL_STATE, registrationInitialState),
   takeLatest(Types.REGISTRATION_REDIRECT, registrationRedirect),
+  takeLatest(
+    Types.CREATE_OR_EDIT_REGISTRATION_REQUEST,
+    createOrEditRegistration
+  ),
+  takeLatest(Types.DELETE_REGISTRATION_REQUEST, deleteRegistration),
 ]);

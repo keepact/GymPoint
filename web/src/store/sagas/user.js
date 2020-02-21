@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { profileUpdate } from '~/services/user';
 import { uploadFile } from '~/services/file';
 
-import { Types } from './index';
+import { Types } from '../ducks/user';
 
 export function* updateProfile({ payload }) {
   const { name, email, ...rest } = payload.data;

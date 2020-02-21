@@ -1,17 +1,19 @@
 import { takeLatest, call, put, all, delay, select } from 'redux-saga/effects';
+import { startSubmit, stopSubmit } from 'redux-form';
+
 import { toast } from 'react-toastify';
-import { parseDecimal } from '~/util/format';
+import { parseDecimal, parseInteger } from '~/util/format';
 
 import history from '~/services/history';
-import { studentList, studentListId } from '~/services/student';
+import * as studentService from '~/services/student';
 
-import { Types } from './index';
+import { Types, getAllStudents } from '../ducks/student';
 
 export function* listStudentById({ payload }) {
   const { id } = payload;
 
   try {
-    const { data } = yield call(studentListId, id);
+    const { data } = yield call(studentService.studentListId, id);
     const { name, email, age, height, weight } = data;
 
     const student = {
@@ -31,7 +33,7 @@ export function* listStudentById({ payload }) {
   } catch (err) {
     toast.error(err.response.data.error);
     yield put({
-      type: Types.LIST_STUDENTS_FAILURE,
+      type: Types.STUDENT_LOADED,
     });
   }
 }
@@ -44,7 +46,7 @@ export function* listStudents({ payload }) {
   }
 
   try {
-    const { data } = yield call(studentList, payload);
+    const { data } = yield call(studentService.studentList, payload);
 
     const students = data.content.rows.map(students => ({
       id: students.id,
@@ -67,7 +69,7 @@ export function* listStudents({ payload }) {
   } catch (err) {
     toast.error(err.response.data.error);
     yield put({
-      type: Types.LIST_STUDENTS_FAILURE,
+      type: Types.STUDENT_LOADED,
     });
   }
 }
@@ -82,7 +84,7 @@ export function* filterStudent({ payload }) {
   };
 
   try {
-    const { data } = yield call(studentList, filtered);
+    const { data } = yield call(studentService.studentList, filtered);
 
     const students = data.content.rows.map(students => ({
       id: students.id,
@@ -108,10 +110,71 @@ export function studentInitialState() {
   history.push('students/create');
 }
 
+export function* updateStudent({ payload }) {
+  const { name, email, age, height_formatted, weight_formatted } = payload.data;
+
+  const { id } = payload;
+
+  const studentData = {
+    id,
+    name,
+    email,
+    age,
+    height: parseInteger(height_formatted, 'height'),
+    weight: parseInteger(weight_formatted),
+  };
+
+  yield put(startSubmit('STUDENT_FORM'));
+  try {
+    if (id) {
+      yield call(studentService.studentUpdate, studentData);
+    } else {
+      yield call(studentService.studentCreate, studentData);
+    }
+
+    toast.success(
+      id ? 'Estudante atualizado com sucesso' : 'Estudante criado com sucesso'
+    );
+
+    yield put(stopSubmit('STUDENT_FORM'));
+    yield put({
+      type: Types.STUDENT_LOADED,
+    });
+    history.push('/students');
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put({
+      type: Types.STUDENT_LOADED,
+    });
+  }
+}
+
+export function* deleteStudent({ payload }) {
+  const { id } = payload;
+
+  try {
+    yield call(studentService.studentDelete, id);
+
+    toast.success('Aluno removido com sucesso');
+
+    yield put({
+      type: Types.STUDENT_LOADED,
+    });
+    yield put(getAllStudents(1));
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put({
+      type: Types.STUDENT_LOADED,
+    });
+  }
+}
+
 export default all([
   takeLatest(Types.LIST_STUDENTS_REQUEST, listStudents),
   takeLatest(Types.LIST_STUDENT_ID_REQUEST, listStudentById),
   takeLatest(Types.FILTER_STUDENTS_REQUEST, filterStudent),
   takeLatest(Types.STUDENT_REDIRECT, studentRedirect),
   takeLatest(Types.UPDATE_STUDENT_INITIAL_STATE, studentInitialState),
+  takeLatest(Types.CREATE_OR_EDIT_STUDENT_REQUEST, updateStudent),
+  takeLatest(Types.DELETE_STUDENT_REQUEST, deleteStudent),
 ]);

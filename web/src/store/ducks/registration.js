@@ -10,7 +10,10 @@ export const Types = {
   UPDATE_REGISTRATION_INITIAL_STATE:
     '@registration/UPDATE_REGISTRATION_INITIAL_STATE',
   REGISTRATION_REDIRECT: '@registration/REGISTRATION_REDIRECT',
-  LIST_REGISTRATIONS_FAILURE: '@registration/LIST_REGISTRATIONS_FAILURE',
+  REGISTRATION_LOADED: '@registration/REGISTRATION_LOADED',
+  DELETE_REGISTRATION_REQUEST: '@registration/DELETE_REGISTRATION_REQUEST',
+  CREATE_OR_EDIT_REGISTRATION_REQUEST:
+    '@registration/CREATE_OR_EDIT_REGISTRATION_REQUEST',
 };
 
 // Reducer
@@ -32,10 +35,18 @@ const INITIAL_STATE = {
   pendingCount: 0,
 };
 
-export default function registrationList(state = INITIAL_STATE, action) {
+export default function registration(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.LIST_REGISTRATIONS_REQUEST: {
+        draft.loading = true;
+        break;
+      }
+      case Types.CREATE_OR_EDIT_REGISTRATION_REQUEST: {
+        draft.loading = true;
+        break;
+      }
+      case Types.DELETE_REGISTRATION_REQUEST: {
         draft.loading = true;
         break;
       }
@@ -73,7 +84,7 @@ export default function registrationList(state = INITIAL_STATE, action) {
         }
         break;
       }
-      case Types.LIST_REGISTRATIONS_FAILURE: {
+      case Types.REGISTRATION_LOADED: {
         draft.loading = false;
         break;
       }
@@ -107,5 +118,19 @@ export function createRegistration() {
 export function redirectRegistration() {
   return {
     type: Types.REGISTRATION_REDIRECT,
+  };
+}
+
+export function deleteRegistration(id) {
+  return {
+    type: Types.DELETE_REGISTRATION_REQUEST,
+    payload: { id },
+  };
+}
+
+export function updateOrCreateRegistration(data, id) {
+  return {
+    type: Types.CREATE_OR_EDIT_REGISTRATION_REQUEST,
+    payload: { data, id },
   };
 }

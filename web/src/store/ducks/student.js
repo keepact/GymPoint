@@ -3,16 +3,17 @@ import produce from 'immer';
 // Action Types
 
 export const Types = {
-  LIST_STUDENTS_REQUEST: '@student/LIST_STUDENTS_REQUEST',
   FILTER_STUDENTS_REQUEST: '@student/FILTER_STUDENTS_REQUEST',
   FILTER_STUDENTS_SUCCESS: '@student/FILTER_STUDENTS_SUCCESS',
+  LIST_STUDENTS_REQUEST: '@student/LIST_STUDENTS_REQUEST',
   LIST_STUDENTS_SUCCESS: '@student/LIST_STUDENTS_SUCCESS',
   LIST_STUDENT_ID_REQUEST: '@student/LIST_STUDENT_ID_REQUEST',
   LIST_STUDENT_ID_SUCCESS: '@student/LIST_STUDENT_ID_SUCCESS',
   STUDENT_REDIRECT: '@student/STUDENT_REDIRECT',
-  UPDATE_STUDENT_CLEAR_VALUE: '@student/UPDATE_STUDENT_CLEAR_VALUE',
   UPDATE_STUDENT_INITIAL_STATE: '@student/UPDATE_STUDENT_INITIAL_STATE',
-  LIST_STUDENTS_FAILURE: '@student/LIST_STUDENTS_FAILURE',
+  CREATE_OR_EDIT_STUDENT_REQUEST: '@student/CREATE_OR_EDIT_STUDENT_REQUEST',
+  STUDENT_LOADED: '@student/STUDENT_LOADED',
+  DELETE_STUDENT_REQUEST: '@student/DELETE_STUDENT_REQUEST',
 };
 
 // Reducer
@@ -27,11 +28,19 @@ const INITIAL_STATE = {
   lastPage: undefined,
 };
 
-export default function studentList(state = INITIAL_STATE, action) {
+export default function student(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.LIST_STUDENTS_REQUEST: {
         draft.loading = typeof action.payload.student !== 'string';
+        break;
+      }
+      case Types.CREATE_OR_EDIT_STUDENT_REQUEST: {
+        draft.loading = true;
+        break;
+      }
+      case Types.DELETE_STUDENT_REQUEST: {
+        draft.loading = true;
         break;
       }
       case Types.LIST_STUDENTS_SUCCESS: {
@@ -60,12 +69,12 @@ export default function studentList(state = INITIAL_STATE, action) {
         }
         break;
       }
-      case Types.LIST_STUDENTS_FAILURE: {
-        draft.loading = false;
-        break;
-      }
       case Types.FILTER_STUDENTS_SUCCESS: {
         draft.filteredStudent = action.payload.students;
+        break;
+      }
+      case Types.STUDENT_LOADED: {
+        draft.loading = false;
         break;
       }
       default:
@@ -105,5 +114,19 @@ export function createStudent() {
 export function redirectStudent() {
   return {
     type: Types.STUDENT_REDIRECT,
+  };
+}
+
+export function updateOrCreateStudent(data, id) {
+  return {
+    type: Types.CREATE_OR_EDIT_STUDENT_REQUEST,
+    payload: { data, id },
+  };
+}
+
+export function deleteStudent(id) {
+  return {
+    type: Types.DELETE_STUDENT_REQUEST,
+    payload: { id },
   };
 }
