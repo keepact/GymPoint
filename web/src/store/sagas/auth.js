@@ -4,7 +4,7 @@ import history from '~/services/history';
 
 import { authLogin } from '~/services/auth';
 
-import { Types } from './index';
+import { Types } from '../ducks/auth';
 
 export function* signIn({ payload }) {
   try {

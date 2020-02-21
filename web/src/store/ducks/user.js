@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { Types as TypeAuth } from '../auth';
+import { Types as TypeAuth } from './auth';
 
 // Action Types
 

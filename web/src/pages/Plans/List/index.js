@@ -7,8 +7,8 @@ import {
   getAllPlans,
   createPlan,
   getPlanById,
-} from '~/store/modules/plan/list';
-import { deletePlan } from '~/store/modules/plan/delete';
+  deletePlan,
+} from '~/store/ducks/plan';
 
 import loadingAnimation from '~/assets/animations/loader.json';
 
@@ -27,7 +27,7 @@ function PlansList() {
   const dispatch = useDispatch();
 
   const { plans: currentPlans, loading, page, lastPage } = useSelector(
-    state => state.planList
+    state => state.plan
   );
 
   const plans = useMemo(() => currentPlans, [currentPlans]);

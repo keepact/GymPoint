@@ -11,8 +11,7 @@ import loadingAnimation from '~/assets/animations/loader.json';
 import NumberInput from '~/components/FormFields/NumberInput';
 import Input from '~/components/FormFields/Input';
 
-import { redirectPlan } from '~/store/modules/plan/list';
-import { updateOrCreatePlan } from '~/store/modules/plan/update';
+import { redirectPlan, updateOrCreatePlan } from '~/store/ducks/plan';
 import { validatePlan } from '~/util/validate';
 
 import {
@@ -24,8 +23,7 @@ import {
 } from '~/styles/shared';
 
 function PlansForm({ handleSubmit, submitting, change }) {
-  const { planId } = useSelector(state => state.planList);
-  const { loading } = useSelector(state => state.planUpdate);
+  const { planId, loading } = useSelector(state => state.plan);
 
   const selector = formValueSelector('PLAN_FORM');
   const duration = useSelector(state => selector(state, 'duration'));
@@ -137,7 +135,7 @@ PlansForm.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    initialValues: state.planList.plan,
+    initialValues: state.plan.plan,
   };
 };
 

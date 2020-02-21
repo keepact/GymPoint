@@ -17,9 +17,11 @@ import Select from '~/components/FormFields/Select';
 import NumberInput from '~/components/FormFields/NumberInput';
 import DatePicker from '~/components/FormFields/DatePicker';
 
-import { filterStudent } from '~/store/modules/student/list';
-import { redirectRegistration } from '~/store/modules/registration/list';
-import { updateOrCreateRegistration } from '~/store/modules/registration/update';
+import { filterStudent } from '~/store/ducks/student';
+import {
+  updateOrCreateRegistration,
+  redirectRegistration,
+} from '~/store/ducks/registration';
 
 import {
   Content,
@@ -30,7 +32,7 @@ import {
 } from '~/styles/shared';
 
 function RegistrationForm({ change, handleSubmit, submitting }) {
-  const { registrationId } = useSelector(state => state.registrationList);
+  const { registrationId, loading } = useSelector(state => state.registration);
 
   const selector = formValueSelector('REGISTRATION_FORM');
   const plan = useSelector(state => selector(state, 'plan'));
@@ -38,9 +40,8 @@ function RegistrationForm({ change, handleSubmit, submitting }) {
 
   const dispatch = useDispatch();
 
-  const { loading } = useSelector(state => state.registrationUpdate);
-  const { plans } = useSelector(state => state.planList);
-  const { students, filteredStudent } = useSelector(state => state.studentList);
+  const { plans } = useSelector(state => state.plan);
+  const { students, filteredStudent } = useSelector(state => state.student);
 
   const loadStudentOptions = async inputValue => {
     dispatch(filterStudent(inputValue));
@@ -166,7 +167,7 @@ RegistrationForm.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    initialValues: state.registrationList.registration,
+    initialValues: state.registration.registration,
   };
 };
 

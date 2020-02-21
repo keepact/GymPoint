@@ -5,7 +5,8 @@ import produce from 'immer';
 export const Types = {
   LIST_QUESTIONS_REQUEST: '@support/LIST_QUESTIONS_REQUEST',
   LIST_QUESTIONS_SUCCESS: '@support/LIST_QUESTIONS_SUCCESS',
-  LIST_QUESTIONS_FAILURE: '@support/LIST_QUESTIONS_FAILURE',
+  CREATE_ANSWER_REQUEST: '@support/CREATE_ANSWER_REQUEST',
+  QUESTION_LOADED: '@support/QUESTION_LOADED',
 };
 
 // Reducer
@@ -17,10 +18,14 @@ const INITIAL_STATE = {
   lastPage: undefined,
 };
 
-export default function supportList(state = INITIAL_STATE, action) {
+export default function helporder(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case Types.LIST_QUESTIONS_REQUEST: {
+        draft.loading = true;
+        break;
+      }
+      case Types.CREATE_ANSWER_REQUEST: {
         draft.loading = true;
         break;
       }
@@ -33,7 +38,7 @@ export default function supportList(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
-      case Types.LIST_QUESTIONS_FAILURE: {
+      case Types.QUESTION_LOADED: {
         draft.loading = false;
         break;
       }
@@ -48,5 +53,12 @@ export function getAllSupportQuestions(page, newList) {
   return {
     type: Types.LIST_QUESTIONS_REQUEST,
     payload: { page, newList },
+  };
+}
+
+export function createAnswer(data, id) {
+  return {
+    type: Types.CREATE_ANSWER_REQUEST,
+    payload: { data, id },
   };
 }

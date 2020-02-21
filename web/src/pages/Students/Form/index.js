@@ -8,8 +8,7 @@ import { FiUpload } from 'react-icons/fi';
 
 import { validateStudent } from '~/util/validate';
 
-import { updateOrCreateStudent } from '~/store/modules/student/update';
-import { redirectStudent } from '~/store/modules/student/list';
+import { updateOrCreateStudent, redirectStudent } from '~/store/ducks/student';
 
 import Input from '~/components/FormFields/Input';
 import NumberInput from '~/components/FormFields/NumberInput';
@@ -28,8 +27,7 @@ import {
 function StudentForm({ handleSubmit, submitting }) {
   const dispatch = useDispatch();
 
-  const { studentId } = useSelector(state => state.studentList);
-  const { loading } = useSelector(state => state.studentUpdate);
+  const { studentId, loading } = useSelector(state => state.student);
 
   const submit = data => {
     dispatch(updateOrCreateStudent(data, studentId || undefined));
@@ -118,7 +116,7 @@ StudentForm.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    initialValues: state.studentList.student,
+    initialValues: state.student.student,
   };
 };
 

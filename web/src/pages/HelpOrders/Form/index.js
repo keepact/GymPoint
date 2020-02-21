@@ -8,7 +8,7 @@ import TextArea from '~/components/FormFields/TextArea';
 
 import { Container, Content, FormPopUp } from './styles';
 
-function PopUp({
+function ModalForm({
   name,
   title,
   question,
@@ -46,11 +46,11 @@ function PopUp({
   );
 }
 
-PopUp.defaultProps = {
+ModalForm.defaultProps = {
   placeholder: '...',
 };
 
-PopUp.propTypes = {
+ModalForm.propTypes = {
   name: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   question: PropTypes.string.isRequired,
@@ -66,4 +66,4 @@ PopUp.propTypes = {
 export default reduxForm({
   form: 'HELPORDER_FORM',
   validate: validateHelpOrders,
-})(PopUp);
+})(ModalForm);

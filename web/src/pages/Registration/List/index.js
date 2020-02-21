@@ -8,8 +8,8 @@ import {
   getAllRegistrations,
   createRegistration,
   getRegistrationById,
-} from '~/store/modules/registration/list';
-import { deleteRegistration } from '~/store/modules/registration/delete';
+  deleteRegistration,
+} from '~/store/ducks/registration';
 
 import PageActions from '~/components/Pagination';
 import Animation from '~/components/Animation';
@@ -32,7 +32,7 @@ function RegistrationList() {
     lastPage,
     pending,
     pendingCount,
-  } = useSelector(state => state.registrationList);
+  } = useSelector(state => state.registration);
 
   const registrations = useMemo(() => currentRegistrations, [
     currentRegistrations,

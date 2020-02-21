@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { Field, reduxForm } from 'redux-form';
 
-import { signIn } from '~/store/modules/auth';
+import { signIn } from '~/store/ducks/auth';
 import { validateSignIn } from '~/util/validate';
 
 import Input from '~/components/FormFields/Input';
