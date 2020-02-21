@@ -6,13 +6,7 @@ import { removeDuplicates } from '~/util/functions';
 import * as service from '~/services/helporder';
 import NavigationService from '~/services/navigation';
 
-import {
-  Types,
-  helpOrderSuccess,
-  helpOrderFailure,
-  helpOrderAnswer,
-  createHelpOrderSuccess,
-} from './index';
+import { Types } from '../ducks/helporder';
 
 export function* createQuestion({ payload }) {
   const { studentId } = yield select(state => state.auth);
@@ -26,13 +20,18 @@ export function* createQuestion({ payload }) {
       newHelpOrder,
     );
 
-    yield put(createHelpOrderSuccess(newQuestion));
-
+    yield put({
+      type: Types.CREATE_HELP_ORDERS_SUCCESS,
+      payload: { newQuestion },
+    });
     NavigationService.navigate('HelpOrderList');
     Alert.alert('Sucesso', 'Pergunta Enviada');
   } catch (err) {
     Alert.alert(err.response.data.error);
-    yield put(helpOrderFailure());
+
+    yield put({
+      type: Types.HELP_ORDERS_FAILURE,
+    });
   }
 }
 
@@ -59,18 +58,29 @@ export function* listQuestions({ payload }) {
 
     const currentQuestions = removeDuplicates(newHelpOrders, 'id');
 
-    yield put(
-      helpOrderSuccess(page !== 1 ? currentQuestions : helpOrderData, pages),
-    );
+    yield put({
+      type: Types.HELP_ORDERS_SUCCESS,
+      payload:
+        page !== 1
+          ? { helpOrders: currentQuestions, pages }
+          : { helpOrders: helpOrderData, pages },
+    });
   } catch (err) {
-    yield put(helpOrderFailure());
     Alert.alert('Houve um erro', err.response.data.error);
+    yield put({
+      type: Types.HELP_ORDERS_FAILURE,
+    });
   }
 }
 
 export function* helpOrderRedirect({ payload }) {
-  if (payload.data) {
-    yield put(helpOrderAnswer(payload.data));
+  const { data } = payload;
+
+  if (data) {
+    yield put({
+      type: Types.HELP_ORDERS_ANSWER,
+      payload: { data },
+    });
     NavigationService.navigate('HelpOrderAnswer');
   } else {
     NavigationService.navigate('HelpOrderAsk');

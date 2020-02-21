@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { helpOrderRequest, helpOrderRedirect } from '~/store/modules/helporder';
+import { listHelpOrder, redirectHelpOrder } from '~/store/ducks/helporder';
 
 import Loading from '~/components/Loading';
 import Questions from '~/components/Questions';
@@ -26,22 +26,22 @@ function HelpOrderList() {
 
   useEffect(() => {
     if (firstRender) {
-      dispatch(helpOrderRequest(page));
+      dispatch(listHelpOrder(page));
     }
   }, [dispatch, firstRender, page]);
 
   const handleAddQuestion = () => {
-    dispatch(helpOrderRedirect());
+    dispatch(redirectHelpOrder());
   };
 
   const handleGoToAnswer = item => {
-    dispatch(helpOrderRedirect(item));
+    dispatch(redirectHelpOrder(item));
   };
 
   const handleLoadMore = () => {
     if (!loading && !lastPage) {
       const newPage = page + 1;
-      dispatch(helpOrderRequest(newPage));
+      dispatch(listHelpOrder(newPage));
     }
   };
 
@@ -67,8 +67,6 @@ function HelpOrderList() {
 
       {!loaded ? (
         <ContainerLoading>
-          <Loading />
-          <Loading />
           <Loading />
         </ContainerLoading>
       ) : (

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { checkInRequest, createCheckInRequest } from '~/store/modules/checkin';
+import { listCheckIn, createCheckIn } from '~/store/ducks/checkin';
 
 import Loading from '~/components/Loading';
 import CheckIns from '~/components/CheckIns';
@@ -27,13 +27,13 @@ function CheckIn() {
   const dispatch = useDispatch();
 
   const handleAddCheckIn = () => {
-    dispatch(createCheckInRequest());
+    dispatch(createCheckIn());
   };
 
   const handleLoadMore = () => {
     if (!loading && !lastPage) {
       const newPage = page + 1;
-      dispatch(checkInRequest(newPage));
+      dispatch(listCheckIn(newPage));
     }
   };
 
@@ -56,8 +56,6 @@ function CheckIn() {
       </ButtonContainer>
       {!loaded ? (
         <ContainerLoading>
-          <Loading />
-          <Loading />
           <Loading />
         </ContainerLoading>
       ) : (

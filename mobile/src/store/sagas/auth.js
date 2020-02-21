@@ -1,18 +1,23 @@
 import { takeLatest, put, all } from 'redux-saga/effects';
 import { Alert } from 'react-native';
 
-import { Types, signInSuccess, signFailure } from './index';
-import { checkInRequest } from '../checkin';
+import { Types } from '../ducks/auth';
+import { listCheckIn } from '../ducks/checkin';
 
 export function* signIn({ payload }) {
   const { id } = payload;
 
   try {
-    yield put(signInSuccess(id));
-    yield put(checkInRequest(1));
+    yield put({
+      type: Types.SIGN_IN_SUCCESS,
+      payload: { id },
+    });
+    yield put(listCheckIn(1));
   } catch (err) {
     Alert.alert('Houve um erro', err.response.data.error);
-    yield put(signFailure());
+    yield put({
+      type: Types.SIGN_IN_FAILURE,
+    });
   }
 }
 

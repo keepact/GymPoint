@@ -5,22 +5,22 @@ import * as service from '~/services/checkin';
 
 import { removeDuplicates } from '~/util/functions';
 
-import {
-  Types,
-  checkInSuccess,
-  checkInFailure,
-  createCheckInSuccess,
-} from './index';
+import { Types } from '../ducks/checkin';
 
 export function* createCheckIn() {
   const { studentId } = yield select(state => state.auth);
   try {
     const { data } = yield call(service.checkinCreate, studentId);
 
-    yield put(createCheckInSuccess(data));
+    yield put({
+      type: Types.CREATE_CHECKIN_SUCCESS,
+      payload: { data },
+    });
   } catch (err) {
     Alert.alert(err.response.data.error);
-    yield put(checkInFailure());
+    yield put({
+      type: Types.CHECKIN_FAILURE,
+    });
   }
 }
 
@@ -45,12 +45,18 @@ export function* listCheckIns({ payload }) {
     const newCheckins = [...checkIns, ...checkInData];
     const currentCheckins = removeDuplicates(newCheckins, 'id');
 
-    yield put(
-      checkInSuccess(page !== 1 ? currentCheckins : checkInData, pages),
-    );
+    yield put({
+      type: Types.CHECKIN_SUCCESS,
+      payload:
+        page !== 1
+          ? { checkIns: currentCheckins, pages }
+          : { checkIns: checkInData, pages },
+    });
   } catch (err) {
     Alert.alert('Houve um erro', err.response.data.error);
-    yield put(checkInFailure());
+    yield put({
+      type: Types.CHECKIN_FAILURE,
+    });
   }
 }
 
