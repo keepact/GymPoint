@@ -45,23 +45,10 @@ export default function auth(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function signInRequest(id) {
+export function signIn(id) {
   return {
     type: Types.SIGN_IN_REQUEST,
     payload: { id },
-  };
-}
-
-export function signInSuccess(id) {
-  return {
-    type: Types.SIGN_IN_SUCCESS,
-    payload: { id },
-  };
-}
-
-export function signFailure() {
-  return {
-    type: Types.SIGN_IN_FAILURE,
   };
 }
 

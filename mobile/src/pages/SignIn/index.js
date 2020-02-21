@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { signInRequest } from '~/store/modules/auth';
+import { signIn } from '~/store/ducks/auth';
 
 import logo from '~/assets/images/group-2.png';
 
@@ -23,7 +23,7 @@ function SignIn() {
   const dispatch = useDispatch();
 
   const handleSubmit = id => {
-    dispatch(signInRequest(id));
+    dispatch(signIn(id));
   };
 
   return (

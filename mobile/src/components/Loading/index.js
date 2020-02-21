@@ -3,19 +3,11 @@ import PropTypes from 'prop-types';
 
 import { View } from 'react-native';
 
-import {
-  Placeholder,
-  PlaceholderMedia,
-  PlaceholderLine,
-  Loader,
-} from 'rn-placeholder';
+import { Placeholder, PlaceholderMedia, PlaceholderLine } from 'rn-placeholder';
 
 function Loading({ left, bottom, style }) {
   return (
-    <Placeholder
-      Animation={Loader}
-      style={style}
-      Left={left ? PlaceholderMedia : null}>
+    <Placeholder style={style} Left={left ? PlaceholderMedia : null}>
       <PlaceholderLine width={50} height={20} />
       <PlaceholderLine height={10} />
       <PlaceholderLine height={14} />
