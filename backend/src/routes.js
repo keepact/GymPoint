@@ -10,15 +10,15 @@ import PlanController from './app/controllers/Plan';
 import RegistrationController from './app/controllers/Registration';
 import PendingController from './app/controllers/Pending';
 import CheckinController from './app/controllers/Checkin';
-import SupportStudentController from './app/controllers/Support-student';
-import SupportCompanyController from './app/controllers/Support-company';
+import SupportStudentController from './app/controllers/SupportStudent';
+import SupportCompanyController from './app/controllers/SupportCompany';
 
 import * as UserMiddlewares from './app/middlewares/User';
 import * as StudentMiddlewares from './app/middlewares/Student';
 import * as RegistrationMiddlewares from './app/middlewares/Registration';
 import * as PlanMiddlewares from './app/middlewares/Plan';
-import * as SupportStudentMiddlewares from './app/middlewares/Support-student';
-import * as SupportCompanyMiddlewares from './app/middlewares/Support-company';
+import * as SupportStudentMiddlewares from './app/middlewares/SupportStudent';
+import * as SupportCompanyMiddlewares from './app/middlewares/SupportCompany';
 import * as CheckinMiddlewares from './app/middlewares/Checkin';
 
 import FileMiddleware from './app/middlewares/File';
