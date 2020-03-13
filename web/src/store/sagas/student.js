@@ -160,7 +160,6 @@ export function* deleteStudent({ payload }) {
     yield put({
       type: Types.STUDENT_LOADED,
     });
-    yield put(getAllStudents(1));
   } catch (err) {
     toast.error(err.response.data.error);
     yield put({
