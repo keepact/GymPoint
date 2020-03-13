@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 
+import PusherRepository from './PusherRepository';
 import Student from '../models/Student';
-import PusherRepository from '../repositories/Pusher-repository';
 import File from '../models/File';
 
 class StudentRepository {
@@ -75,12 +75,12 @@ class StudentRepository {
 
   async delete(id) {
     try {
-      let pusherRepository = new PusherRepository();
+      const pusherRepository = new PusherRepository();
+      const students = await this.getAll(1);
 
-      pusherRepository.sendNewListInRealTime(id);
+      pusherRepository.sendNewListInRealTime(id, students);
 
       return await Student.destroy({ where: { id } });
-
     } catch (err) {
       return console.error(
         `Não foi possível remover o cadastro do aluno: ${JSON.stringify(err)}`

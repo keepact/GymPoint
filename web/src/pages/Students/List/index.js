@@ -39,18 +39,10 @@ function StudentsList() {
   }, [dispatch]);
 
   useEffect(() => {
-    subscribe(
-      'student',
-      'new-student-list',
-      Types.NEW_STUDENTS
-    );
+    subscribe('student', 'new-student-list', Types.NEW_STUDENTS);
 
     return () => {
-      unsubscribe(
-        'student',
-        'new-student-list',
-        Types.NEW_STUDENTS
-      );
+      unsubscribe('student', 'new-student-list', Types.NEW_STUDENTS);
     };
   });
 
