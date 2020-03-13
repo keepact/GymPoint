@@ -4,7 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 
-import { configurePusher,  } from 'pusher-redux';
+import { configurePusher } from 'pusher-redux';
 
 import './config/ReactotronConfig';
 
@@ -17,8 +17,8 @@ import GlobalStyle from './styles/global';
 
 function App() {
   const options = {
-    cluster: "us2",
-    useTLS: true
+    cluster: 'us2',
+    useTLS: true,
   };
 
   configurePusher(store, process.env.REACT_APP_PUSHER_KEY, options);
