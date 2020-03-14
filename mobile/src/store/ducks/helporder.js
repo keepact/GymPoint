@@ -11,7 +11,7 @@ export const Types = {
   CREATE_HELP_ORDERS_REQUEST: '@helporders/CREATE_HELP_ORDERS_REQUEST',
   CREATE_HELP_ORDERS_SUCCESS: '@helporders/CREATE_HELP_ORDERS_SUCCESS',
   HELP_ORDERS_FAILURE: '@helporders/HELP_ORDERS_FAILURE',
-  NEW_ASNWER: '@student/NEW_ASNWER',
+  NEW_ASNWER: '@helporders/NEW_ASNWER',
 };
 
 // Reducer
