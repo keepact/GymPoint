@@ -7,17 +7,18 @@ import { configurePusher } from 'pusher-redux/react-native';
 
 import './config/ReactotronConfig';
 
+import { PUSHER_KEY } from 'react-native-dotenv';
 import { store, persistor } from './store';
 import App from './App';
 
 import Header from '~/components/Header';
 import Background from '~/components/Background';
-import { PUSHER_KEY } from 'react-native-dotenv';
 
 export default function Index() {
   const options = {
     cluster: 'us2',
     useTLS: true,
+    activityTimeout: 6000,
   };
 
   configurePusher(store, PUSHER_KEY, options);
