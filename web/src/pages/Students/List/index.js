@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { subscribe, unsubscribe } from 'pusher-redux';
 import { FiPlusCircle } from 'react-icons/fi';
 
 import {
@@ -37,14 +36,6 @@ function StudentsList() {
   useEffect(() => {
     dispatch(getAllStudents(1));
   }, [dispatch]);
-
-  useEffect(() => {
-    subscribe('student', 'new-student-list', Types.NEW_STUDENTS);
-
-    return () => {
-      unsubscribe('student', 'new-student-list', Types.NEW_STUDENTS);
-    };
-  });
 
   const handleSearch = e => {
     dispatch(getAllStudents(page, e.target.value));

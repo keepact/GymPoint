@@ -7,6 +7,7 @@ export const Types = {
   LIST_QUESTIONS_SUCCESS: '@support/LIST_QUESTIONS_SUCCESS',
   CREATE_ANSWER_REQUEST: '@support/CREATE_ANSWER_REQUEST',
   QUESTION_LOADED: '@support/QUESTION_LOADED',
+  NEW_QUESTION: '@student/NEW_QUESTION',
 };
 
 // Reducer
@@ -27,6 +28,20 @@ export default function helporder(state = INITIAL_STATE, action) {
       }
       case Types.CREATE_ANSWER_REQUEST: {
         draft.loading = true;
+        break;
+      }
+      case Types.NEW_QUESTION: {
+        const { id, student_id, name, question } = action.data;
+
+        const newQuestion = {
+          questionId: id,
+          id: student_id,
+          name,
+          question,
+        };
+
+        const newQuestions = [newQuestion, ...draft.questions];
+        draft.questions = newQuestions;
         break;
       }
       case Types.LIST_QUESTIONS_SUCCESS: {

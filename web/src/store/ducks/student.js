@@ -14,7 +14,6 @@ export const Types = {
   CREATE_OR_EDIT_STUDENT_REQUEST: '@student/CREATE_OR_EDIT_STUDENT_REQUEST',
   STUDENT_LOADED: '@student/STUDENT_LOADED',
   DELETE_STUDENT_REQUEST: '@student/DELETE_STUDENT_REQUEST',
-  NEW_STUDENTS: '@student/NEW_STUDENTS',
 };
 
 // Reducer
@@ -42,10 +41,6 @@ export default function student(state = INITIAL_STATE, action) {
       }
       case Types.DELETE_STUDENT_REQUEST: {
         draft.loading = true;
-        break;
-      }
-      case Types.NEW_STUDENTS: {
-        draft.students = action.data;
         break;
       }
       case Types.LIST_STUDENTS_SUCCESS: {
