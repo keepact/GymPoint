@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { subscribe, unsubscribe } from 'pusher-redux';
 
 import PageActions from '~/components/Pagination';
 import ModalForm from './Form';
@@ -8,7 +9,11 @@ import Animation from '~/components/Animation';
 import loadingAnimation from '~/assets/animations/loader.json';
 import clearAnimation from '~/assets/animations/clear.json';
 
-import { createAnswer, getAllSupportQuestions } from '~/store/ducks/helporder';
+import {
+  Types,
+  createAnswer,
+  getAllSupportQuestions,
+} from '~/store/ducks/helporder';
 
 import {
   Container,
@@ -34,6 +39,14 @@ function HelpOrders() {
   useEffect(() => {
     dispatch(getAllSupportQuestions(1));
   }, [dispatch]);
+
+  useEffect(() => {
+    subscribe('question', 'student-question', Types.NEW_QUESTION);
+
+    return () => {
+      unsubscribe('question', 'student-question', Types.NEW_QUESTION);
+    };
+  });
 
   const popUpAction = () => {
     setOpen(!open);
