@@ -19,6 +19,8 @@ import {
   ContainerLoading,
   LoadingWrapper,
   LoadingIndicator,
+  EmptyContainer,
+  NoData,
 } from './styles';
 
 function HelpOrderList() {
@@ -27,13 +29,13 @@ function HelpOrderList() {
   );
 
   const dispatch = useDispatch();
-  const firstRender = useMemo(() => helporders.length === 0, [helporders]);
+  const currentHelpOrders = useMemo(() => helporders.length, [helporders]);
 
   useEffect(() => {
-    if (firstRender) {
+    if (currentHelpOrders === 0) {
       dispatch(listHelpOrder(page));
     }
-  }, [dispatch, firstRender, page]);
+  }, [dispatch, currentHelpOrders, page]);
 
   useEffect(() => {
     subscribe('answer', 'company-answer', Types.NEW_ASNWER);
@@ -78,11 +80,12 @@ function HelpOrderList() {
         </NewQuetionButton>
       </ButtonContainer>
 
-      {!loaded ? (
+      {!loaded && (
         <ContainerLoading>
           <Loading />
         </ContainerLoading>
-      ) : (
+      )}
+      {currentHelpOrders > 0 ? (
         <List
           refreshing={loading}
           onEndReachedThreshold={0.1}
@@ -95,6 +98,10 @@ function HelpOrderList() {
             <Questions data={item} onSubmit={() => handleGoToAnswer(item)} />
           )}
         />
+      ) : (
+        <EmptyContainer>
+          <NoData>Não há Perguntas</NoData>
+        </EmptyContainer>
       )}
     </Container>
   );

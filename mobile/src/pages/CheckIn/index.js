@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -15,9 +15,11 @@ import {
   CheckInButton,
   ButtonContainer,
   List,
+  NoData,
   ContainerLoading,
   LoadingWrapper,
   LoadingIndicator,
+  EmptyContainer,
 } from './styles';
 
 function CheckIn() {
@@ -25,6 +27,7 @@ function CheckIn() {
     state => state.checkin,
   );
   const dispatch = useDispatch();
+  const currentCheckins = useMemo(() => checkIns.lenght, [checkIns])
 
   const handleAddCheckIn = () => {
     dispatch(createCheckIn());
@@ -54,11 +57,12 @@ function CheckIn() {
       <ButtonContainer>
         <CheckInButton onPress={handleAddCheckIn}>Novo check-in</CheckInButton>
       </ButtonContainer>
-      {!loaded ? (
+      {!loaded && (
         <ContainerLoading>
           <Loading />
         </ContainerLoading>
-      ) : (
+      )}
+      {currentCheckins > 0 ? (
         <List
           refreshing={loading}
           onEndReachedThreshold={0.1}
@@ -69,6 +73,10 @@ function CheckIn() {
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => <CheckIns data={item} />}
         />
+      ) : (
+        <EmptyContainer>
+          <NoData>Não há checkins</NoData>
+        </EmptyContainer>
       )}
     </Container>
   );
