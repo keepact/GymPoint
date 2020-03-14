@@ -11,6 +11,7 @@ export const Types = {
   CREATE_HELP_ORDERS_REQUEST: '@helporders/CREATE_HELP_ORDERS_REQUEST',
   CREATE_HELP_ORDERS_SUCCESS: '@helporders/CREATE_HELP_ORDERS_SUCCESS',
   HELP_ORDERS_FAILURE: '@helporders/HELP_ORDERS_FAILURE',
+  NEW_ASNWER: '@student/NEW_ASNWER',
 };
 
 // Reducer
@@ -43,6 +44,13 @@ export default function helporder(state = INITIAL_STATE, action) {
 
         if (draft.loaded) return;
         draft.loaded = true;
+        break;
+      }
+      case Types.NEW_ASNWER: {
+        const questionIndex = draft.helporders.findIndex(
+          question => question.id === action.data.id
+        );
+        draft.helporders[questionIndex] = action.data;
         break;
       }
       case Types.HELP_ORDERS_FAILURE: {
