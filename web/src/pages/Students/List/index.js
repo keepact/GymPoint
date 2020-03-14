@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FiPlusCircle } from 'react-icons/fi';
 
 import {
-  Types,
   getAllStudents,
   getStudentById,
   createStudent,
