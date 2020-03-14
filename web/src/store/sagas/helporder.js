@@ -47,7 +47,7 @@ export function* createAnswer({ payload }) {
 
   yield put(startSubmit('HELPORDER_FORM'));
   try {
-    const { data } = yield call(
+    yield call(
       helpOrderService.helpOrderCreate,
       supportAnswer
     );
@@ -58,8 +58,7 @@ export function* createAnswer({ payload }) {
     yield put(getAllSupportQuestions(1));
 
     yield put({
-      type: Types.CREATE_ANSWER_SUCCESS,
-      payload: { data },
+      type: Types.QUESTION_LOADED,
     });
   } catch (err) {
     toast.error(err.response.data.error);
