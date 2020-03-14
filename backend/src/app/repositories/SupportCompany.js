@@ -2,6 +2,8 @@ import { Op } from 'sequelize';
 
 import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Student';
+
+import PusherRepository from './Pusher';
 import SupportMail from '../jobs/SupportMail';
 
 import Queue from '../../lib/Queue';
@@ -50,6 +52,10 @@ class SupportCompanyRepository {
       });
 
       const answerAt = new Date();
+
+      const pusherRepository = new PusherRepository();
+
+      pusherRepository.sendAnswerInRealTime(question, reqBody);
 
       await question.update({
         answer: reqBody,
