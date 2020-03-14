@@ -1,6 +1,5 @@
 import { Op } from 'sequelize';
 
-import PusherRepository from './PusherRepository';
 import Student from '../models/Student';
 import File from '../models/File';
 
@@ -75,11 +74,6 @@ class StudentRepository {
 
   async delete(id) {
     try {
-      const pusherRepository = new PusherRepository();
-      const students = await this.getAll(1);
-
-      pusherRepository.sendNewListInRealTime(id, students);
-
       return await Student.destroy({ where: { id } });
     } catch (err) {
       return console.error(
