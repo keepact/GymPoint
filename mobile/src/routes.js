@@ -9,22 +9,22 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import SignIn from './pages/SignIn';
 import CheckIn from './pages/CheckIn';
-import { navigationRef } from './services/navigation';
-
 import HelpOrderList from './pages/HelpOrders/List';
 import HelpOrderAsk from './pages/HelpOrders/Ask';
 import HelpOrderAnswer from './pages/HelpOrders/Answer';
 
-function App({ isSigned }) {
+import { navigationRef } from './services/navigation';
+
+function Routes({ isSigned }) {
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
 
-  const tabBarIcon = ({ tintColor }) => (
-    <Icon name="add-circle-outline" size={20} color={tintColor} />
-  );
-
-  tabBarIcon.propTypes = {
-    tintColor: PropTypes.string.isRequired,
+  const tabBarIcon = (color, size, route) => {
+    return route ? (
+      <Icon name="add-circle-outline" size={size} color={color} />
+    ) : (
+      <Icon name="event" size={size} color={color} />
+    );
   };
 
   const StackNavigator = () => {
@@ -65,8 +65,9 @@ function App({ isSigned }) {
             name="Checkins"
             component={CheckIn}
             options={{
-              title: 'Checkins',
+              title: 'home',
               tabBarLabel: 'Checkins',
+              tabBarIcon: ({ color, size }) => tabBarIcon(color, size, 'home'),
             }}
           />
           <Tab.Screen
@@ -75,7 +76,7 @@ function App({ isSigned }) {
             options={{
               title: 'Pedir Ajuda',
               tabBarLabel: 'Pedir Ajuda',
-              tabBarIcon,
+              tabBarIcon: ({ color, size }) => tabBarIcon(color, size),
             }}
           />
         </Tab.Navigator>
@@ -86,12 +87,12 @@ function App({ isSigned }) {
   );
 }
 
-App.defaultProps = {
+Routes.defaultProps = {
   isSigned: false,
 };
 
-App.propTypes = {
+Routes.propTypes = {
   isSigned: PropTypes.bool,
 };
 
-export default App;
+export default Routes;

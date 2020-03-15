@@ -1,10 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import PropTypes from 'prop-types';
-
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import { listCheckIn, createCheckIn } from '~/store/ducks/checkin';
 
 import Loading from '~/components/Loading';
@@ -81,18 +77,5 @@ function CheckIn() {
     </Container>
   );
 }
-
-const tabBarIcon = ({ tintColor }) => {
-  return <Icon name="event" size={20} color={tintColor} />;
-};
-
-CheckIn.navigationOptions = {
-  tabBarLabel: 'Check-ins',
-  tabBarIcon,
-};
-
-tabBarIcon.propTypes = {
-  tintColor: PropTypes.string.isRequired,
-};
 
 export default CheckIn;
