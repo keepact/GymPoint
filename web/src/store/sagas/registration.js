@@ -44,11 +44,11 @@ export function* listRegistrationId({ payload }) {
 }
 
 export function* listRegistrations({ payload }) {
-  const { page, newList } = payload;
+  const { page, pending: pendingList } = payload;
 
   try {
     const { data } = yield call(
-      !newList
+      !pendingList
         ? registrationService.registrationList
         : registrationService.registrationPending,
       page
