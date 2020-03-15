@@ -95,10 +95,10 @@ export default function registration(state = INITIAL_STATE, action) {
 
 // Action Creators
 
-export function getAllRegistrations(page, newList) {
+export function getAllRegistrations(page, pending) {
   return {
     type: Types.LIST_REGISTRATIONS_REQUEST,
-    payload: { page, newList },
+    payload: { page, pending },
   };
 }
 

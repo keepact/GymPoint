@@ -50,14 +50,21 @@ function RegistrationList() {
   };
 
   const handlePage = page => {
-    dispatch(getAllRegistrations(page));
+    if (
+      currentRegistrations[0].student === 'Aluno Removido' ||
+      currentRegistrations[0].plan === 'Plano Removido'
+    ) {
+      dispatch(getAllRegistrations(page, 'pending'));
+    } else {
+      dispatch(getAllRegistrations(page));
+    }
   };
 
   const handlePendingPage = () => {
     if (pending) {
       dispatch(getAllRegistrations(1, 'pending'));
     } else {
-      dispatch(getAllRegistrations(page));
+      dispatch(getAllRegistrations(1));
     }
   };
 
