@@ -10,9 +10,9 @@ class PusherRepository {
         cluster: 'us2',
         useTLS: true,
       });
-      // if (process.env.NODE_ENV !== 'development') {
-      channels_client.trigger(channel, event, message);
-      // }
+      if (process.env.NODE_ENV !== 'development') {
+        channels_client.trigger(channel, event, message);
+      }
     } catch (err) {
       console.log(err);
     }
