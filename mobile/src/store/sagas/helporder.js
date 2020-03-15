@@ -24,7 +24,7 @@ export function* createQuestion({ payload }) {
       type: Types.CREATE_HELP_ORDERS_SUCCESS,
       payload: { newQuestion },
     });
-    NavigationService.navigate('HelpOrderList');
+    NavigationService.navigate('Home');
     Alert.alert('Sucesso', 'Pergunta Enviada');
   } catch (err) {
     Alert.alert(err.response.data.error);
@@ -81,9 +81,9 @@ export function* helpOrderRedirect({ payload }) {
       type: Types.HELP_ORDERS_ANSWER,
       payload: { data },
     });
-    NavigationService.navigate('HelpOrderAnswer');
+    NavigationService.navigate('Answer');
   } else {
-    NavigationService.navigate('HelpOrderAsk');
+    NavigationService.navigate('Ask');
   }
 }
 

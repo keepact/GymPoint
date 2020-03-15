@@ -27,7 +27,7 @@ function CheckIn() {
     state => state.checkin,
   );
   const dispatch = useDispatch();
-  const currentCheckins = useMemo(() => checkIns.lenght, [checkIns])
+  const currentCheckins = useMemo(() => checkIns.length, [checkIns]);
 
   const handleAddCheckIn = () => {
     dispatch(createCheckIn());
