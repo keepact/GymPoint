@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import { removeDuplicates } from '~/util/functions';
 
 import * as service from '~/services/helporder';
-import * as NavigationService from '~/services/navigation';
+import NavigationService from '~/services/navigation';
 
 import { Types } from '../ducks/helporder';
 

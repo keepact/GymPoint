@@ -1,7 +1,36 @@
-import * as React from 'react';
+import { createRef } from 'react';
+import { CommonActions } from '@react-navigation/native';
 
-export const navigationRef = React.createRef();
+export const navigationRef = createRef();
 
-export function navigate(name, params) {
-  navigationRef.current?.navigate(name, params);
+function navigate(routeName, routeParams) {
+  return navigationRef.current?.dispatch(
+    CommonActions.navigate({
+      name: routeName,
+      params: routeParams,
+    }),
+  );
 }
+
+function reset(state) {
+  return navigationRef.current?.dispatch(
+    CommonActions.reset({
+      index: 1,
+      routes: [state],
+    }),
+  );
+}
+
+function goBack(route, state) {
+  return navigationRef.current?.dispatch({
+    ...CommonActions.goBack(),
+    source: route.key,
+    target: state.key,
+  });
+}
+export default {
+  navigationRef,
+  navigate,
+  reset,
+  goBack,
+};
