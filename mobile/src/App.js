@@ -1,20 +1,11 @@
-import React from 'react';
+import 'react-native-gesture-handler';
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 
-import NavigationService from '~/services/navigation';
-
-import createRouter from './routes';
+import Routes from './routes';
 
 export default function App() {
   const { signed } = useSelector(state => state.auth);
 
-  const Routes = createRouter(signed);
-
-  return (
-    <Routes
-      ref={navigatorRef => {
-        NavigationService.setTopLevelNavigator(navigatorRef);
-      }}
-    />
-  );
+  return <Routes isSigned={signed} />;
 }

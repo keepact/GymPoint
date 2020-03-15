@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { subscribe, unsubscribe } from 'pusher-redux/react-native';
+// import { subscribe, unsubscribe } from 'pusher-redux/react-native';
 
 import {
-  Types,
+  // Types,
   listHelpOrder,
   redirectHelpOrder,
 } from '~/store/ducks/helporder';
@@ -37,13 +37,13 @@ function HelpOrderList() {
     }
   }, [dispatch, currentHelpOrders, page]);
 
-  useEffect(() => {
-    subscribe('answer', 'company-answer', Types.NEW_ASNWER);
+  // useEffect(() => {
+  //   subscribe('answer', 'company-answer', Types.NEW_ASNWER);
 
-    return () => {
-      unsubscribe('answer', 'company-answer', Types.NEW_ASNWER);
-    };
-  });
+  //   return () => {
+  //     unsubscribe('answer', 'company-answer', Types.NEW_ASNWER);
+  //   };
+  // });
 
   const handleAddQuestion = () => {
     dispatch(redirectHelpOrder());
