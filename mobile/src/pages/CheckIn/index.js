@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { listCheckIn, createCheckIn } from '~/store/ducks/checkin';
 
 import Loading from '~/components/Loading';
-import CheckIns from '~/components/CheckIns';
+import CheckIns from './CheckIns';
 
 import {
   Container,

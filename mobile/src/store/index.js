@@ -4,8 +4,8 @@ import createSagaMiddleware from 'redux-saga';
 import createStore from './createStore';
 import persistReducers from './persistReducers';
 
-import rootReducer from './rootReducer';
-import rootSaga from './rootSaga';
+import rootReducer from './ducks';
+import rootSaga from './sagas';
 
 const sagaMonitor = __DEV__ ? console.tron.createSagaMonitor() : null;
 

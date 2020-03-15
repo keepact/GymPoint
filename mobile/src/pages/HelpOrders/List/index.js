@@ -9,7 +9,7 @@ import {
 } from '~/store/ducks/helporder';
 
 import Loading from '~/components/Loading';
-import Questions from '~/components/Questions';
+import Questions from './Questions';
 
 import {
   Container,
